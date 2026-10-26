@@ -872,6 +872,17 @@ def _file_only_projection(dep: "Dependency") -> "Dependency | None":
     return Dependency(dep_type="composite", operator="And", sub_deps=kept)
 
 
+def _pattern_promotes(plugin: "Plugin", type_name: str) -> bool:
+    """True when a pattern of type *type_name* makes *plugin* more usable than
+    its default type. Only those patterns gate availability: an unmet one is
+    worth a "required plugin isn't enabled" hint and a met one makes the
+    option newly available. A pattern that demotes the option (MOS's
+    "Vanilla body" is Recommended by default and Optional once VCO is
+    installed) or marks it NotUsable must not dim or highlight it."""
+    default = plugin.type_descriptor.default_type or "Optional"
+    return _TYPE_RANK.get(type_name, 2) > _TYPE_RANK.get(default, 2)
+
+
 def plugin_dep_unmet(plugin: "Plugin", active_files: set[str] | None,
                      installed_files: set[str] | None = None,
                      loose_files: set[str] | None = None) -> bool:
@@ -893,7 +904,9 @@ def plugin_dep_unmet(plugin: "Plugin", active_files: set[str] | None,
     active = active_files or set()
     installed = installed_files if installed_files is not None else active
     saw_file_dep = False
-    for pattern_dep, _type_name in plugin.type_descriptor.patterns:
+    for pattern_dep, type_name in plugin.type_descriptor.patterns:
+        if not _pattern_promotes(plugin, type_name):
+            continue
         file_dep = _file_only_projection(pattern_dep)
         if file_dep is None:
             continue
@@ -918,7 +931,9 @@ def plugin_dep_met(plugin: "Plugin", active_files: set[str] | None,
     no file gate return False (they were always available, not 'newly' so)."""
     active = active_files or set()
     installed = installed_files if installed_files is not None else active
-    for pattern_dep, _type_name in plugin.type_descriptor.patterns:
+    for pattern_dep, type_name in plugin.type_descriptor.patterns:
+        if not _pattern_promotes(plugin, type_name):
+            continue
         file_dep = _file_only_projection(pattern_dep)
         if file_dep is None:
             continue

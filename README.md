@@ -1,127 +1,72 @@
+# Caelumite
 
-<p align="center">
-    <img width="400" alt="ghbanner" src="https://github.com/user-attachments/assets/acb661d1-2619-4d2c-adbf-050b54d533ba" />
-</p>
+A macOS mod manager for Windows games running in CrossOver, with an MO2-style
+interface: profiles, FOMOD installers, LOOT sorting, Nexus downloads and
+hardlink deployment, plus wizards for tools like xEdit, BodySlide and
+DynDOLOD.
 
-<h3 align="center">A mod manager for Linux.</h3>
+Caelumite is a macOS-only fork of
+[Amethyst Mod Manager](https://github.com/ChrisDKN/Amethyst-Mod-Manager) by
+ChrisDKN. Nearly all of the mod-management code is Amethyst's. Caelumite adds
+the macOS platform layer and keeps merging upstream releases. Please send
+game-support and mod-management bug reports and feature ideas upstream, and
+support the original project.
 
-<h5 align="center">
-  <a href="https://www.nexusmods.com/site/mods/1714">Nexus</a> |
-  <a href="https://github.com/ChrisDKN/Amethyst-Mod-Manager/wiki">Wiki</a> |
-  <a href="https://crowdin.com/project/amethyst-mod-manager">Help Translate</a> |
-  <a href="https://ko-fi.com/chrisdkn">Ko-Fi</a>
-</h5>
+## How it works on macOS
 
-<p align="center">
-    <img width="700" src="src/icons/ui.png" alt="ui">
-</p>
+- **Games live in CrossOver bottles.** Caelumite finds every CrossOver bottle
+  and the Windows Steam installed inside it, so Steam games are detected
+  automatically. The game's bottle is its prefix.
+- **Mods are hardlinked into the game folder.** The game reads plain files at
+  full speed; nothing is injected at runtime. Keep mod staging
+  (`~/Games/Caelumite` by default) on the same disk as the bottle, or
+  deployment falls back to slower symlinks or copies.
+- **Play and tools run in the bottle.** Play hands off to the bottle's
+  Steam (`steam.exe -applaunch`), or runs the exe directly with launch mode
+  *None*. Wizard tools and Run EXE use the same bottle.
+- **One link is added to each game bottle:** `drive_c/users/steamuser` →
+  the bottle's real user (`crossover`). Amethyst's game handlers use Proton's
+  user name for plugins.txt, INIs and saves; the link makes those paths land
+  in the right place. Wine ignores the extra folder.
 
-## Key Features
+Config lives in `~/Library/Application Support/Caelumite`.
 
-- **Mo2 style interface** - If it's not broke, don't fix it
-- **Install Nexus Collections** - Handles fast mod installs, Collection load orders, applies fomod options and mod diff patches automatically.
-- **Create Nexus Collections** - Ability to create, edit and upload Nexus collections
-- **Install Wabbajack mod lists** - Browse and install Wabbajack mod lists and manage them in the manager
-- **In app Nexus Browser** - View and install mods straight into the manager, from the manager
-- **In app Thunderstore Browser** - View and install mods for Thunderstore supported games
-- **Loot support** - Libloot is built into the application and optimised for fast plugin sorting
-- **Update checking** - Quickly check all mods for Nexus updates. Bg3 mods installed via mod.io can also be checked for updates
-- **Multi game support** - Bethesda, RE Engine (including pak invalidation), Bg3, CP2077 and a lot more. Designed to make adding game support easy
-- **Multiple Deploy methods** - Deploy as symlinks, Hardlinks or as a VFS. Restoring reverts the game folder back to its previous state
-- **Automated tool setup** - Run things like Pandora,pgpatcher,dyndolod with a few clicks
-- **Root folder building** - Most mods that need to go to root do so automatically, no setup needed. Anything else can be toggled to go to root with a couple clicks
-- **Multi platform detection** - Detects games installed by Steam, Heroic, Lutris and Faugus
+## Requirements
 
----
+- macOS on Apple silicon or Intel
+- [CrossOver](https://www.codeweavers.com/crossover) with your game installed
+  in a bottle
+- Homebrew Python 3.12–3.14, Rust (`brew install python@3.14 rust`) and the
+  Xcode command line tools (`xcode-select --install`)
 
-## Install
-
-**The Application may ask to set a password, This is for the OS keyring to store your nexus API key as we do not store it in a plain text file. Set the password to anything you want**
-
-### Appimage
-Run the following command in a terminal. It will appear in your applications menu under Games and Utilities.
-
-```bash
-curl -sSL https://raw.githubusercontent.com/ChrisDKN/Amethyst-Mod-Manager/main/src/appimage/Amethyst-MM-installer.sh | bash
-```
-
-Alternatively you download the appimage via the release page and install via gear lever
-
-The application will notifiy when a new update goes live, Pressing the update button will rerun the script and update to any new version
-
-### Flatpak
-
-Run the following command
+## Running from source
 
 ```bash
-flatpak install --user https://chrisdkn.github.io/Amethyst-Mod-Manager/amethyst.flatpakref
+scripts/setup-macos.sh
 ```
-
-The remote can also be added manually where you can then install from the app store/discover store
 
 ```bash
-flatpak remote-add --user --if-not-exists modmanager-origin https://chrisdkn.github.io/Amethyst-Mod-Manager/amethyst.flatpakrepo
-flatpak install --user modmanager-origin io.github.Amethyst.ModManager//stable
+./caelumite
 ```
 
-The repo carries two branches, `stable` and `beta`, so name the one you want.
+The setup script creates `.venv`, installs the Python dependencies and builds
+the two native extensions (the deployment catalog and libloot) into `src/`.
 
-Updates will be shown in your package manager
+## Not supported on macOS (yet)
 
-Manually swap to the beta branch
+- Tool prefixes separate from the game's bottle: every tool runs in the game's
+  bottle.
+- Windows component installers (VC++, .NET, XAudio): install them with
+  CrossOver's own "Install Software" instead.
+- Steam-style launch options (`%command%`), the Linux VFS deploy method,
+  Wayland, LSFG and MangoHud.
+- Opening `nxm://` links from the Nexus website needs an app bundle, which
+  is not built yet.
 
-```bash
-flatpak install --user --reinstall modmanager-origin io.github.Amethyst.ModManager//beta
-```
+## Keeping up with upstream
 
-(swap `--user` for `--system` if that's where you installed it)
+See [docs/UPSTREAM.md](docs/UPSTREAM.md).
 
-Installing from a bundle skips the 32-bit compat extensions that running Windows tools (Proton/wine) requires - The app installs them automatically on first launch, or you can add them yourself:
+## License
 
-```bash
-flatpak install --user flathub org.freedesktop.Platform.Compat.i386//24.08 org.freedesktop.Platform.GL32.default//24.08
-```
-
-### AUR
-<a href='https://aur.archlinux.org/packages/amethyst-mod-manager'>
-	<img width='240' alt='Get on AUR' src='https://upload.wikimedia.org/wikipedia/commons/e/e8/Archlinux-logo-standard-version.png'/>
-</a>
-
----
-
-## Games Supported
-
-Almost 100 games are currently added/supported. See the [wiki](https://github.com/ChrisDKN/Amethyst-Mod-Manager/wiki#supported-games) for the full list
-- All Bethesda titles
-- Cyberpunk 2077
-- Baldurs Gate 3
-- Stardew Valley
-- RE Engine Titles
-- BepInEx Games
-- A lot of Ue5 Titles
-
----
-
-## Wiki
-
-See the [wiki](https://github.com/ChrisDKN/Amethyst-Mod-Manager/wiki) page for a detailed guide on how to the use the mod manager and its functions. 
-
-The wiki is also built into the manager and can be viewed there.
-
-For building from source see the section on the wiki [here](https://github.com/ChrisDKN/Amethyst-Mod-Manager/wiki#building-from-source) 
-
----
-
-## Contributing
-
-Feature requests and pull requests are welcome and I will go through these when I have the time.
-
-If you would like to help improve translations, feel free to contribute on the [crowdin](https://crowdin.com/project/amethyst-mod-manager) page
-
----
-
-## Supporting the project
-
-Your feedback is enough and is greatly appreciated as this benefits everyone but if you'd like donate you can on Ko-fi 
-
-<a href='https://ko-fi.com/R6R51XJ80I' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+GPL-3.0, like upstream. See [LICENSE](LICENSE).

@@ -25,6 +25,8 @@ def main() -> int:
          "--release", "--locked"],
         check=True,
         env=environment,
+        # cargo reads .cargo/config.toml (the macOS link flags) from the cwd.
+        cwd=crate,
     )
     suffix = "dylib" if sys.platform == "darwin" else "so"
     source = target / "release" / f"libamethyst_filegraph.{suffix}"

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Start Caelumite from source (run scripts/setup-macos.sh once first).
+cd "$(dirname "$0")/src" || exit 1
+if [ ! -x ../.venv/bin/python ]; then
+    echo "error: .venv missing - run scripts/setup-macos.sh first" >&2
+    exit 1
+fi
+exec ../.venv/bin/python run_qt.py "$@"

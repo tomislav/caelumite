@@ -1,29 +1,75 @@
-# Caelumite
+<p align="center">
+    <img width="128" alt="Caelumite" src="src/icons/Logo.png" />
+</p>
 
-A macOS mod manager for Windows games running in CrossOver, with an MO2-style
-interface: profiles, FOMOD installers, LOOT sorting, Nexus downloads and
-hardlink deployment, plus wizards for tools like xEdit, BodySlide and
-DynDOLOD.
+<h1 align="center">Caelumite</h1>
+
+<h3 align="center">A mod manager for macOS, for Windows games in CrossOver.</h3>
+
+<h5 align="center">
+  <a href="https://github.com/tomislav/caelumite/issues">Issues</a> |
+  <a href="docs/NEXUS.md">Nexus Mods</a> |
+  <a href="docs/UPSTREAM.md">Upstream</a> |
+  <a href="https://github.com/ChrisDKN/Amethyst-Mod-Manager">Amethyst Mod Manager</a>
+</h5>
+
+<p align="center">
+    <img width="800" src="docs/screenshot.webp" alt="Caelumite showing a Starfield mod list, its plugins and the Play bar">
+</p>
 
 Caelumite is a macOS-only fork of
 [Amethyst Mod Manager](https://github.com/ChrisDKN/Amethyst-Mod-Manager) by
-ChrisDKN. Nearly all of the mod-management code is Amethyst's. Caelumite adds
+ChrisDKN. Nearly all of the mod-management code is Amethyst's; Caelumite adds
 the macOS platform layer and keeps merging upstream releases. Please send
 game-support and mod-management bug reports and feature ideas upstream, and
 support the original project.
 
+## Key Features
+
+- **MO2-style interface** - mod list with separators, priorities, flags and
+  conflicts on the left; plugins, mod files, saves and the game's data on
+  the right.
+- **CrossOver integration** - finds every CrossOver bottle and the Windows
+  Steam inside it, so installed Steam games are detected automatically. Play,
+  tools and wizards all run in the game's bottle.
+- **Hardlink deployment** - mods are hardlinked into the game folder, so the
+  game reads plain files at full speed with nothing injected at runtime.
+  Restore puts the game folder back exactly as it was.
+- **Script extenders** - a detected loader (SFSE, SKSE64, F4SE, ...) is the
+  default Play entry. Caelumite starts the bottle's Steam first, so the game
+  doesn't relaunch without it.
+- **LOOT built in** - libloot sorts plugins in-app, with masterlist updates,
+  LOOT userlists, groups and rule editing.
+- **FOMOD and BAIN installers** - with saved choices, so reinstalls and
+  updates remember your options.
+- **Conflict detection** - loose-file and BSA/BA2 archive conflicts, per mod
+  and file by file.
+- **Root folder installs** - deploy any mod, such as a script extender, to
+  the game folder instead of `Data` with a right-click.
+- **Nexus links and update checks** - "Mod Manager Download" links open in
+  Caelumite (`nxm://`), and all mods can be checked for updates at once. Nexus
+  login is limited for now - see [Nexus Mods](#nexus-mods).
+- **Import from Mod Organizer 2** - bring over an MO2 instance's mods, load
+  order and separators in seconds, as APFS clones that take almost no extra
+  disk space.
+- **Tool wizards** - set up and run modding tools such as xEdit in a few
+  clicks, inside the game's bottle.
+- **Profiles** - separate mod lists, load orders, INIs and saves per profile.
+- **A real Mac app** - native menu bar, keyboard shortcuts, Keychain storage
+  for credentials, and a title bar that follows the theme.
+- **Many games** - Caelumite inherits Amethyst's support for almost 100
+  games (all Bethesda titles, Cyberpunk 2077, Baldur's Gate 3, RE Engine and
+  BepInEx games, ...). So far it has been tested on macOS with Starfield.
+
 ## How it works on macOS
 
-- **Games live in CrossOver bottles.** Caelumite finds every CrossOver bottle
-  and the Windows Steam installed inside it, so Steam games are detected
-  automatically. The game's bottle is its prefix.
-- **Mods are hardlinked into the game folder.** The game reads plain files at
-  full speed; nothing is injected at runtime. Keep mod staging
+- **Games live in CrossOver bottles.** The game's bottle is its prefix.
+- **Mods are hardlinked into the game folder.** Keep mod staging
   (`~/Games/Caelumite` by default) on the same disk as the bottle, or
   deployment falls back to slower symlinks or copies.
-- **Play and tools run in the bottle.** Play hands off to the bottle's
-  Steam (`steam.exe -applaunch`), or runs the exe directly with launch mode
-  *None*. Wizard tools and Run EXE use the same bottle.
+- **Play runs in the bottle.** Play hands off to the bottle's Steam
+  (`steam.exe -applaunch`), or runs the exe directly with launch mode
+  *None*. A script extender entry starts the bottle's Steam, then the loader.
 - **One link is added to each game bottle:** `drive_c/users/steamuser` →
   the bottle's real user (`crossover`). Amethyst's game handlers use Proton's
   user name for plugins.txt, INIs and saves; the link makes those paths land
@@ -39,7 +85,7 @@ Config lives in `~/Library/Application Support/Caelumite`.
 - Homebrew Python 3.12–3.14, Rust (`brew install python@3.14 rust`) and the
   Xcode command line tools (`xcode-select --install`)
 
-## Running from source
+## Install from source
 
 ```bash
 git clone https://github.com/tomislav/caelumite
@@ -50,31 +96,30 @@ scripts/setup-macos.sh
 ```
 
 ```bash
-./caelumite
+scripts/build-app.sh
 ```
 
 The setup script creates `.venv`, installs the Python dependencies and builds
 the two native extensions (the deployment catalog and libloot) into `src/`.
-
-To get the Caelumite name and icon in the menu bar, Dock and app switcher,
-and to open Nexus "Mod Manager Download" links, build the app bundle:
+`build-app.sh` builds `build/Caelumite.app`, which gives Caelumite its name
+and icon in the menu bar, Dock and app switcher, and opens Nexus "Mod Manager
+Download" links. Drag it into `/Applications` if you like, or start it with:
 
 ```bash
-scripts/build-app.sh
+./caelumite
 ```
 
-`build/Caelumite.app` runs this checkout, so code changes need no rebuild;
-rebuild after `scripts/setup-macos.sh` or a Homebrew Python upgrade. You can
-drag it into `/Applications`. `./caelumite` uses it when it exists. On start,
-Caelumite makes itself the default `nxm://` handler, and the handler for
-Thunderstore `ror2mm://` and `modl://` links unless another app already
-handles them.
+The app runs this checkout, so code changes need no rebuild; rebuild after
+`scripts/setup-macos.sh` or a Homebrew Python upgrade. On start, Caelumite
+makes itself the default `nxm://` handler, and the handler for Thunderstore
+`ror2mm://` and `modl://` links unless another app already handles them.
 
 ## Nexus Mods
 
 Caelumite isn't registered with Nexus Mods yet, so Nexus login is off in
 public builds. For testing and personal use you can log in with your personal
-API key; see [docs/NEXUS.md](docs/NEXUS.md).
+API key; see [docs/NEXUS.md](docs/NEXUS.md). Installing from downloaded
+archives, deploying, LOOT and the wizards all work without Nexus.
 
 ## Importing from Mod Organizer 2
 
@@ -90,7 +135,8 @@ extra disk space, independent of MO2), and the MO2 profile's load order
 replaces the Caelumite profile's after a backup. Separators keep their mods:
 MO2 writes a separator after its mods in `modlist.txt` and Caelumite reads it
 before them, so the import moves each one. MO2 itself isn't changed. Close
-Caelumite first.
+Caelumite first, and press Refresh Modlist once after the import so conflicts
+are indexed.
 
 ## Not supported on macOS (yet)
 

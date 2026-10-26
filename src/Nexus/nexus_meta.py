@@ -215,6 +215,33 @@ _META_CACHE: dict[str, tuple[tuple, NexusModMeta]] = {}
 _META_CACHE_MAX = 8192
 
 
+def _mo2_installed_file_id(cp: configparser.ConfigParser, mod_id: int) -> int:
+    """The Nexus file id MO2 recorded for *mod_id*, or 0.
+
+    MO2 keeps installed files in ``[installedFiles]`` (``1\\modid``,
+    ``1\\fileid``, ...) rather than a ``[General]`` ``fileid``, so without this
+    every MO2-imported mod looks file-less and the update check falls back to
+    comparing the mod page's version - which authors often leave stale.
+    """
+    if not cp.has_section("installedFiles"):
+        return 0
+    section = cp["installedFiles"]
+    for key, value in section.items():
+        index, _, field = key.partition("\\")
+        if field != "fileid" or not index.isdigit():
+            continue
+        owner = (section.get(f"{index}\\modid") or "").strip()
+        if mod_id and owner and owner != str(mod_id):
+            continue
+        try:
+            file_id = int(value)
+        except ValueError:
+            continue
+        if file_id > 0:
+            return file_id
+    return 0
+
+
 def read_meta(meta_ini_path: Path) -> NexusModMeta:
     """
     Parse a ``meta.ini`` file and return a :class:`NexusModMeta`.
@@ -247,6 +274,9 @@ def read_meta(meta_ini_path: Path) -> NexusModMeta:
                 setattr(meta, attr, raw.lower() in ("true", "1", "yes"))
             else:
                 setattr(meta, attr, raw)
+
+    if meta.file_id <= 0:
+        meta.file_id = _mo2_installed_file_id(cp, meta.mod_id)
 
     meta.previous_version = read_previous_version(cp)
 

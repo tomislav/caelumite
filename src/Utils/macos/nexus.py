@@ -38,6 +38,34 @@ def personal_key_allowed() -> bool:
     return _dev_flag(PERSONAL_KEY_FLAG, PERSONAL_KEY_ENV)
 
 
+def keychain_usable() -> bool:
+    """Keyring probe for macOS: keyring's Keychain backend is active.
+    (Upstream's probe asks DBus for the Linux Secret Service, which a Mac
+    never has, so every credential would go to the file fallback.)"""
+    try:
+        import keyring
+        from keyring.backends import macOS
+        return isinstance(keyring.get_keyring(), macOS.Keyring)
+    except Exception:
+        return False
+
+
+def _move_file_key_to_keychain() -> str:
+    """One-time move of a personal key saved by the file fallback (used
+    before the Keychain probe existed) into the Keychain. That file's
+    encryption key comes from /etc/machine-id, which macOS doesn't have, so
+    it is only obfuscated. Returns the key, or ""."""
+    from Nexus import nexus_api
+    if not nexus_api._keyring_ok():
+        return ""
+    key = nexus_api._load_key_file()
+    if key:
+        nexus_api.save_api_key(key)
+        if nexus_api.load_api_key() == key:
+            nexus_api._clear_key_file()
+    return key
+
+
 def load_saved_api() -> dict:
     """Worker-safe replacement for upstream's saved-login load while
     Caelumite is unregistered: the personal key in testing setups, else none
@@ -46,7 +74,7 @@ def load_saved_api() -> dict:
     if not personal_key_allowed():
         return result
     from Nexus.nexus_api import NexusAPI, load_api_key
-    key = load_api_key()
+    key = load_api_key() or _move_file_key_to_keychain()
     if key:
         result["api"] = NexusAPI(key)
     return result

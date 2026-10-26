@@ -170,6 +170,14 @@ _SOCKET_PATH = _resolve_socket_path()
 # _SOCKET_PATH so that a sender which lost XDG_RUNTIME_DIR can still reach us.
 _FALLBACK_SOCKET_PATH = Path(f"/tmp/amethyst-mod-manager-{os.getuid()}.sock")
 
+if sys.platform == "darwin":
+    # Caelumite: one socket in the per-user temp folder - no XDG runtime dir,
+    # Flatpak or install variants to meet across on macOS.
+    from Utils.macos.app import ipc_socket_path as _mac_socket_path
+    _SOCKET_PATH = _FALLBACK_SOCKET_PATH = _mac_socket_path()
+    _resolve_socket_path = _home_socket_path = lambda: _SOCKET_PATH
+    _candidate_socket_paths = lambda: [_SOCKET_PATH]
+
 # XDG .desktop file name used to register the handler
 _DESKTOP_FILE_NAME = "amethystmodmanager-nxm.desktop"
 

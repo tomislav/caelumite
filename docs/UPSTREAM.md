@@ -61,9 +61,10 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/processes/game.py` | running-game tracking via `sysctl(KERN_PROCARGS2)` instead of `/proc/*/environ` |
 | `gui_qt/i18n.py` | installs the rename translator |
 | `gui_qt/shortcuts.py` | Install Mod defaults to Cmd+I so Cmd+M can minimize |
-| `Nexus/nxm_handler.py` | `NxmHandler` registration via LaunchServices (`Utils/macos/urls.py`) |
+| `Nexus/nxm_handler.py` | `NxmHandler` registration via LaunchServices (`Utils/macos/urls.py`); the single-instance socket is in the per-user temp folder, not XDG/Flatpak/`~/.local/share` paths |
+| `Thunderstore/ror2mm_handler.py` | `ror2mm://` and `modl://` registration via LaunchServices, only when no other app handles them |
 | `Nexus/nexus_api.py` | requests identify as Caelumite; Caelumite's own keyring entry ([NEXUS.md](NEXUS.md)) |
-| `Nexus/nexus_oauth.py` | Caelumite's own OAuth client, empty (OAuth off) until Nexus registers it |
+| `Nexus/nexus_oauth.py` | Caelumite's own OAuth client, empty (OAuth off) until Nexus registers it; the keyring probe checks for the macOS Keychain instead of DBus |
 | `Utils/mods/install.py` | the install worker's Nexus lookup ignores saved upstream OAuth logins |
 | `gui_qt/nexus_mod_detail_view.py` | image requests identify as Caelumite |
 | `wizards_qt/__init__.py` | wizards in `Utils/macos/wizard.py` `MACOS_UNSUPPORTED` join `EXCLUDED` (Linux-native tools, Proton-only texture conversion, Synthesis, ReShade) |

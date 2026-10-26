@@ -84,6 +84,14 @@ cat > "$APP/Contents/Info.plist" <<EOF
             <key>CFBundleURLName</key><string>Nexus Mods download link</string>
             <key>CFBundleURLSchemes</key><array><string>nxm</string></array>
         </dict>
+        <dict>
+            <key>CFBundleURLName</key><string>Thunderstore install link</string>
+            <key>CFBundleURLSchemes</key><array><string>ror2mm</string></array>
+        </dict>
+        <dict>
+            <key>CFBundleURLName</key><string>MODL download link</string>
+            <key>CFBundleURLSchemes</key><array><string>modl</string></array>
+        </dict>
     </array>
 </dict>
 </plist>

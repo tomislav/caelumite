@@ -66,7 +66,9 @@ scripts/build-app.sh
 `build/Caelumite.app` runs this checkout, so code changes need no rebuild;
 rebuild after `scripts/setup-macos.sh` or a Homebrew Python upgrade. You can
 drag it into `/Applications`. `./caelumite` uses it when it exists. On start,
-Caelumite makes itself the default `nxm://` handler.
+Caelumite makes itself the default `nxm://` handler, and the handler for
+Thunderstore `ror2mm://` and `modl://` links unless another app already
+handles them.
 
 ## Nexus Mods
 

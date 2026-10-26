@@ -9,6 +9,7 @@ at the few places a user actually sees it (window title, About, bundle).
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 APP_NAME = "Caelumite"
@@ -33,3 +34,15 @@ def config_dir() -> Path:
 def logs_dir() -> Path:
     """~/Library/Logs/Caelumite (not created here)."""
     return Path.home() / "Library" / "Logs" / APP_NAME
+
+
+def ipc_socket_path() -> Path:
+    """The single-instance socket, in the per-user temp folder launchd gives
+    every process of this user (confstr _CS_DARWIN_USER_TEMP_DIR, so it does
+    not depend on the caller's TMPDIR) - the macOS counterpart of
+    $XDG_RUNTIME_DIR. Short enough for the 104-byte socket path limit."""
+    try:
+        base = os.confstr(65537)  # _CS_DARWIN_USER_TEMP_DIR
+    except (OSError, ValueError):
+        base = None
+    return Path(base or f"/tmp/caelumite-{os.getuid()}") / "caelumite.sock"

@@ -9,8 +9,11 @@ link in argv as on Linux. On a cold start the event can arrive before the
 main window exists, so links are queued until :func:`attach` hands over the
 window; they then go through the same signals upstream's link IPC uses.
 
-Upstream's ``NxmHandler`` (``.desktop`` files and xdg-mime) is mapped onto
-LaunchServices: registering makes this bundle the default nxm handler.
+Upstream's ``NxmHandler``, ``Ror2mmHandler`` and ``ModlHandler`` (``.desktop``
+files and xdg-mime) are mapped onto LaunchServices: registering makes this
+bundle the default handler. nxm is always claimed; Thunderstore's ror2mm and
+the generic modl are only taken when no other app handles them (r2modman, for
+one, also handles ror2mm).
 """
 
 from __future__ import annotations
@@ -21,7 +24,12 @@ from PySide6.QtCore import QEvent, QObject, QTimer
 
 from Utils.macos.app import BUNDLE_ID
 
-SCHEMES = ("nxm",)
+SCHEMES = ("nxm", "ror2mm", "modl")
+# Schemes Caelumite takes even from another default handler.
+_CLAIMED = ("nxm",)
+# The main window signal each scheme's links go to (as upstream's link IPC).
+_SIGNALS = {"nxm": "_nxm_received", "ror2mm": "_ror2mm_received",
+            "modl": "_modl_received"}
 
 _CF = ctypes.cdll.LoadLibrary(
     "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation")
@@ -77,6 +85,17 @@ def is_default(scheme: str = "nxm") -> bool:
     return bool(handler) and handler.lower() == BUNDLE_ID.lower()
 
 
+def taken_by_other(scheme: str) -> bool:
+    """Another app is the default handler of an unclaimed *scheme*."""
+    handler = default_handler(scheme)
+    return (scheme not in _CLAIMED and bool(handler)
+            and handler.lower() != BUNDLE_ID.lower())
+
+
+def registration_is_current(scheme: str = "nxm") -> bool:
+    return is_default(scheme) or taken_by_other(scheme)
+
+
 def register_default(scheme: str = "nxm") -> bool:
     """Make Caelumite the default *scheme* handler. Only possible from the
     app bundle - LaunchServices needs the bundle that declares the scheme."""
@@ -87,6 +106,9 @@ def register_default(scheme: str = "nxm") -> bool:
         return False
     if is_default(scheme):
         return True
+    if taken_by_other(scheme):
+        nxm_log(f"{scheme}:// left with {default_handler(scheme)}")
+        return False
     s, b = _cf(scheme), _cf(BUNDLE_ID)
     try:
         status = _CS.LSSetDefaultHandlerForURLScheme(s, b)
@@ -120,8 +142,13 @@ class _LinkFilter(QObject):
         if self.window is None:
             self.pending.append(url)
         else:
-            self.window._nxm_received.emit(url)
+            _deliver(self.window, url)
         return True
+
+
+def _deliver(window, url: str) -> None:
+    scheme = url.split(":", 1)[0].lower()
+    getattr(window, _SIGNALS[scheme]).emit(url)
 
 
 _filter: _LinkFilter | None = None
@@ -142,4 +169,4 @@ def attach(window) -> None:
     _filter.window = window
     pending, _filter.pending = _filter.pending, []
     for url in pending:
-        QTimer.singleShot(500, lambda u=url: window._nxm_received.emit(u))
+        QTimer.singleShot(500, lambda u=url: _deliver(window, u))

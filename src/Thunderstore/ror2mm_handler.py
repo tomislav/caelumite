@@ -422,3 +422,14 @@ class Ror2mmHandler:
                     == cls._DESKTOP_FILE_NAME)
         except (OSError, subprocess.SubprocessError):
             return False
+
+
+if sys.platform == "darwin":
+    # Caelumite: LaunchServices instead of .desktop files and xdg-mime; also
+    # covers ModlHandler. Another app's ror2mm/modl handler is left alone.
+    from Utils.macos import urls as _mac_urls
+
+    Ror2mmHandler.register = classmethod(
+        lambda cls: _mac_urls.register_default(cls._SCHEME))
+    Ror2mmHandler.registration_is_current = classmethod(
+        lambda cls: _mac_urls.registration_is_current(cls._SCHEME))

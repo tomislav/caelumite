@@ -96,6 +96,11 @@ def _check_keyring() -> None:
         _keyring_available = False
         app_log("OAuth: no keyring backend available - using file-based token storage")
 
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: the macOS Keychain, not the DBus Secret Service.
+    from Utils.macos.nexus import keychain_usable as _probe_keyring
+
 _check_keyring()
 
 # ---------------------------------------------------------------------------

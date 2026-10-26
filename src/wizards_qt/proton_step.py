@@ -15,6 +15,7 @@ the choices are saved.
 
 from __future__ import annotations
 
+import sys
 import threading
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -322,6 +323,10 @@ class ProtonStepWidget(QWidget):
             and (self._current_prefix_mode() == PREFIX_MODE_GAME
                  or not self._selected_is_custom()
                  or load_custom_proton_warning_ack()))
+        if sys.platform == "darwin":
+            # Caelumite: tools run in the game's CrossOver bottle.
+            from Utils.macos.wizard import adapt_proton_step
+            adapt_proton_step(self)
 
     def showEvent(self, event):  # noqa: N802 (Qt override)
         super().showEvent(event)

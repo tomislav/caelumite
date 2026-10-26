@@ -36,13 +36,21 @@ _EXACT = {
     "Proton prefix": "CrossOver bottle",
     "{0} prefix": "{0} in CrossOver",
     "Found via Steam compatdata.": "Found in the game's CrossOver bottle.",
+    # Wizard "Choose Proton Version" step (see Utils.macos.wizard).
+    "Using the game's existing prefix - Proton version follows the game's "
+    "Steam setting and no new prefix is created.":
+        "Nothing new is created - the tool shares the game's bottle.",
+    "e.g. PROTON_USE_WINED3D=1 WINEDLLOVERRIDES=dinput8=n,b":
+        "e.g. WINEDLLOVERRIDES=dinput8=n,b",
     "Run an .exe in this prefix\u2026": "Run an .exe in this bottle\u2026",
     "Auto detects Steam/Heroic/Lutris/Faugus/Bottles ownership. Force a specific "
     "launcher, or None to always launch the exe directly via Proton.":
         "Auto launches through Steam in the game's CrossOver bottle. None always "
         "runs the exe directly in the bottle.",
 }
-_SUBSTRINGS: tuple[tuple[str, str], ...] = ()
+_SUBSTRINGS: tuple[tuple[str, str], ...] = (
+    ("Choose Proton Version", "CrossOver Bottle"),
+)
 
 
 def rebrand(text: str) -> str:

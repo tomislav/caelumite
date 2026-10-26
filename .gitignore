@@ -28,3 +28,5 @@ src/appimage/dist/
 /assets
 result
 /build/
+# Caelumite: Superpowers plans and specs stay local
+/docs/superpowers/

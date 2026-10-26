@@ -35,6 +35,8 @@ _HIDE_TEXT = re.compile(
     r"|Swap launcher with script extender.*"
     # Settings > "Hide buttons" entry; the button is always hidden on macOS.
     r"|Wabbajack"
+    # Upstream's translation project.
+    r"|Translate on Crowdin"
     # Proton winetricks installers - CrossOver installs these itself.
     r"|Install Windows component.*"
     r"|Install VC\+\+ Redistributable"

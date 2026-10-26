@@ -11,6 +11,7 @@ identical across both front-ends.
 from __future__ import annotations
 
 import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -210,6 +211,12 @@ def resolve_proton_env(game, log_fn: LogFn = _noop, *, allow_fallback: bool = Tr
             log_fn("Proton Tools: the selected prefix is unavailable.")
             return None, None
         return game.proton_script, game.env.copy()
+
+    if sys.platform == "darwin":
+        # Caelumite: the game's CrossOver bottle and its wine wrapper.
+        from Utils.macos.launch import tool_prefix_env
+        result = tool_prefix_env(None, game, log_fn)
+        return (result[0], result[2]) if result is not None else (None, None)
 
     from Utils.launchers.steam import (
         find_any_installed_proton,

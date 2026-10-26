@@ -22836,6 +22836,12 @@ class MainWindow(QMainWindow):
             ],
         )
         self._play_exe_selector.setFixedHeight(self._BTN_H)
+        if sys.platform == "darwin":
+            # Caelumite: "Starfield (SFSE)" instead of sfse_loader.exe.
+            from Utils.macos.launch import play_label
+            self._play_exe_selector._display_fn = (
+                lambda label: play_label(
+                    getattr(getattr(self, "_gs", None), "game", None), label))
         self._play_exe_selector.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         h.addWidget(self._play_exe_selector, 1)
         self._play_exe_paths: dict[str, Path] = {}

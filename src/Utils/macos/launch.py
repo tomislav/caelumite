@@ -209,6 +209,18 @@ def script_extender_name(game) -> str:
     return getattr(game, "_script_extender_exe", "") or ""
 
 
+def play_label(game, label: str) -> str:
+    """Text shown for a play-bar entry: the script extender loader reads
+    "Starfield (SFSE)" (from ``sfse_loader.exe``; SKSE64, F4SE, ... alike).
+    The entry's label itself stays the exe name, which keys its saved
+    selection and settings."""
+    se = script_extender_name(game) if game is not None else ""
+    if se and label.lower() == se.lower():
+        short = Path(se).stem.lower().removesuffix("_loader").upper()
+        return f"{game.name} ({short})"
+    return label
+
+
 def play_menu(game, items: list[str], saved: str | None) -> tuple[list[str], str]:
     """Order and default of the play-bar dropdown on macOS.
 

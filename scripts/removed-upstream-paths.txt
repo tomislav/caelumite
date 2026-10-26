@@ -1,0 +1,13 @@
+# Upstream paths that Caelumite (macOS-only) does not ship.
+# One git pathspec per line; scripts/sync-upstream.sh removes these again
+# after every merge from upstream, including files upstream adds later.
+:(glob).github/**
+:(glob)flatpak/**
+:(glob)nix/**
+:(glob)src/appimage/**
+:(glob)**/meson.build
+flake.nix
+flake.lock
+amethyst-mod-manager
+amethyst-mod-manager-cli
+src/run_qt.sh

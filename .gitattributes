@@ -4,3 +4,4 @@ src/icons/Logo.png merge=ours
 README.md merge=ours
 src/version.py merge=ours
 Changelog.txt merge=ours
+AGENTS.md merge=ours

@@ -88,7 +88,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `gui_qt/nexus_mod_detail_view.py` | image requests identify as Caelumite |
 | `wizards_qt/__init__.py` | wizards in `Utils/macos/wizard.py` `MACOS_UNSUPPORTED` join `EXCLUDED` (Linux-native tools, Proton-only texture conversion, Synthesis, ReShade) |
 | `Utils/wine/protontricks.py` | `build_proton_env_for_game` → bottle (dtkit-patch and other prefix installers) |
-| `Utils/ui/config.py` | the Wabbajack top-bar button is always hidden; the Endorse button and update check are off |
+| `Utils/ui/config.py` | the Wabbajack top-bar button is always hidden; the Endorse button is off; the mod list defaults to MO2's order |
 | `gui_qt/settings_view.py` | no "Hide Ko-Fi button" setting (a hook appended at the end skips that checkbox) |
 | `Utils/bethesda/xedit.py` | the xEdit Windows XP flag goes through `reg import` (`Utils/macos/registry.py`) |
 | `Utils/github/cache.py`, `Utils/sharing/paste.py`, `Thunderstore/thunderstore_download.py`, `Utils/downloads/modl.py`, `LOOT/loot_sorter.py`, `Games/Baldur's Gate 3/modio_api.py`, `Games/Baldur's Gate 3/bg3le_runtime.py` | User-Agent `Caelumite/<version>` |
@@ -103,7 +103,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |
 
 **Replaced files:** `src/icons/Logo.png` (from `scripts/make_icon.py`),
-`README.md` and `Changelog.txt`.
+`README.md`, `Changelog.txt`, `src/version.py` and `AGENTS.md`.
 
 ## Editing upstream files
 

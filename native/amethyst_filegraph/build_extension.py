@@ -26,7 +26,8 @@ def main() -> int:
         check=True,
         env=environment,
     )
-    source = target / "release" / "libamethyst_filegraph.so"
+    suffix = "dylib" if sys.platform == "darwin" else "so"
+    source = target / "release" / f"libamethyst_filegraph.{suffix}"
     if not source.is_file():
         raise SystemExit(f"cargo did not produce {source}")
     output_path.parent.mkdir(parents=True, exist_ok=True)

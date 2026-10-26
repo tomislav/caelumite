@@ -433,7 +433,10 @@ class OblivionRemastered(UE5Game):
             return None
         return game_path / _PLUGINS_TXT_GAME_REL
 
-    def _symlink_plugins_txt(self, profile: str, log_fn) -> None:
+    def _symlink_plugins_txt(self, profile: str, log_fn,
+                             prefix_root: "Path | None" = None) -> None:
+        # Plugins.txt lives in the game folder, not the prefix, so a tool
+        # prefix (prefix_root) needs nothing extra.
         _log = log_fn
         target = self._plugins_txt_target()
         if target is None:

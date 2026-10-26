@@ -172,17 +172,19 @@ class Starfield(BethesdaBase):
     def _script_extender_exe(self) -> str:
         return "sfse_loader.exe"
 
-    def _plugins_txt_target(self) -> Path | None:
-        if self._prefix_path is None:
+    def _plugins_txt_target(self, prefix_root: "Path | None" = None) -> Path | None:
+        root = prefix_root if prefix_root is not None else self._prefix_path
+        if root is None:
             return None
-        return self._prefix_path / self._APPDATA_SUBPATH / self.plugins_txt_filename
+        return root / self._APPDATA_SUBPATH / self.plugins_txt_filename
 
-    def _symlink_plugins_txt(self, profile: str, log_fn) -> None:
+    def _symlink_plugins_txt(self, profile: str, log_fn,
+                             prefix_root: "Path | None" = None) -> None:
         from Utils.plugins.parser import is_blueprint_flagged
         from Utils.plugins import read_plugins
 
         _log = log_fn
-        target = self._plugins_txt_target()
+        target = self._plugins_txt_target(prefix_root)
         if target is None:
             _log("  WARN: Prefix path not set - skipping Plugins.txt write.")
             return

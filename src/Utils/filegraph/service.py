@@ -697,6 +697,7 @@ class ProfileSession:
             operation_hint["mods"] = sorted(
                 affected if hint_kind == "blacklist" else affected | hinted)
             missing_manifests: list[str] = []
+            missing_keys: set[str] = set()
             if affected:
                 names = {
                     key: name for name, key, _variant in wanted if key in affected
@@ -712,6 +713,7 @@ class ProfileSession:
                             mod_name)
                         if catalog_manifest is None:
                             missing_manifests.append(mod_name)
+                            missing_keys.add(mod_key)
                             continue
                         yield self.adapter.build_manifest(
                             mod_name, cancel=cancel,
@@ -721,7 +723,10 @@ class ProfileSession:
                     affected_batches(), cancel=cancel)
             variants = self.library.variant_keys()
             for mod_name, mod_key, variant_key in wanted:
-                if variant_key in variants.get(mod_key, frozenset()):
+                # A mod the loop above already found without a manifest is
+                # listed once, not looked up and counted again.
+                if (mod_key in missing_keys
+                        or variant_key in variants.get(mod_key, frozenset())):
                     continue
                 if cancel.is_cancelled():
                     raise FileGraphCancelled("filegraph variant derivation cancelled")

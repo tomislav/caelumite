@@ -24,7 +24,7 @@ git merge --no-ff --no-commit "$REF" || true
 
 # `git rm` also resolves a modify/delete conflict as "deleted".
 grep -v '^#' "$LIST" | grep -v '^$' | tr '\n' '\0' |
-    xargs -0 git rm -r -q --ignore-unmatch -- >/dev/null
+    xargs -0 git rm -r -q -f --ignore-unmatch -- >/dev/null
 
 CONFLICTS="$(git diff --name-only --diff-filter=U)"
 if [ -n "$CONFLICTS" ]; then

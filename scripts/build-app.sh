@@ -78,6 +78,13 @@ cat > "$APP/Contents/Info.plist" <<EOF
     <key>LSApplicationCategoryType</key><string>public.app-category.games</string>
     <key>NSHighResolutionCapable</key><true/>
     <key>NSPrincipalClass</key><string>NSApplication</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key><string>Nexus Mods download link</string>
+            <key>CFBundleURLSchemes</key><array><string>nxm</string></array>
+        </dict>
+    </array>
 </dict>
 </plist>
 EOF
@@ -87,6 +94,10 @@ EOF
 # the checkout, which a bundle signature can't cover, and a locally built app
 # carries no quarantine flag that would ask for one.
 codesign --force --sign - "$APP/Contents/MacOS/caelumite-python"
+
+# Tell LaunchServices about the bundle (and its nxm:// scheme). Caelumite
+# makes itself the default nxm handler when it starts.
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$APP"
 
 echo "Built $APP"
 echo "Start it with: open \"$APP\"   (or drag it into /Applications)"

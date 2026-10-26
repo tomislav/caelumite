@@ -23894,6 +23894,11 @@ class MainWindow(QMainWindow):
 
     def _open_github(self):
         from Utils.environment.xdg import open_url
+        if sys.platform == "darwin":
+            # Caelumite: its own repository.
+            from Utils.macos.app import REPO_URL
+            open_url(REPO_URL)
+            return
         open_url("https://github.com/ChrisDKN/Amethyst-Mod-Manager")
 
     def _open_kofi(self):

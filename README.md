@@ -42,6 +42,10 @@ Config lives in `~/Library/Application Support/Caelumite`.
 ## Running from source
 
 ```bash
+git clone https://github.com/tomislav/caelumite
+```
+
+```bash
 scripts/setup-macos.sh
 ```
 
@@ -51,6 +55,18 @@ scripts/setup-macos.sh
 
 The setup script creates `.venv`, installs the Python dependencies and builds
 the two native extensions (the deployment catalog and libloot) into `src/`.
+
+To get the Caelumite name and icon in the menu bar, Dock and app switcher,
+and to open Nexus "Mod Manager Download" links, build the app bundle:
+
+```bash
+scripts/build-app.sh
+```
+
+`build/Caelumite.app` runs this checkout, so code changes need no rebuild;
+rebuild after `scripts/setup-macos.sh` or a Homebrew Python upgrade. You can
+drag it into `/Applications`. `./caelumite` uses it when it exists. On start,
+Caelumite makes itself the default `nxm://` handler.
 
 ## Not supported on macOS (yet)
 
@@ -66,8 +82,6 @@ the two native extensions (the deployment catalog and libloot) into `src/`.
   wizard still works once BodySlide is installed as a mod), TTW, BSA
   Decompressor, ESM Fixes, me3, Regulation Merge, YeetPatch, VRAMr,
   BENDr, ParallaxR and Synthesis. See `src/Utils/macos/wizard.py`.
-- Opening `nxm://` links from the Nexus website needs an app bundle, which
-  is not built yet.
 
 ## Keeping up with upstream
 

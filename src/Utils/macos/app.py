@@ -15,6 +15,7 @@ APP_NAME = "Caelumite"
 BUNDLE_ID = "io.github.caelumite"
 UPSTREAM_NAME = "Amethyst Mod Manager"
 UPSTREAM_URL = "https://github.com/ChrisDKN/Amethyst-Mod-Manager"
+REPO_URL = "https://github.com/tomislav/caelumite"
 
 
 def config_dir() -> Path:

@@ -20,7 +20,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtWidgets import QApplication, QMenuBar, QMessageBox
 
-from Utils.macos.app import APP_NAME, UPSTREAM_NAME, UPSTREAM_URL
+from Utils.macos.app import APP_NAME, REPO_URL, UPSTREAM_NAME, UPSTREAM_URL
 
 
 def _focused(method: str):
@@ -54,12 +54,18 @@ def _call(window, name: str):
     return run
 
 
+def _open(url: str) -> None:
+    from Utils.environment.xdg import open_url
+    open_url(url)
+
+
 def _about(window) -> None:
     from version import __version__
     QMessageBox.about(
         window, f"About {APP_NAME}",
         f"<h3>{APP_NAME} {__version__}</h3>"
         f"<p>A mod manager for Windows games running in CrossOver on macOS.</p>"
+        f"<p><a href='{REPO_URL}'>{REPO_URL.removeprefix('https://')}</a></p>"
         f"<p>{APP_NAME} is a fork of <a href='{UPSTREAM_URL}'>{UPSTREAM_NAME}</a> "
         f"by ChrisDKN, which provides nearly all of its mod management.</p>"
         f"<p>Licensed under the GNU General Public License v3.</p>")
@@ -103,8 +109,14 @@ def install(window) -> QMenuBar:
             lambda: (window.raise_(), window.activateWindow()))
 
     help_menu = bar.addMenu("Help")
-    _action(help_menu, f"{UPSTREAM_NAME} Wiki", _call(window, "_open_wiki_tab"))
-    _action(help_menu, "Changelog", _call(window, "_open_changelog_tab"))
+    _action(help_menu, f"{APP_NAME} on GitHub", lambda: _open(REPO_URL))
+    _action(help_menu, "Report an Issue…", lambda: _open(f"{REPO_URL}/issues"))
     help_menu.addSeparator()
-    _action(help_menu, f"{UPSTREAM_NAME} on GitHub", _call(window, "_open_github"))
+    _action(help_menu, f"{UPSTREAM_NAME} Wiki", _call(window, "_open_wiki_tab"))
+    _action(help_menu, f"{UPSTREAM_NAME} Changelog", _call(window, "_open_changelog_tab"))
+    _action(help_menu, f"{UPSTREAM_NAME} on GitHub", lambda: _open(UPSTREAM_URL))
+
+    # nxm:// links that arrived while the window was being built.
+    from Utils.macos import urls
+    urls.attach(window)
     return bar

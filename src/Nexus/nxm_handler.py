@@ -1283,3 +1283,16 @@ class NxmIPC:
                         path.unlink(missing_ok=True)
                     except OSError:
                         pass
+
+
+if sys.platform == "darwin":
+    # Caelumite: LaunchServices instead of .desktop files and xdg-mime.
+    from Utils.macos import urls as _mac_urls
+
+    NxmHandler.register = classmethod(lambda cls: _mac_urls.register_default("nxm"))
+    NxmHandler.is_registered = classmethod(lambda cls: _mac_urls.is_default("nxm"))
+    NxmHandler.registration_is_current = classmethod(
+        lambda cls: _mac_urls.is_default("nxm"))
+    # LaunchServices has no "unregister"; another app claiming nxm takes over.
+    NxmHandler.unregister = classmethod(lambda cls: None)
+    NxmHandler.repair_portal_handler = classmethod(lambda cls: None)

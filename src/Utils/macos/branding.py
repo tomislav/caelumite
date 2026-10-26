@@ -101,7 +101,8 @@ def apply_identity(app) -> None:
     """Application name for the menu bar and About on macOS, and the filter
     that hides Linux-only controls. The window icon comes from
     icons/Logo.png, which Caelumite replaces (scripts/make_icon.py)."""
-    from Utils.macos import ui_prune
+    from Utils.macos import ui_prune, urls
 
     app.setApplicationName(APP_NAME)
     ui_prune.install(app)
+    urls.install(app)

@@ -59,11 +59,13 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/processes/instances.py` | `ps`/`kill` instead of `/proc` |
 | `Utils/processes/game.py` | running-game tracking via `sysctl(KERN_PROCARGS2)` instead of `/proc/*/environ` |
 | `gui_qt/i18n.py` | installs the rename translator |
+| `gui_qt/shortcuts.py` | Install Mod defaults to Cmd+I so Cmd+M can minimize |
+| `Nexus/nxm_handler.py` | `NxmHandler` registration via LaunchServices (`Utils/macos/urls.py`) |
 | `wizards_qt/__init__.py` | wizards in `Utils/macos/wizard.py` `MACOS_UNSUPPORTED` join `EXCLUDED` (Linux-native tools, Proton-only texture conversion, Synthesis, ReShade) |
 | `Utils/wine/protontricks.py` | `build_proton_env_for_game` → bottle (dtkit-patch and other prefix installers) |
 | `Utils/ui/config.py` | the Wabbajack top-bar button is always hidden |
 | `wizards_qt/proton_step.py` | the wizard "Choose Proton Version" step shows the game's bottle instead (`Utils/macos/wizard.py`) |
-| `gui_qt/app.py` | app name and UI filter |
+| `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository |
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |
 
 **Replaced files:** `src/icons/Logo.png` (from `scripts/make_icon.py`) and

@@ -771,11 +771,13 @@ class SettingsView(ConnectionsSettingsMixin, OverlayBase):
         self._finish_section(g)
 
         g = self._section(self.tr("Status bar"))
-        self._checkbox(
-            g, self.tr("Hide Ko-Fi button"),
-            uc.load_hide_kofi_button, uc.save_hide_kofi_button,
-            help=self.tr("Hide the Ko-Fi donation button in the status bar."),
-            on_changed=lambda _v: self._apply_support_buttons())
+        import sys
+        if sys.platform != "darwin":  # Caelumite: no Ko-Fi button
+            self._checkbox(
+                g, self.tr("Hide Ko-Fi button"),
+                uc.load_hide_kofi_button, uc.save_hide_kofi_button,
+                help=self.tr("Hide the Ko-Fi donation button in the status bar."),
+                on_changed=lambda _v: self._apply_support_buttons())
 
         self._checkbox(
             g, self.tr("Hide Endorse button"),

@@ -26,7 +26,7 @@ _RENAMES = (
     (re.compile(r"\bAmethyst\b(?![-_.])"), APP_NAME),
 )
 
-# Source strings that refer to upstream on purpose.
+# Source strings that refer to upstream on purpose (unless _EXACT maps them).
 _KEEP = re.compile(r"Endorse|Ko-?fi|upstream|ChrisDKN", re.IGNORECASE)
 
 # Whole strings that describe the Linux runtime; on macOS the game's
@@ -43,6 +43,9 @@ _EXACT = {
     "e.g. PROTON_USE_WINED3D=1 WINEDLLOVERRIDES=dinput8=n,b":
         "e.g. WINEDLLOVERRIDES=dinput8=n,b",
     "Run an .exe in this prefix\u2026": "Run an .exe in this bottle\u2026",
+    # Theme editor: Caelumite has no Ko-Fi button.
+    "Special-purpose accent buttons such as Ko-Fi.": "Special-purpose accent buttons.",
+    "Accent buttons like Ko-Fi.": "Accent buttons.",
     "Auto detects Steam/Heroic/Lutris/Faugus/Bottles ownership. Force a specific "
     "launcher, or None to always launch the exe directly via Proton.":
         "Auto launches through Steam in the game's CrossOver bottle. None always "
@@ -54,10 +57,12 @@ _SUBSTRINGS: tuple[tuple[str, str], ...] = (
 
 
 def rebrand(text: str) -> str:
-    if not text or _KEEP.search(text):
+    if not text:
         return text
     if text in _EXACT:
         return _EXACT[text]
+    if _KEEP.search(text):
+        return text
     for old, new in _SUBSTRINGS:
         text = text.replace(old, new)
     for pattern, repl in _RENAMES:
@@ -111,8 +116,9 @@ def apply_identity(app) -> None:
     """Application name for the menu bar and About on macOS, and the filter
     that hides Linux-only controls. The window icon comes from
     icons/Logo.png, which Caelumite replaces (scripts/make_icon.py)."""
-    from Utils.macos import ui_prune, urls
+    from Utils.macos import titlebar, ui_prune, urls
 
     app.setApplicationName(APP_NAME)
     ui_prune.install(app)
     urls.install(app)
+    titlebar.install(app)

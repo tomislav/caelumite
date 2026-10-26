@@ -69,9 +69,10 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `gui_qt/nexus_mod_detail_view.py` | image requests identify as Caelumite |
 | `wizards_qt/__init__.py` | wizards in `Utils/macos/wizard.py` `MACOS_UNSUPPORTED` join `EXCLUDED` (Linux-native tools, Proton-only texture conversion, Synthesis, ReShade) |
 | `Utils/wine/protontricks.py` | `build_proton_env_for_game` → bottle (dtkit-patch and other prefix installers) |
-| `Utils/ui/config.py` | the Wabbajack top-bar button is always hidden |
+| `Utils/ui/config.py` | the Wabbajack top-bar button is always hidden; the Endorse button and update check are off |
+| `gui_qt/settings_view.py` | no "Hide Ko-Fi button" setting |
 | `wizards_qt/proton_step.py` | the wizard "Choose Proton Version" step shows the game's bottle instead (`Utils/macos/wizard.py`) |
-| `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; Nexus login goes through `Utils/macos/nexus.py` until Caelumite is registered |
+| `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; Nexus login goes through `Utils/macos/nexus.py` until Caelumite is registered; no Ko-Fi button |
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |
 
 **Replaced files:** `src/icons/Logo.png` (from `scripts/make_icon.py`) and

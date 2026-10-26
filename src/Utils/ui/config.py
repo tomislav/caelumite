@@ -2161,11 +2161,9 @@ if sys.platform == "darwin":
     def load_hidden_header_buttons() -> set[str]:
         return _upstream_load_hidden_header_buttons() | {"wabbajack"}
 
-    # Upstream's donation/endorse buttons don't apply to Caelumite, and the
-    # update check looks for upstream's Linux releases.
-    def load_hide_kofi_button() -> bool:
-        return True
-
+    # Upstream's endorse button doesn't apply to Caelumite (its Ko-Fi button
+    # isn't built at all), and the update check looks for upstream's Linux
+    # releases.
     def load_hide_endorse_button() -> bool:
         return True
 

@@ -11,7 +11,8 @@ info), so an import is a copy:
   * MO2's overwrite folder is cloned into Caelumite's, without replacing
     files already there;
   * the MO2 profile's load-order files replace the Caelumite profile's,
-    after a backup into <profile>/backups/.
+    after a backup into <profile>/backups/; separators are moved to the
+    front of their blocks, the order Caelumite reads them in.
 
 Mods whose folder name already exists in Caelumite are skipped (listed at
 the end). Close Caelumite before running it.
@@ -75,6 +76,36 @@ def merge_clone(src_dir: Path, dest_dir: Path) -> tuple[int, int]:
     return cloned, kept
 
 
+def caelumite_modlist(mo2_text: str) -> tuple[str, int]:
+    """MO2's modlist.txt converted to Caelumite's separator layout.
+
+    Both list the highest priority first, but MO2 writes a separator after
+    its mods (its view is ascending, so the separator lands above them) and
+    Caelumite reads a separator as heading the mods after it. Each separator
+    moves to the front of its block; mod order, and so priority, is
+    unchanged. MO2's ``*`` entries (DLC and other files it doesn't manage)
+    are dropped - they aren't mod folders. Returns (text, n) where n counts
+    mods below the last separator: ungrouped in MO2, they end up in the last
+    separator's block here, since moving them would change their priority.
+    """
+    out: list[str] = []
+    block: list[str] = []
+    for line in mo2_text.splitlines(keepends=True):
+        name = line.rstrip("\r\n")
+        if name.startswith("#") or not name.strip():
+            out.append(line)
+        elif name.startswith("*"):
+            continue
+        elif name[1:].endswith("_separator"):
+            out.append(line)
+            out.extend(block)
+            block = []
+        else:
+            block.append(line)
+    out.extend(block)
+    return "".join(out), len(block)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("instance", type=Path)
@@ -121,6 +152,14 @@ def main() -> int:
             shutil.copy2(profile_dst / name, backup / name)
         if (profile_src / name).is_file():
             shutil.copy2(profile_src / name, profile_dst / name)
+    modlist = profile_dst / "modlist.txt"
+    if (profile_src / "modlist.txt").is_file():
+        text, ungrouped = caelumite_modlist(
+            (profile_src / "modlist.txt").read_text(encoding="utf-8"))
+        modlist.write_text(text, encoding="utf-8", newline="")
+        if ungrouped:
+            print(f"  note: {ungrouped} mod(s) above MO2's first separator now "
+                  "sit in the last separator's block (same priority)")
     print(f"  profile '{a.profile}' now uses MO2 '{a.mo2_profile}' load order "
           f"(previous files backed up to {backup})")
 

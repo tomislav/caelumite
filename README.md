@@ -87,8 +87,10 @@ Caelumite uses MO2's mod-folder and load-order formats, so an MO2 instance
 
 Mods and the overwrite folder are copied as APFS clones (instant, almost no
 extra disk space, independent of MO2), and the MO2 profile's load order
-replaces the Caelumite profile's after a backup. MO2 itself isn't changed.
-Close Caelumite first.
+replaces the Caelumite profile's after a backup. Separators keep their mods:
+MO2 writes a separator after its mods in `modlist.txt` and Caelumite reads it
+before them, so the import moves each one. MO2 itself isn't changed. Close
+Caelumite first.
 
 ## Not supported on macOS (yet)
 

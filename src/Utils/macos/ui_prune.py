@@ -50,8 +50,8 @@ _HIDE_TEXT = re.compile(
     re.DOTALL,
 )
 _HIDE_PLACEHOLDER = re.compile(r"%command%")
-# Settings sections whose every option is upstream-only on macOS: the Ko-Fi and
-# Endorse toggles, and upstream's release update check.
+# Settings sections whose every option is upstream-only on macOS: the Endorse
+# toggle (the Ko-Fi one isn't built), and upstream's release update check.
 _HIDE_GROUP = re.compile(r"^(?:Status bar|Updates)$")
 
 # Launch-via modes that need a Linux launcher; macOS launches through the

@@ -23361,6 +23361,11 @@ class MainWindow(QMainWindow):
             self.tr("Ko-Fi"), _c(self._pal, "BTN_PURPLE"), compact=True)
         self._kofi_btn.clicked.connect(self._open_kofi)
         h.addWidget(self._kofi_btn)
+        if sys.platform == "darwin":
+            # Caelumite: no Ko-Fi button (upstream's donation link).
+            h.removeWidget(self._kofi_btn)
+            self._kofi_btn.deleteLater()
+            self._kofi_btn = None
 
         self._endorse_amm_btn = self._color_button(
             self.tr("♥ Endorse AMM"), _c(self._pal, "BTN_DANGER"), compact=True)

@@ -35,6 +35,7 @@ _EXACT = {
     "Proton": "CrossOver",
     "Proton prefix": "CrossOver bottle",
     "{0} prefix": "{0} in CrossOver",
+    "Found via Steam compatdata.": "Found in the game's CrossOver bottle.",
     "Run an .exe in this prefix\u2026": "Run an .exe in this bottle\u2026",
     "Auto detects Steam/Heroic/Lutris/Faugus/Bottles ownership. Force a specific "
     "launcher, or None to always launch the exe directly via Proton.":

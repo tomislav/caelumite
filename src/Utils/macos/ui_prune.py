@@ -84,8 +84,24 @@ class _PruneFilter(QObject):
             elif isinstance(obj, QComboBox):
                 _prune_combo(obj)
             elif isinstance(obj, QWidget) and _should_hide(obj):
-                obj.hide()
+                _row_of(obj).hide()
         return False
+
+
+def _row_of(widget: QWidget) -> QWidget:
+    """The widget to hide for *widget*: its row when it is the text of a
+    "bare checkbox + wrapping label" pair (upstream's option rows), else
+    itself - hiding only the label would leave an orphaned checkbox."""
+    parent = widget.parentWidget()
+    if not isinstance(widget, QLabel) or parent is None or parent.layout() is None:
+        return widget
+    siblings = [parent.layout().itemAt(i).widget()
+                for i in range(parent.layout().count())]
+    siblings = [w for w in siblings if w is not None and w is not widget]
+    if len(siblings) == 1 and isinstance(siblings[0], QAbstractButton) \
+            and not siblings[0].text():
+        return parent
+    return widget
 
 
 def install(app: QApplication) -> None:

@@ -13,6 +13,7 @@ from __future__ import annotations
 import json
 import os
 import shutil
+import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import wraps
@@ -359,6 +360,9 @@ class BaseGame(ABC):
         specific method. The configure menus only mark explicit choices as
         recommended.
         """
+        if sys.platform == "darwin":
+            # Caelumite: staging and CrossOver bottles share the home volume.
+            return "hardlink"
         return None
 
     @property

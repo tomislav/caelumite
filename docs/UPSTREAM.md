@@ -53,6 +53,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/wine/proton.py` | `resolve_proton_env` → bottle (winecfg, regedit, registry repair) |
 | `Utils/deployment/pipeline.py` | `steamuser` link before deploying |
 | `Utils/config_paths.py` | config dir and default staging root |
+| `Games/base_game.py` | Hardlink is the default deploy method (games that ask for Symlink keep it) |
 | `Utils/environment/xdg.py` | `open` instead of `xdg-open`; `~/Downloads` |
 | `Utils/processes/sleep.py` | `caffeinate` |
 | `Utils/processes/instances.py` | `ps`/`kill` instead of `/proc` |

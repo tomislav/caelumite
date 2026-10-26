@@ -101,6 +101,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/github/app_updates.py` | release URLs point at Caelumite |
 | `gui_qt/app.py` (app update check), `gui_qt/update_overlay.py` | updates come from Caelumite's GitHub releases: the newest one with a DMG, which the banner's "Download update" opens (`Utils/macos/updates.py`) |
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |
+| `Utils/diagnostics/system.py` | System Information shows the macOS version, run mode and installed CrossOver builds instead of the Linux distribution, libc, Flatpak/AppImage and desktop-session rows (`Utils/macos/diagnostics.py`) |
 
 **Replaced files:** `src/icons/Logo.png` (from `scripts/make_icon.py`),
 `README.md`, `Changelog.txt`, `src/version.py` and `AGENTS.md`.

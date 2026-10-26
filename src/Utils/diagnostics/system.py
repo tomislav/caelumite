@@ -264,7 +264,7 @@ def collect() -> list[tuple[str, str]]:
             return fallback
 
     runtime = list(qt_runtime_details().items())
-    return [
+    pairs = [
         ("App version", app_version()),
         ("OS", _safe(platform.platform)),
         ("Distribution", distribution()),
@@ -284,6 +284,11 @@ def collect() -> list[tuple[str, str]]:
         ("OpenGL", _safe(gl_status_text)),
         ("Env overrides", _safe(active_env_overrides, "None")),
     ]
+    if sys.platform == "darwin":
+        # Caelumite: macOS rows instead of the Linux desktop ones.
+        from Utils.macos.diagnostics import system_info
+        return system_info(pairs)
+    return pairs
 
 
 def log_lines() -> list[str]:

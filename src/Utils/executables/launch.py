@@ -352,6 +352,12 @@ def detect_framework_exes(game, framework_states: "dict | None" = None) -> list[
             continue
         if game_exe is not None and str(exe).lower() == str(game_exe).lower():
             continue
+        if (sys.platform == "darwin"
+                and getattr(game, "supports_script_extender_swap", False)
+                and exe.name.lower()
+                == (getattr(game, "_script_extender_exe", "") or "").lower()):
+            # Caelumite: Play itself starts the script extender loader.
+            continue
         if exe not in out:
             out.append(exe)
     return out

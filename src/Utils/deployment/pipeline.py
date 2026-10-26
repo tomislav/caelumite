@@ -1040,10 +1040,10 @@ def run_deploy_pipeline(
         if (sys.platform == "darwin"
                 and getattr(game, "supports_script_extender_swap", False)):
             # Caelumite: CrossOver applies its per-game fixes by exe name, so
-            # a game renamed to <Game>.bak crashes (Starfield). Play starts
-            # the script extender's loader directly instead.
-            log_fn("  Launcher swap skipped on macOS - Play starts the script "
-                   "extender loader directly.")
+            # a game renamed to <Game>.bak crashes (Starfield). The loader is
+            # its own play-bar entry instead (Utils/macos/launch.py).
+            log_fn("  Launcher swap skipped on macOS - the script extender is "
+                   "its own Play entry.")
         elif hasattr(game, "swap_launcher"):
             game.swap_launcher(log_fn)
 

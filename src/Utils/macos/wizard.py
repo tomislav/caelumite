@@ -41,3 +41,33 @@ def adapt_proton_step(step) -> None:
     note.setWordWrap(True)
     step.layout().insertWidget(1, note)
     step._update_proton_row_state()
+
+
+# Wizards that cannot work on macOS, keyed by WizardTool.dialog_class_path,
+# with the reason. They are dropped from the Wizard menu there (added to
+# wizards_qt.EXCLUDED). Everything else either runs its tool in the game's
+# CrossOver bottle or does its work in Python.
+MACOS_UNSUPPORTED: dict[str, str] = {
+    "wizards.reshade.ReShadeWizard":
+        "installs d3dcompiler_47 with Linux winetricks; ReShade can't hook "
+        "games rendering through CrossOver's D3DMetal",
+    "wizards.bodyslide_linux.BodySlideLinuxWizard":
+        "runs the Linux build of BodySlide",
+    "wizards.bodyslide_linux.OutfitStudioLinuxWizard":
+        "runs the Linux build of Outfit Studio",
+    "wizards.ttw.TTWInstallerWizard": "runs the native Linux MPI installer",
+    "wizards.bsa_decompressor.BSADecompressorWizard":
+        "runs the native Linux MPI installer",
+    "wizards.esm_fixes.ESMFixesWizard": "runs the native Linux MPI installer",
+    "wizards.me3_install.Me3InstallWizard": "installs the Linux build of me3",
+    "wizards.regulation_merge.RegulationMergeWizard":
+        "runs the linux-x64 build of WitchyBND",
+    "wizards_qt.yeetpatch_view.YeetPatchView": "runs the Linux build of YeetPatch",
+    "wizards.vramr.VRAMrWizard": "converts textures with texconv through Proton",
+    "wizards.bendr_parallaxr.BENDrWizard":
+        "converts textures with texconv through Proton",
+    "wizards.bendr_parallaxr.ParallaxRWizard":
+        "converts textures with texconv through Proton",
+    "wizards.bethesda_synthesis.SynthesisWizard":
+        "builds its own Proton prefix with .NET; it has no CrossOver path",
+}

@@ -60,6 +60,12 @@ the two native extensions (the deployment catalog and libloot) into `src/`.
   CrossOver's own "Install Software" instead.
 - Steam-style launch options (`%command%`), the Linux VFS deploy method,
   Wayland, LSFG and MangoHud.
+- Wabbajack (texture conversion and MPI installers need Proton), and the
+  wizards that run Linux-native tools or Proton-only texture conversion:
+  ReShade, BodySlide/Outfit Studio (Linux builds - the Windows BodySlide
+  wizard still works once BodySlide is installed as a mod), TTW, BSA
+  Decompressor, ESM Fixes, me3, Regulation Merge, YeetPatch, VRAMr,
+  BENDr, ParallaxR and Synthesis. See `src/Utils/macos/wizard.py`.
 - Opening `nxm://` links from the Nexus website needs an app bundle, which
   is not built yet.
 

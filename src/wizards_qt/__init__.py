@@ -24,6 +24,7 @@ full-width overlays in Tk).
 from __future__ import annotations
 
 from dataclasses import dataclass
+import sys
 from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
@@ -104,6 +105,10 @@ class QtWizardContext:
 EXCLUDED: frozenset[str] = frozenset({
     "wizards.bepinex.BepInExWizard",
 })
+if sys.platform == "darwin":
+    # Caelumite: drop wizards that need Linux-only tools.
+    from Utils.macos.wizard import MACOS_UNSUPPORTED
+    EXCLUDED = EXCLUDED | frozenset(MACOS_UNSUPPORTED)
 
 
 def _re_pak_restore(game, log_fn=None, on_close=None, ctx=None, **extra):

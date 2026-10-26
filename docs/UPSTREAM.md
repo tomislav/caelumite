@@ -59,6 +59,9 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/processes/instances.py` | `ps`/`kill` instead of `/proc` |
 | `Utils/processes/game.py` | running-game tracking via `sysctl(KERN_PROCARGS2)` instead of `/proc/*/environ` |
 | `gui_qt/i18n.py` | installs the rename translator |
+| `wizards_qt/__init__.py` | wizards in `Utils/macos/wizard.py` `MACOS_UNSUPPORTED` join `EXCLUDED` (Linux-native tools, Proton-only texture conversion, Synthesis, ReShade) |
+| `Utils/wine/protontricks.py` | `build_proton_env_for_game` → bottle (dtkit-patch and other prefix installers) |
+| `Utils/ui/config.py` | the Wabbajack top-bar button is always hidden |
 | `wizards_qt/proton_step.py` | the wizard "Choose Proton Version" step shows the game's bottle instead (`Utils/macos/wizard.py`) |
 | `gui_qt/app.py` | app name and UI filter |
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |

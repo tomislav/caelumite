@@ -10,6 +10,7 @@ import hashlib
 import io
 import json
 import os
+import sys
 import re
 import shutil
 import signal
@@ -792,6 +793,11 @@ def build_proton_env_for_game(game) -> "tuple[Path, dict] | tuple[None, None]":
     Proton install / prefix can be found. The env is suitable for
     ``python3 <proton_script> run <installer.exe> …``.
     """
+    if sys.platform == "darwin":
+        # Caelumite: the game's CrossOver bottle and its wine wrapper.
+        from Utils.macos.launch import tool_prefix_env
+        result = tool_prefix_env(None, game)
+        return (result[0], result[2]) if result is not None else (None, None)
     from Utils.launchers.steam import (
         find_any_installed_proton,
         find_proton_for_game,

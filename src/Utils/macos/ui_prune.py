@@ -33,6 +33,8 @@ _HIDE_TEXT = re.compile(
     # Launcher swap: CrossOver can't run a renamed game exe; Play starts
     # the script extender loader directly on macOS.
     r"|Swap launcher with script extender.*"
+    # Settings > "Hide buttons" entry; the button is always hidden on macOS.
+    r"|Wabbajack"
     # Proton winetricks installers - CrossOver installs these itself.
     r"|Install Windows component.*"
     r"|Install VC\+\+ Redistributable"

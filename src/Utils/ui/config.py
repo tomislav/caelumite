@@ -9,6 +9,7 @@ import io
 import os
 import re as _re
 import subprocess
+import sys
 import threading
 import time
 from pathlib import Path
@@ -2150,6 +2151,15 @@ def load_hidden_header_buttons() -> set[str]:
         return set()
     names = {p.strip().lower() for p in raw.split(",")}
     return {n for n in names if n in _HIDEABLE_HEADER_BUTTONS}
+
+
+if sys.platform == "darwin":
+    # Caelumite: Wabbajack installs need Proton tools (texconv, MPI), so its
+    # top-bar button is always hidden.
+    _upstream_load_hidden_header_buttons = load_hidden_header_buttons
+
+    def load_hidden_header_buttons() -> set[str]:
+        return _upstream_load_hidden_header_buttons() | {"wabbajack"}
 
 
 def save_hidden_header_buttons(value) -> None:

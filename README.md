@@ -7,6 +7,7 @@
 <h3 align="center">A mod manager for macOS, for Windows games in CrossOver.</h3>
 
 <h5 align="center">
+  <a href="https://github.com/tomislav/caelumite/releases/latest">Download</a> |
   <a href="https://github.com/tomislav/caelumite/issues">Issues</a> |
   <a href="docs/NEXUS.md">Nexus Mods</a> |
   <a href="docs/UPSTREAM.md">Upstream</a> |
@@ -66,6 +67,23 @@ useful to you, please support the original project: endorse
   games (all Bethesda titles, Cyberpunk 2077, Baldur's Gate 3, RE Engine and
   BepInEx games, ...). So far it has been tested on macOS with Starfield.
 
+## Download
+
+Get the latest Caelumite DMG from the
+[releases page](https://github.com/tomislav/caelumite/releases/latest), open
+it and drag Caelumite into Applications. The app is signed and notarized by
+Apple.
+
+You need:
+- a Mac with Apple silicon, running macOS 14 or later
+- [CrossOver](https://www.codeweavers.com/crossover), with your game installed
+  in a bottle
+
+On start, Caelumite checks this repository for a newer release and offers to
+download it; install it the same way. Settings → Updates turns the check off
+or includes pre-releases. Your settings, in
+`~/Library/Application Support/Caelumite`, carry over.
+
 ## How it works on macOS
 
 - **Games live in CrossOver bottles.** The game's bottle is its prefix.
@@ -83,15 +101,12 @@ useful to you, please support the original project: endorse
 
 Config lives in `~/Library/Application Support/Caelumite`.
 
-## Requirements
+## Building from source
 
-- macOS on Apple silicon or Intel
-- [CrossOver](https://www.codeweavers.com/crossover) with your game installed
-  in a bottle
-- Homebrew Python 3.12–3.14, Rust (`brew install python@3.14 rust`) and the
-  Xcode command line tools (`xcode-select --install`)
-
-## Install from source
+For development, or to run the latest code. Besides CrossOver, you need
+Homebrew Python 3.12–3.14, Rust (`brew install python@3.14 rust`) and the
+Xcode command line tools (`xcode-select --install`). Only Apple silicon is
+tested.
 
 ```bash
 git clone https://github.com/tomislav/caelumite

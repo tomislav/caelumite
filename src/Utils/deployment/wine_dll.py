@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import os
 import shutil
+import sys
 import time as _time
 from pathlib import Path
 
@@ -164,6 +165,15 @@ def apply_wine_dll_overrides(
     if not overrides:
         return True
     overrides = _merge_overrides(overrides)
+
+    if sys.platform == "darwin":
+        # Caelumite: a CrossOver bottle's Wine may be running (Steam lives in
+        # it) and would overwrite a direct user.reg edit - import instead.
+        from Utils.macos.crossover import bottle_for_path
+        bottle = bottle_for_path(prefix_path)
+        if bottle is not None:
+            from Utils.macos.registry import apply_dll_overrides
+            return apply_dll_overrides(bottle, overrides, _log)
 
     # Accept either the pfx/ directory directly or its parent (compatdata/<id>/)
     if not (prefix_path / "user.reg").is_file() and (prefix_path / "pfx" / "user.reg").is_file():
@@ -413,6 +423,14 @@ def remove_wine_dll_overrides(
         return True
 
     dlls_lower = {d.lower() for d in dlls}
+
+    if sys.platform == "darwin":
+        # Caelumite: through the bottle's Wine, as in apply_wine_dll_overrides.
+        from Utils.macos.crossover import bottle_for_path
+        bottle = bottle_for_path(prefix_path)
+        if bottle is not None:
+            from Utils.macos.registry import remove_dll_overrides
+            return remove_dll_overrides(bottle, dlls, _log)
 
     # Accept either the pfx/ directory directly or its parent
     if not (prefix_path / "user.reg").is_file() and (prefix_path / "pfx" / "user.reg").is_file():

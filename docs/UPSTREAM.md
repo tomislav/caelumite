@@ -51,6 +51,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/launchers/steam.py` | Windows Steam in bottles as Steam roots; Windows library paths; bottle as prefix; `proton_run_command` → bottle |
 | `Utils/executables/launch.py` | Play, Run EXE, tool prefixes and the game prefix use the bottle; no `wineserver -k` |
 | `Utils/wine/proton.py` | `resolve_proton_env` → bottle (winecfg, regedit, registry repair) |
+| `Utils/deployment/wine_dll.py` | DLL overrides go through `reg import` in the bottle (`Utils/macos/registry.py`), not a direct `user.reg` edit a running Wine would overwrite |
 | `Utils/deployment/pipeline.py` | `steamuser` link before deploying; no script-extender launcher swap (CrossOver can't run a renamed game exe) |
 | `Utils/config_paths.py` | config dir and default staging root |
 | `Games/base_game.py` | Hardlink is the default deploy method (games that ask for Symlink keep it) |

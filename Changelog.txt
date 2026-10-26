@@ -23,3 +23,5 @@ Initial release of Caelumite, a macOS fork of Amethyst Mod Manager 2.5.5 by Chri
 ### Bug Fixes
 - FOMOD: options are no longer dimmed when an unmet condition wouldn't make them recommended
 - Nexus update checks read MO2's installed file ids from meta.ini, so imported mods no longer report false updates
+- Linking plugins.txt into a tool prefix no longer fails for Starfield and Oblivion Remastered (xEdit, BethINI, PGPatcher and other wizards, Run EXE)
+- The "Catalog has no raw manifest" warning lists each missing mod once

@@ -96,7 +96,22 @@ def bottle_command(bottle: Bottle, program: str, args=(), *,
     cmd = [str(app.wine), "--bottle", bottle.name, "--no-convert"]
     if not wait:
         cmd.append("--no-wait")
-    return cmd + [program, *map(str, args)]
+    return cmd + [_quote_safe(program), *(_quote_safe(str(a)) for a in args)]
+
+
+def _quote_safe(arg: str) -> str:
+    """Protect an argument from the wrapper's Windows command-line quoting.
+
+    The wrapper wraps arguments containing whitespace in double quotes, and
+    under Windows parsing rules a backslash run before the closing quote
+    escapes it: ``"C:\\Game Dir\\"`` became the value ``C:\\Game Dir" /f``,
+    swallowing the next arguments (a ``reg add`` then lost its ``/f`` and hung
+    on an overwrite prompt). Doubling the trailing run keeps it literal.
+    """
+    if not any(ch.isspace() for ch in arg):
+        return arg
+    trailing = len(arg) - len(arg.rstrip("\\"))
+    return arg + "\\" * trailing
 
 
 def exe_command(bottle: Bottle, exe: Path, args=(), *, wait: bool = True) -> list[str] | None:

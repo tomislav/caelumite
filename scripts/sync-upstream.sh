@@ -34,31 +34,44 @@ fi
 git fetch upstream
 # .gitattributes marks files Caelumite replaces (e.g. the logo) merge=ours.
 git config merge.ours.driver true
-git merge --no-ff --no-commit "$REF" || true
+MERGE_HEAD_FILE="$(git rev-parse --git-dir)/MERGE_HEAD"
+if ! git merge --no-ff --no-commit "$REF"; then
+    # Conflicts still leave MERGE_HEAD; anything else (a bad ref, files the
+    # merge would overwrite) aborted the merge.
+    if [ ! -f "$MERGE_HEAD_FILE" ]; then
+        echo "error: merging $REF failed (see above); nothing was merged" >&2
+        exit 1
+    fi
+fi
 
 # `git rm` also resolves a modify/delete conflict as "deleted".
 printf '%s\n' "$REMOVED" | grep -v '^#' | grep -v '^$' | tr '\n' '\0' |
     xargs -0 git rm -r -q -f --ignore-unmatch -- >/dev/null
 
+# Plugin code on Resources runs inside Caelumite: list every changed .py
+# (conflicted ones included) before anything is committed.
+CODE=""
+if [ "$BRANCH" = "Resources" ] && [ -f "$MERGE_HEAD_FILE" ]; then
+    CODE="$(git diff --name-only HEAD...MERGE_HEAD -- '*.py')"
+fi
+
 CONFLICTS="$(git diff --name-only --diff-filter=U)"
 if [ -n "$CONFLICTS" ]; then
     echo "Resolve these conflicts, then run 'git commit':"
     echo "$CONFLICTS" | sed 's/^/  /'
+fi
+if [ -n "$CODE" ]; then
+    echo "Plugin code changed upstream - review it before committing and pushing:"
+    echo "$CODE" | sed 's/^/  /'
+    [ -n "$CONFLICTS" ] || echo "Then run 'git commit --no-edit'."
+fi
+if [ -n "$CONFLICTS" ] || [ -n "$CODE" ]; then
     exit 1
 fi
 
-if git diff --cached --quiet && [ ! -f "$(git rev-parse --git-dir)/MERGE_HEAD" ]; then
+if git diff --cached --quiet && [ ! -f "$MERGE_HEAD_FILE" ]; then
     echo "Already up to date with $REF."
     exit 0
-fi
-if [ "$BRANCH" = "Resources" ]; then
-    CODE="$(git diff --cached --name-only HEAD -- '*.py')"
-    if [ -n "$CODE" ]; then
-        echo "Plugin code changed - review it before committing and pushing:"
-        echo "$CODE" | sed 's/^/  /'
-        echo "Then run 'git commit --no-edit'."
-        exit 1
-    fi
 fi
 git commit -q --no-edit
 echo "Merged $REF: $(git log -1 --format='%h %s')"

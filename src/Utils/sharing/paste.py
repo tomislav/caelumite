@@ -35,6 +35,10 @@ PASTE_HOST = "paste.c-net.org"
 _PASTE_API = f"https://{PASTE_HOST}/"
 
 _USER_AGENT = "Amethyst-Mod-Manager"
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own name, not upstream's.
+    from Utils.macos.app import USER_AGENT as _USER_AGENT
 
 #: How long an upload survives, for UI copy. The host expires files after 180
 #: days and resets that clock on every access - there is no per-upload expiry

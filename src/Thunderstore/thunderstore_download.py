@@ -30,6 +30,10 @@ from Utils.app_log import app_log
 # Cloudflare 403s the default Python-urllib User-Agent, so an explicit one is
 # mandatory for every Thunderstore request - not merely good manners.
 USER_AGENT = "Amethyst-Mod-Manager"
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own name, not upstream's.
+    from Utils.macos.app import USER_AGENT as USER_AGENT
 
 _CHUNK = 256 * 1024
 _TIMEOUT = 60

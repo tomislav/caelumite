@@ -29,7 +29,7 @@ from Utils.macos.crossover import (
     Bottle,
     app_for_bottle,
     bottle_for_path,
-    ensure_steamuser_alias,
+    prepare_bottle,
     windows_to_host,
     _registry_steam_path,
 )
@@ -159,7 +159,7 @@ def bottle_for_game(game, log_fn=_noop_log) -> Bottle | None:
     if app_for_bottle(bottle) is None:
         log_fn("CrossOver is not installed in /Applications or ~/Applications.")
         return None
-    ensure_steamuser_alias(bottle.path, log_fn)
+    prepare_bottle(bottle.path, log_fn)
     return bottle
 
 
@@ -236,53 +236,89 @@ def play_menu(game, items: list[str], saved: str | None) -> tuple[list[str], str
 
 
 def _steam_running(bottle: Bottle) -> bool:
-    """True when Windows Steam is running in *bottle*."""
-    import re
-    import subprocess
-    from Utils.macos.processes import matching_pids
+    """True when Windows Steam itself is running in *bottle* (not CrossOver's
+    wrapper that starts it, whose arguments also name steam.exe)."""
+    from Utils.macos.processes import exe_marker, matching_pids
 
-    pids = matching_pids((f"WINEPREFIX={bottle.path}",)) or set()
-    if not pids:
-        return False
-    try:
-        out = subprocess.run(
-            ["/bin/ps", "-ww", "-o", "command=", "-p", ",".join(map(str, pids))],
-            capture_output=True, text=True, timeout=5).stdout
-    except (OSError, subprocess.SubprocessError):
-        return False
-    return any(re.search(r"(?i)(^|\\)steam\.exe(\s|$)", line.strip())
-               for line in out.splitlines())
+    return bool(matching_pids((exe_marker(bottle.name, bottle.path, "steam.exe"),)))
 
 
 def _start_steam(bottle: Bottle, steam_exe: Path, log_fn, timeout: float = 90) -> None:
-    """Start the bottle's Steam and give it time to sign in (worker thread)."""
+    """Start the bottle's Steam and give it time to sign in (worker thread).
+
+    Started outside the Play session (plain Popen, no launch marker), so
+    Steam is not tracked as the game and Stop never terminates it."""
     import subprocess
     import time
 
     log_fn(f"Play: starting Steam in bottle '{bottle.name}' first ...")
     cmd = bottle_command(bottle, host_to_windows(bottle, steam_exe), ["-silent"],
                          wait=False)
-    subprocess.Popen(cmd, env=bottle_env(bottle), cwd=steam_exe.parent,
+    env = bottle_env(bottle)
+    from Utils.processes.game import LAUNCH_ID_ENV
+    env.pop(LAUNCH_ID_ENV, None)
+    subprocess.Popen(cmd, env=env, cwd=steam_exe.parent,
                      stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                      stderr=subprocess.DEVNULL, start_new_session=True)
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline and not _steam_running(bottle):
         time.sleep(1)
+    if not _steam_running(bottle):
+        log_fn(f"Play: Steam did not start within {timeout:.0f} s - "
+               "launching anyway.")
+        return
     # Running is not signed in; the client needs a moment before games can
     # check ownership.
     time.sleep(10)
 
 
 def _ensure_steam(game, bottle: Bottle, log_fn) -> None:
-    """Start the bottle's Steam unless it is running - before a script
+    """Start the bottle's Steam unless it is running. Before a script
     extender loader, which starts the game exe directly: without Steam up,
     the game's Steam check relaunches it through Steam, without the script
-    extender."""
+    extender. Before a Steam hand-off, so the hand-off doesn't become Steam
+    itself (and the Play session doesn't track Steam as the game)."""
     from Utils.executables.launch import effective_steam_id
 
     steam_exe = _steam_exe(bottle)
     if effective_steam_id(game) and steam_exe and not _steam_running(bottle):
         _start_steam(bottle, steam_exe, log_fn)
+
+
+def _launch_inputs(game, settings_key: str, exe_name: str, launches_game: bool,
+                   log_fn, prefix: str):
+    """(args, env updates) as upstream's launch routes build them: the
+    saved arguments, plus the game's default arguments (Cyberpunk's
+    ``-modded``, ...) when the exe starts the game, plus the variables from
+    the saved Launch Options. Wrapper commands there (``%command%``) are not
+    supported on macOS and are ignored. None when the arguments don't parse."""
+    from Utils.executables.launch import (
+        load_exe_args, load_launch_options, parse_launch_options)
+
+    try:
+        args = shlex.split(load_exe_args(game, settings_key))
+    except ValueError as exc:
+        _fail(log_fn, f"invalid launch arguments: {exc}")
+        return None
+    if launches_game:
+        try:
+            declared = game.default_launch_args_for_exe(exe_name)
+        except AttributeError:
+            declared = getattr(game, "default_launch_args", []) or []
+        defaults = [str(a) for a in declared if str(a) not in args]
+        if defaults:
+            log_fn(f"{prefix}: adding default launch args: {' '.join(defaults)}")
+            args = defaults + args
+    env_updates, rest = parse_launch_options(
+        load_launch_options(game, settings_key), ["%cmd%"])
+    if "%cmd%" in rest:
+        at = rest.index("%cmd%")
+        args += rest[at + 1:]   # arguments after %command% still apply
+        rest = rest[:at + 1]
+    if rest != ["%cmd%"]:
+        log_fn(f"{prefix}: wrapper commands in Launch Options are not "
+               "supported on macOS; only their variables and arguments are used.")
+    return args, env_updates
 
 
 def _fail(log_fn, reason: str) -> None:
@@ -294,25 +330,31 @@ def _fail(log_fn, reason: str) -> None:
 def launch_exe(exe_path: Path, game, log_fn=_noop_log, *,
                launch_settings_key: "str | None" = None, label: str = "") -> None:
     """Run a Windows exe in the game's bottle and watch it (worker thread)."""
-    from Utils.executables.launch import load_exe_args, spawn_process_watched
+    from Utils.executables.launch import is_game_launch_exe, spawn_process_watched
 
     bottle = bottle_for_game(game, log_fn)
     if bottle is None:
         _fail(log_fn, "no CrossOver bottle for this game.")
         return
-    key = launch_settings_key or exe_path.name
-    try:
-        args = shlex.split(load_exe_args(game, key))
-    except ValueError as exc:
-        _fail(log_fn, f"invalid launch arguments: {exc}")
-        return
     se = script_extender_name(game)
-    if se and exe_path.name.lower() == se.lower():
+    is_loader = bool(se) and exe_path.name.lower() == se.lower()
+    try:
+        launches_game = is_loader or is_game_launch_exe(game, exe_path)
+    except Exception:
+        launches_game = is_loader
+    inputs = _launch_inputs(game, launch_settings_key or exe_path.name,
+                            exe_path.name, launches_game, log_fn, "Run EXE")
+    if inputs is None:
+        return
+    args, env_updates = inputs
+    if is_loader:
         _ensure_steam(game, bottle, log_fn)
     cmd = exe_command(bottle, exe_path, args)
     label = label or f"Run EXE {exe_path.name}"
     log_fn(f"{label}: {' '.join(shlex.quote(c) for c in cmd)}")
-    spawn_process_watched(cmd, env=bottle_env(bottle), cwd=exe_path.parent,
+    env = bottle_env(bottle)
+    env.update(env_updates)
+    spawn_process_watched(cmd, env=env, cwd=exe_path.parent,
                           label=label, log_fn=log_fn)
 
 
@@ -321,14 +363,16 @@ def launch_game(game, log_fn=_noop_log) -> None:
 
     Launch mode "auto"/"steam" with a Steam app id hands the launch to the
     bottle's Windows Steam (``steam.exe -applaunch``), which the Steam API
-    needs. The game's preferred launch exe or mode "none" runs the exe
-    directly in the bottle. A script extender loader is not used here: it is
-    its own play-bar entry, run by launch_exe.
+    needs; the game is then tracked by the app id Steam gives its processes.
+    The game's preferred launch exe or mode "none" runs the exe directly in
+    the bottle. A script extender loader is not used here: it is its own
+    play-bar entry, run by launch_exe.
     """
     from Utils.executables.launch import (
-        effective_steam_id, game_exe_key, load_exe_args, load_launch_mode,
-        resolve_game_exe, spawn_process_watched,
+        effective_steam_id, game_exe_key, load_launch_mode, resolve_game_exe,
+        spawn_process_watched,
     )
+    from Utils.processes import game as game_process
 
     bottle = bottle_for_game(game, log_fn)
     if bottle is None:
@@ -337,11 +381,13 @@ def launch_game(game, log_fn=_noop_log) -> None:
     exe = resolve_game_exe(game)
     key = game_exe_key(game)
     mode = load_launch_mode(game, key)
-    try:
-        args = shlex.split(load_exe_args(game, key))
-    except ValueError as exc:
-        _fail(log_fn, f"invalid launch arguments: {exc}")
+    inputs = _launch_inputs(game, key, exe.name if exe is not None else "",
+                            True, log_fn, "Play")
+    if inputs is None:
         return
+    args, env_updates = inputs
+    env = bottle_env(bottle)
+    env.update(env_updates)
 
     preferred = getattr(game, "preferred_launch_exe", "") or ""
     direct = mode == "none" or (exe is not None and preferred
@@ -354,11 +400,23 @@ def launch_game(game, log_fn=_noop_log) -> None:
     # loader is its own play-bar entry instead (play_menu, launch_exe), so
     # the game entry always starts the game without it.
     if not direct and mode in ("auto", "steam") and steam_id and steam_exe:
+        # Steam owns the game's process tree; the hand-off below exits once
+        # it has passed the request on. Upstream watches the app id Steam
+        # stamps on the game's environment, but under Wine that stays on the
+        # Windows side - so watch for the game's exe in the bottle instead.
+        _ensure_steam(game, bottle, log_fn)
+        from Utils.macos.processes import exe_marker
+        game_process.arm_external(
+            [exe_marker(bottle.name, bottle.path, exe.name)] if exe is not None else [],
+            "Steam")
+        if env_updates:
+            log_fn("Play: Launch Options variables don't reach a game that "
+                   "Steam starts; use launch mode None to apply them.")
         cmd = bottle_command(bottle, host_to_windows(bottle, steam_exe),
                              ["-applaunch", steam_id, *args], wait=False)
         log_fn(f"Play: handing off to Steam in bottle '{bottle.name}' "
                f"(app {steam_id})")
-        spawn_process_watched(cmd, env=bottle_env(bottle), cwd=steam_exe.parent,
+        spawn_process_watched(cmd, env=env, cwd=steam_exe.parent,
                               label="Play (Steam in CrossOver)", log_fn=log_fn)
         return
     if exe is None:
@@ -367,5 +425,5 @@ def launch_game(game, log_fn=_noop_log) -> None:
         return
     log_fn(f"Play: launching {exe.name} in bottle '{bottle.name}'")
     cmd = exe_command(bottle, exe, args)
-    spawn_process_watched(cmd, env=bottle_env(bottle), cwd=exe.parent,
+    spawn_process_watched(cmd, env=env, cwd=exe.parent,
                           label="Play (CrossOver)", log_fn=log_fn)

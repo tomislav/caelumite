@@ -18,6 +18,7 @@ from __future__ import annotations
 import os
 import plistlib
 import re
+import threading
 from dataclasses import dataclass
 from pathlib import Path, PureWindowsPath
 
@@ -349,7 +350,7 @@ def prefix_for_game(steam_id: str, game_path: "Path | str | None") -> Path | Non
     bottle = bottle_for_path(game_path) or bottle_for_steam_app(steam_id)
     if bottle is None:
         return None
-    ensure_steamuser_alias(bottle.path)
+    prepare_bottle(bottle.path)
     return bottle.path
 
 
@@ -386,6 +387,8 @@ def ensure_steamuser_alias(bottle_path: Path, log_fn=None) -> bool:
         return False
     try:
         alias.symlink_to(real)
+    except FileExistsError:
+        return alias.is_symlink() or alias.is_dir()   # another thread made it
     except OSError as exc:
         if log_fn:
             log_fn(f"could not link {alias} -> {real}: {exc}")
@@ -393,3 +396,82 @@ def ensure_steamuser_alias(bottle_path: Path, log_fn=None) -> bool:
     if log_fn:
         log_fn(f"linked {alias} -> {real} so prefix paths resolve in the bottle")
     return True
+
+
+_PFX_LOCK = threading.Lock()
+
+
+def ensure_pfx_link(bottle_path: Path, log_fn=None) -> bool:
+    """Thread-safe, never-raising wrapper around _ensure_pfx_link: it runs
+    from get_prefix_path() on any thread (UI and deploy worker)."""
+    if (bottle_path / "pfx").is_symlink():
+        return True
+    with _PFX_LOCK:
+        try:
+            return _ensure_pfx_link(bottle_path, log_fn)
+        except OSError as exc:
+            if log_fn:
+                log_fn(f"could not set up {bottle_path / 'pfx'}: {exc}")
+            return False
+
+
+def _ensure_pfx_link(bottle_path: Path, log_fn=None) -> bool:
+    """Make ``<bottle>/pfx`` a link to the bottle itself.
+
+    Upstream's tools treat a prefix as Proton's ``compatdata`` layout and
+    reach the Wine prefix as ``<compat_data>/pfx`` (about 70 places: wizard
+    seeds, plugins.txt, INI links). A bottle *is* the Wine prefix, so the
+    self-link - the layout umu and Heroic use, which
+    ``Utils.wine.prefix.resolve_compat_data`` already understands - makes
+    those paths land in the bottle. Wine ignores the extra entry.
+
+    A real ``pfx`` folder left by a tool that ran before this link existed
+    is merged into the bottle first; files the bottle already has are kept
+    and the stray copies moved to ``pfx.stray-<n>``. Returns True when the
+    link is in place.
+    """
+    import shutil
+
+    link = bottle_path / "pfx"
+    if link.is_symlink():
+        return True
+    if link.is_dir():
+        kept = []
+        for src in sorted(p for p in link.rglob("*") if p.is_file() or p.is_symlink()):
+            dest = bottle_path / src.relative_to(link)
+            if dest.exists() or dest.is_symlink():
+                kept.append(src)
+                continue
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(src), str(dest))
+            if log_fn:
+                log_fn(f"moved {src.relative_to(bottle_path)} into the bottle")
+        if kept:
+            n = 1
+            while (bottle_path / f"pfx.stray-{n}").exists():
+                n += 1
+            link.rename(bottle_path / f"pfx.stray-{n}")
+            if log_fn:
+                log_fn(f"kept {len(kept)} conflicting file(s) in pfx.stray-{n}")
+        else:
+            shutil.rmtree(link)
+    elif link.exists():
+        if log_fn:
+            log_fn(f"{link} is a file - not replacing it")
+        return False
+    try:
+        link.symlink_to(".")
+    except FileExistsError:
+        return link.is_symlink()
+    except OSError as exc:
+        if log_fn:
+            log_fn(f"could not link {link} -> .: {exc}")
+        return False
+    return True
+
+
+def prepare_bottle(bottle_path: Path, log_fn=None) -> bool:
+    """Both links upstream's prefix paths need in a bottle (see
+    ensure_steamuser_alias and ensure_pfx_link)."""
+    alias = ensure_steamuser_alias(bottle_path, log_fn)
+    return ensure_pfx_link(bottle_path, log_fn) and alias

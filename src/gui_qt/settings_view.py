@@ -771,13 +771,11 @@ class SettingsView(ConnectionsSettingsMixin, OverlayBase):
         self._finish_section(g)
 
         g = self._section(self.tr("Status bar"))
-        import sys
-        if sys.platform != "darwin":  # Caelumite: no Ko-Fi button
-            self._checkbox(
-                g, self.tr("Hide Ko-Fi button"),
-                uc.load_hide_kofi_button, uc.save_hide_kofi_button,
-                help=self.tr("Hide the Ko-Fi donation button in the status bar."),
-                on_changed=lambda _v: self._apply_support_buttons())
+        self._checkbox(
+            g, self.tr("Hide Ko-Fi button"),
+            uc.load_hide_kofi_button, uc.save_hide_kofi_button,
+            help=self.tr("Hide the Ko-Fi donation button in the status bar."),
+            on_changed=lambda _v: self._apply_support_buttons())
 
         self._checkbox(
             g, self.tr("Hide Endorse button"),
@@ -1919,3 +1917,16 @@ class SettingsView(ConnectionsSettingsMixin, OverlayBase):
             except Exception:
                 pass
         print(f"[settings] {text}")
+
+
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: no Ko-Fi button, so no "Hide Ko-Fi button" setting.
+    _upstream_checkbox = SettingsView._checkbox
+
+    def _checkbox(self, grid, label, load_fn, save_fn, *args, **kwargs):
+        if load_fn is uc.load_hide_kofi_button:
+            return None
+        return _upstream_checkbox(self, grid, label, load_fn, save_fn, *args, **kwargs)
+
+    SettingsView._checkbox = _checkbox

@@ -75,10 +75,11 @@ useful to you, please support the original project: endorse
 - **Play runs in the bottle.** Play hands off to the bottle's Steam
   (`steam.exe -applaunch`), or runs the exe directly with launch mode
   *None*. A script extender entry starts the bottle's Steam, then the loader.
-- **One link is added to each game bottle:** `drive_c/users/steamuser` →
-  the bottle's real user (`crossover`). Amethyst's game handlers use Proton's
-  user name for plugins.txt, INIs and saves; the link makes those paths land
-  in the right place. Wine ignores the extra folder.
+- **Two links are added to each game bottle,** so paths written for
+  Proton land in the bottle: `drive_c/users/steamuser` → the bottle's real
+  user (`crossover`), for the plugins.txt, INI and save paths Amethyst's game
+  handlers use, and `pfx` → the bottle itself, for tools that reach a
+  prefix as `<compatdata>/pfx`. Wine ignores both.
 
 Config lives in `~/Library/Application Support/Caelumite`.
 

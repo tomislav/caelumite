@@ -513,12 +513,12 @@ def run_deploy_pipeline(
     game_root = game.get_game_path()
 
     if sys.platform == "darwin":
-        # Caelumite: handlers write to drive_c/users/steamuser; link it to
-        # the bottle's real user before anything is deployed there.
-        from Utils.macos.crossover import bottle_for_path, ensure_steamuser_alias
+        # Caelumite: handlers write to drive_c/users/steamuser and tools to
+        # <prefix>/pfx; link both into the bottle before anything is deployed.
+        from Utils.macos.crossover import bottle_for_path, prepare_bottle
         _bottle = bottle_for_path(game.get_prefix_path())
         if _bottle is not None:
-            ensure_steamuser_alias(_bottle.path, log_fn)
+            prepare_bottle(_bottle.path, log_fn)
 
     if not _ensure_flatpak_manager_access(game, log_fn=log_fn):
         return False

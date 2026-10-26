@@ -43,15 +43,15 @@ def current_overrides(bottle: Bottle) -> dict[str, str]:
     return found
 
 
-def _import(bottle: Bottle, body: list[str], log) -> bool:
-    """Import *body* (lines under the DllOverrides key) with ``reg import``."""
+def _import(bottle: Bottle, body: list[str], log, key: str = _KEY) -> bool:
+    """Import *body* (value lines under *key*) with ``reg import``."""
     from Utils.macos.launch import bottle_command, bottle_env
 
     temp = bottle.drive_c / "windows" / "temp"
     temp.mkdir(parents=True, exist_ok=True)
     reg_file = temp / f"caelumite-{uuid.uuid4().hex[:8]}.reg"
     text = "\r\n".join(["Windows Registry Editor Version 5.00", "",
-                        f"[{_KEY}]", *body, "", ""])
+                        f"[{key}]", *body, "", ""])
     try:
         # reg import reads Version 5.00 files as UTF-16 LE with a BOM.
         reg_file.write_bytes(b"\xff\xfe" + text.encode("utf-16-le"))
@@ -104,4 +104,14 @@ def remove_dll_overrides(bottle: Bottle, dlls, log) -> bool:
     if ok:
         for dll in names:
             log(f"  DLL override removed: {dll}")
+    return ok
+
+
+def set_app_windows_version(bottle: Bottle, exe_name: str, version: str, log) -> bool:
+    """Per-app Windows version, as winecfg's Applications tab sets it:
+    ``HKCU\\Software\\Wine\\AppDefaults\\<exe>`` ``Version`` = *version*."""
+    key = rf"HKEY_CURRENT_USER\Software\Wine\AppDefaults\{exe_name}"
+    ok = _import(bottle, [f'"Version"="{_quote(version)}"'], log, key=key)
+    if ok:
+        log(f"  Windows version for {exe_name} set to {version}")
     return ok

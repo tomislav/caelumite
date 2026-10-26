@@ -50,31 +50,59 @@ def keychain_usable() -> bool:
         return False
 
 
-def _move_file_key_to_keychain() -> str:
-    """One-time move of a personal key saved by the file fallback (used
-    before the Keychain probe existed) into the Keychain. That file's
+# A key the Keychain couldn't store: used for this session only (see
+# no_key_file), so logging in still works.
+_session_key = ""
+
+
+def no_key_file(key: str) -> None:
+    """macOS replacement for upstream's key-file fallback. That file's
     encryption key comes from /etc/machine-id, which macOS doesn't have, so
-    it is only obfuscated. Returns the key, or ""."""
+    it would only be obfuscated; keep the key in memory instead."""
+    global _session_key
+    _session_key = key
+    from Utils.app_log import app_log
+    app_log("Nexus API key: the macOS Keychain is unavailable - the key is "
+            "used for this session only and not saved.")
+
+
+def _move_file_key_to_keychain() -> str:
+    """One-time move of a personal key that the file fallback saved (before
+    Caelumite checked for the Keychain) into an empty Keychain entry; the
+    file is deleted once the Keychain holds the key. Never overwrites a key
+    already in the Keychain or the session. Returns the moved key, or ""."""
+    import keyring
     from Nexus import nexus_api
     if not nexus_api._keyring_ok():
         return ""
+    if nexus_api.load_api_key():
+        nexus_api._clear_key_file()   # an older copy; the Keychain's is current
+        return ""
     key = nexus_api._load_key_file()
-    if key:
-        nexus_api.save_api_key(key)
-        if nexus_api.load_api_key() == key:
-            nexus_api._clear_key_file()
+    if not key:
+        return ""
+    try:
+        keyring.set_password(nexus_api._KEYRING_SERVICE, nexus_api._KEYRING_USER, key)
+    except Exception:
+        return ""
+    if nexus_api.load_api_key() == key:
+        nexus_api._clear_key_file()
     return key
 
 
 def load_saved_api() -> dict:
     """Worker-safe replacement for upstream's saved-login load while
     Caelumite is unregistered: the personal key in testing setups, else none
-    (stored upstream OAuth tokens belong to the Amethyst app and are ignored)."""
+    (stored upstream OAuth tokens belong to the Amethyst app and are ignored).
+    A key left in the old key file moves to the Keychain either way."""
     result = {"api": None, "error": "", "revoked": False}
+    moved = _move_file_key_to_keychain()
     if not personal_key_allowed():
         return result
     from Nexus.nexus_api import NexusAPI, load_api_key
-    key = load_api_key() or _move_file_key_to_keychain()
+    # A key typed in this session (kept in memory when the Keychain failed)
+    # is the newest one, so it wins.
+    key = _session_key or load_api_key() or moved
     if key:
         result["api"] = NexusAPI(key)
     return result
@@ -109,17 +137,53 @@ def login(window) -> None:
         _reset_onboarding(window)
         return
     from Nexus.nexus_api import save_api_key
-    save_api_key(key)
+    try:
+        save_api_key(key)
+    except OSError as exc:
+        window._notify(window.tr("Could not save the Nexus API key: {0}").format(exc),
+                       "error")
+        _reset_onboarding(window)
+        return
+    window._append_log("[nexus] personal API key saved")
+
+    # Report the outcome once Nexus has checked the key (upstream's
+    # validation worker), not before. A slot left from an earlier attempt
+    # that never got a result is replaced, so results aren't shown twice.
+    previous = getattr(window, "_caelumite_key_check", None)
+    if previous is not None:
+        try:
+            window._nexus_validated.disconnect(previous)
+        except (RuntimeError, TypeError):
+            pass
+
+    def _checked(result):
+        if isinstance(result, dict) and result.get("api") is not window._nexus_api:
+            return
+        window._nexus_validated.disconnect(_checked)
+        window._caelumite_key_check = None
+        name = result.get("name") if isinstance(result, dict) else result
+        error = result.get("error") if isinstance(result, dict) else ""
+        if name:
+            window._notify(window.tr("Logged in to Nexus Mods as {0}.").format(name),
+                           "info")
+            view = getattr(window, "_onboarding_view", None)
+            if view is not None:
+                view.on_logged_in()
+        else:
+            # An error here can be a rejected key or a network problem; the
+            # key stays saved either way.
+            window._notify(window.tr("Couldn't verify the Nexus API key: {0}")
+                           .format(error or window.tr("no response")), "error")
+            _reset_onboarding(window)
+
+    window._caelumite_key_check = _checked
+    window._nexus_validated.connect(_checked)
+    window._notify(window.tr("Checking your Nexus API key\u2026"), "info")
     # As upstream does after an OAuth login: reload the shared API (through
     # load_saved_api), which validates it and refreshes the UI.
     window._nexus_api = None
     window._nexus_api_reload_pending = True
     window._start_nexus_api_init()
-    window._notify(window.tr("Logged in to Nexus Mods."), "info")
-    window._append_log("[nexus] personal API key saved")
-    view = getattr(window, "_onboarding_view", None)
-    if view is not None:
-        view.on_logged_in()
 
 
 def _reset_onboarding(window) -> None:

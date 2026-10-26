@@ -20,9 +20,19 @@ VENV_PY="$ROOT/.venv/bin/python"
 
 [ -x "$VENV_PY" ] || { echo "error: run scripts/setup-macos.sh first" >&2; exit 1; }
 
-BASE_PREFIX="$("$VENV_PY" -c 'import sys; print(sys.base_prefix)')"
-PY_BIN="$BASE_PREFIX/Resources/Python.app/Contents/MacOS/Python"
-PY_HOME="$("$VENV_PY" -c 'import sys, os; print(os.path.dirname(sys._base_executable))')"
+# Refer to Homebrew's Python through its stable "opt" link (the one .venv
+# uses), not the versioned Cellar folder that sys.base_prefix resolves to:
+# a Homebrew update removes the old Cellar folder, which would stop the app
+# from starting.
+OPT_HOME="$(sed -n 's/^home = //p' "$ROOT/.venv/pyvenv.cfg")"   # .../opt/python@3.x/bin
+PY_VER="$("$VENV_PY" -c 'import sys; print(f"{sys.version_info[0]}.{sys.version_info[1]}")')"
+FRAMEWORK="$(dirname "$OPT_HOME")/Frameworks/Python.framework/Versions/$PY_VER"
+if [ ! -d "$FRAMEWORK" ]; then
+    # Not Homebrew's layout (python.org's framework lives at a fixed path).
+    FRAMEWORK="$("$VENV_PY" -c 'import sys; print(sys.base_prefix)')"
+fi
+PY_BIN="$FRAMEWORK/Resources/Python.app/Contents/MacOS/Python"
+PY_HOME="$FRAMEWORK/bin"
 VERSION="$("$VENV_PY" "$ROOT/src/version.py")"
 [ -x "$PY_BIN" ] || { echo "error: framework interpreter not found: $PY_BIN" >&2; exit 1; }
 
@@ -32,6 +42,13 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 
 # Interpreter + venv redirection (Contents/ acts as the venv prefix).
 cp "$PY_BIN" "$APP/Contents/MacOS/caelumite-python"
+# The interpreter links libpython by its Cellar path; point it at the opt one.
+OLD_LIB="$(otool -L "$APP/Contents/MacOS/caelumite-python" \
+    | awk '/Python\.framework\/Versions\/.*\/Python /{print $1; exit}')"
+if [ -n "$OLD_LIB" ] && [ "$OLD_LIB" != "$FRAMEWORK/Python" ]; then
+    install_name_tool -change "$OLD_LIB" "$FRAMEWORK/Python" \
+        "$APP/Contents/MacOS/caelumite-python" 2>/dev/null
+fi
 ln -s "$ROOT/.venv/lib" "$APP/Contents/lib"
 cat > "$APP/Contents/pyvenv.cfg" <<EOF
 home = $PY_HOME

@@ -19,6 +19,10 @@ from Utils.config_paths import get_config_dir
 # Reuse the same keyring service as the Nexus key so all secrets live under
 # one logical app entry; only the user/account differs.
 _KEYRING_SERVICE = "AmethystModManager"
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own name, not upstream's.
+    from Utils.macos.app import KEYCHAIN_SERVICE as _KEYRING_SERVICE
 _KEYRING_USER = "modio_api_key"
 _API_KEY_FILE = "modio_api_key.bin"
 

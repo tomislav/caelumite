@@ -107,5 +107,10 @@ def _paint_safely(widget) -> None:
 
 
 def install(app) -> None:
+    # Only Cocoa windows have an NSView behind winId(); on another Qt
+    # platform (offscreen, used for headless runs) it is a plain number, and
+    # messaging it would crash the process.
+    if app.platformName() != "cocoa":
+        return
     app._caelumite_titlebar_filter = _TitlebarFilter(app)
     app.installEventFilter(app._caelumite_titlebar_filter)

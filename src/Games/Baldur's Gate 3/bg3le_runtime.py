@@ -26,6 +26,11 @@ import time
 import urllib.request
 import zipfile
 from pathlib import Path
+
+_USER_AGENT = "Amethyst-Mod-Manager"
+if sys.platform == "darwin":
+    # Caelumite: its own name, not upstream's.
+    from Utils.macos.app import USER_AGENT as _USER_AGENT
 from typing import Callable
 
 LogFn = Callable[[str], None]
@@ -208,7 +213,7 @@ def _fetch_latest(log: LogFn, timeout: float = 30) -> "tuple[str, str] | None":
     from Utils.ca_bundle import get_ssl_context
     try:
         req = urllib.request.Request(
-            _LATEST_API, headers={"User-Agent": "Amethyst-Mod-Manager"})
+            _LATEST_API, headers={"User-Agent": _USER_AGENT})
         with urllib.request.urlopen(req, timeout=timeout,
                                     context=get_ssl_context()) as resp:
             data = json.loads(resp.read().decode("utf-8"))

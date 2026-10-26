@@ -3955,3 +3955,17 @@ mutation DiscardRevision($collectionId: ID!, $revisionNumber: Int!,
             status=d.get("status", ""),
             uploaded_by=d.get("uploaded_by", ""),
         )
+
+
+if _sys.platform == "darwin":
+    # Caelumite: no key-file fallback - its encryption key would be constant
+    # on macOS (no /etc/machine-id). If the Keychain fails, the key is kept
+    # for the session only (Utils.macos.nexus).
+    from Utils.macos import nexus as _mac_nexus
+
+    _save_key_file = _mac_nexus.no_key_file
+    _upstream_clear_api_key = clear_api_key
+
+    def clear_api_key() -> None:
+        _mac_nexus._session_key = ""
+        _upstream_clear_api_key()

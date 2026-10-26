@@ -41,6 +41,10 @@ from Utils.config_paths import get_application_cache_dir, get_config_dir
 
 
 _USER_AGENT = "Amethyst-Mod-Manager"
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own name, not upstream's.
+    from Utils.macos.app import USER_AGENT as _USER_AGENT
 
 _ssl_ctx = None
 

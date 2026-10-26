@@ -287,6 +287,19 @@ def set_winxp_compat(prefix_path: Path, exe: Path, log_fn=None) -> None:
 
     _log = log_fn or _noop
 
+    import sys
+    if sys.platform == "darwin":
+        # Caelumite: through the bottle's Wine (reg import) - a running Wine
+        # rewrites user.reg from memory and would drop a direct edit.
+        from Utils.macos.crossover import bottle_for_path
+        from Utils.macos.registry import set_app_windows_version
+        bottle = bottle_for_path(prefix_path)
+        if bottle is None:
+            _log(f"Warning: no CrossOver bottle at {prefix_path}; skipping WinXP version flag.")
+        else:
+            set_app_windows_version(bottle, exe.name, "winxp", _log)
+        return
+
     # Accept either pfx/ directly or its compatdata parent
     if not (prefix_path / "user.reg").is_file() and (prefix_path / "pfx" / "user.reg").is_file():
         prefix_path = prefix_path / "pfx"

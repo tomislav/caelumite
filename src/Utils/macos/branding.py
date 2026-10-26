@@ -23,7 +23,9 @@ from Utils.macos.app import APP_NAME
 _RENAMES = (
     (re.compile(r"Amethyst Mod Manager"), APP_NAME),
     (re.compile(r"\bAMM\b"), APP_NAME),
-    (re.compile(r"\bAmethyst\b(?![-_.])"), APP_NAME),
+    # Not file and package names (Amethyst-Mod-Manager, Amethyst_x, Amethyst.ini);
+    # a sentence-ending "Amethyst." is renamed.
+    (re.compile(r"\bAmethyst\b(?![-_]|\.\w)"), APP_NAME),
 )
 
 # Source strings that refer to upstream on purpose (unless _EXACT maps them).
@@ -43,6 +45,10 @@ _EXACT = {
     "e.g. PROTON_USE_WINED3D=1 WINEDLLOVERRIDES=dinput8=n,b":
         "e.g. WINEDLLOVERRIDES=dinput8=n,b",
     "Run an .exe in this prefix\u2026": "Run an .exe in this bottle\u2026",
+    "Failed to register - xdg-mime not found?":
+        "Couldn't make Caelumite the nxm:// handler. It can only do that "
+        "when started from Caelumite.app (scripts/build-app.sh); the log has "
+        "details.",
     # Theme editor: Caelumite has no Ko-Fi button.
     "Special-purpose accent buttons such as Ko-Fi.": "Special-purpose accent buttons.",
     "Accent buttons like Ko-Fi.": "Accent buttons.",

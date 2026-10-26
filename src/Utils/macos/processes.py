@@ -4,6 +4,12 @@ Find processes by an exact environment entry on macOS (no /proc).
 
 macOS backend for ``Utils.processes.game.matching_pids``, which tracks a
 launched game - and stops it - by the marker its process tree inherits.
+
+A game that the bottle's Steam starts inherits Steam's environment, not the
+Play session's, and Wine doesn't copy the variables Steam sets on the
+Windows side (SteamAppId, ...) into it. Those games are matched by an exe
+marker instead (:func:`exe_marker`): a process in the bottle whose Windows
+command line runs that exe.
 ``sysctl(KERN_PROCARGS2)`` returns a process's argv and environment for
 processes of the same user; Wine's game processes carry the marker there.
 """
@@ -13,8 +19,10 @@ from __future__ import annotations
 import ctypes
 import ctypes.util
 import os
+import re
 import struct
 import subprocess
+from pathlib import PureWindowsPath
 
 _CTL_KERN = 1
 _KERN_PROCARGS2 = 49
@@ -33,8 +41,8 @@ def _procargs(pid: int) -> bytes | None:
     return buf.raw[:size.value]
 
 
-def environ_of(pid: int) -> set[str] | None:
-    """The process's environment as a set of ``KEY=VALUE`` strings.
+def _argv_env(pid: int) -> tuple[list[str], set[str]] | None:
+    """(argv, environment as ``KEY=VALUE`` strings) of a process.
 
     KERN_PROCARGS2 layout: int argc, the exec path, NUL padding, argc argv
     strings, then the environment strings, each NUL-terminated.
@@ -48,8 +56,38 @@ def environ_of(pid: int) -> set[str] | None:
     i = 1
     while i < len(parts) and parts[i] == b"":
         i += 1
+    argv = [a.decode(errors="surrogateescape") for a in parts[i:i + argc]]
     env = parts[i + argc:]
-    return {item.decode(errors="surrogateescape") for item in env if b"=" in item}
+    return argv, {item.decode(errors="surrogateescape") for item in env if b"=" in item}
+
+
+def environ_of(pid: int) -> set[str] | None:
+    """The process's environment as a set of ``KEY=VALUE`` strings."""
+    info = _argv_env(pid)
+    return None if info is None else info[1]
+
+
+EXE_MARKER = "CAELUMITE_EXE="
+# The program of a command line: a quoted path; a macOS program (CrossOver's
+# Perl wine wrapper, whose arguments name the exe it starts); a Windows path
+# up to the first ".exe"; else the first word.
+_PROGRAM = re.compile(r'(?i)^\s*(?:"([^"]+)"|(/\S*)|(.*?\.exe)(?=\s|$)|(\S+))')
+
+
+def exe_marker(bottle_name: str, bottle_path, exe_name: str) -> str:
+    """A matching_pids marker for processes in the bottle running *exe_name*."""
+    return f"{EXE_MARKER}{bottle_name}|{bottle_path}|{exe_name}"
+
+
+def _runs_exe(argv: list[str], env: set[str], marker: str) -> bool:
+    name, path, exe = marker[len(EXE_MARKER):].split("|", 2)
+    if f"CX_BOTTLE={name}" not in env and f"WINEPREFIX={path}" not in env:
+        return False
+    m = _PROGRAM.match(" ".join(argv))
+    program = next((g for g in m.groups() if g), "") if m else ""
+    found = PureWindowsPath(program).name.lower()
+    want = exe.lower()
+    return found == want or found == want.removesuffix(".exe")
 
 
 def _all_pids() -> list[int] | None:
@@ -67,14 +105,18 @@ def matching_pids(wanted: tuple[str, ...]) -> set[int] | None:
     pids = _all_pids()
     if pids is None:
         return None
-    wanted_set = set(wanted)
+    exes = [w for w in wanted if w.startswith(EXE_MARKER)]
+    wanted_set = set(wanted) - set(exes)
     own_pid = os.getpid()
     found: set[int] = set()
     for pid in pids:
         if pid == own_pid:
             continue
         # sysctl refuses processes we may not inspect (other users, SIP).
-        env = environ_of(pid)
-        if env is not None and not wanted_set.isdisjoint(env):
+        info = _argv_env(pid)
+        if info is None:
+            continue
+        argv, env = info
+        if not wanted_set.isdisjoint(env) or any(_runs_exe(argv, env, m) for m in exes):
             found.add(pid)
     return found

@@ -27,10 +27,14 @@ def adapt_proton_step(step) -> None:
     step._proton_combo.parentWidget().hide()   # picker + custom build + delete
 
     game = step._game
-    prefix = game.get_prefix_path() if hasattr(game, "get_prefix_path") else None
+    try:
+        prefix = game.get_prefix_path() if hasattr(game, "get_prefix_path") else None
+    except Exception:
+        prefix = None
     bottle = bottle_for_path(prefix)
-    if step._game_chk is not None and bottle is not None:
-        step._game_chk.setChecked(True)
+    if bottle is not None:
+        if step._game_chk is not None:
+            step._game_chk.setChecked(True)
         text = step.tr("{0} runs in the game's CrossOver bottle '{1}'.").format(
             step._tool_display_name, bottle.name)
     else:
@@ -40,7 +44,31 @@ def adapt_proton_step(step) -> None:
     note.setAlignment(Qt.AlignHCenter)
     note.setWordWrap(True)
     step.layout().insertWidget(1, note)
+
+    # Every tool runs in the game's bottle on macOS, so the step always
+    # answers "the game's prefix" - also for wizards that don't offer that
+    # option on Linux (allow_game_prefix=False leaves no checkbox, and the
+    # step would otherwise insist on a Proton build).
+    from Utils.executables.launch import PREFIX_MODE_GAME
+    step._current_prefix_mode = lambda: PREFIX_MODE_GAME
+    step._update_proton_row_state = (
+        lambda: step._continue_btn.setEnabled(bottle is not None))
     step._update_proton_row_state()
+
+    # "Always use these settings": the remembered choice is the game's
+    # prefix, which upstream rejects for wizards without that option ("The
+    # saved game prefix is unavailable") and then stops auto-skipping. Here
+    # the bottle is that prefix, so drop that warning and skip as upstream
+    # would. Other warnings (a missing 64-bit exe) still stop the wizard.
+    unavailable = step.tr("The saved game prefix is unavailable. Choose another "
+                          "prefix setting.")
+    if (bottle is not None and step._remembered
+            and step._remember_warning == unavailable):
+        for label in step.findChildren(QLabel):
+            if label.text() == unavailable:
+                label.hide()
+        step._remember_warning = ""
+        step._auto_skip_pending = True
 
 
 # Wizards that cannot work on macOS, keyed by WizardTool.dialog_class_path,

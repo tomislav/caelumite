@@ -74,6 +74,12 @@ _BUNDLED_DATA_DIR = Path(__file__).parent / "data"
 # User-writable masterlist directory - resolved lazily to avoid import-time side effects
 _DATA_DIR: Path | None = None
 
+_USER_AGENT = "Amethyst-Mod-Manager"
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own name, not upstream's.
+    from Utils.macos.app import USER_AGENT as _USER_AGENT
+
 # Re-download masterlists at most once per 24 hours (when libloot version
 # is unchanged - a libloot version bump always forces a re-fetch).
 _MASTERLIST_TTL_SECS = 86400
@@ -171,7 +177,7 @@ def _probe_url(url: str, timeout: float = 5.0) -> tuple[bool | None, str]:
             url,
             headers={
                 "Range": "bytes=0-0",
-                "User-Agent": "Amethyst-Mod-Manager",
+                "User-Agent": _USER_AGENT,
             },
             method="GET",
         )

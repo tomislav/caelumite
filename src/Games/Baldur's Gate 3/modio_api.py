@@ -19,6 +19,11 @@ from Utils.app_log import app_log
 from Utils.ca_bundle import resolve_ca_bundle
 
 _GAME = 6715
+_USER_AGENT = "AmethystModManager"
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own name, not upstream's.
+    from Utils.macos.app import USER_AGENT as _USER_AGENT
 _MAX_INLINE_RETRY_DELAY = 10.0
 _LEGACY_API_ROOT = "https://api.mod.io/v1"
 
@@ -117,7 +122,7 @@ class ModioAPI:
         self._session.verify = resolve_ca_bundle() or True
         self._session.headers.update({
             "Accept": "application/json",
-            "User-Agent": "AmethystModManager",
+            "User-Agent": _USER_AGENT,
             # BG3 enables per-platform moderation. Amethyst manages the Windows
             # game build (including through Proton), so request its live files.
             "X-Modio-Platform": "windows",

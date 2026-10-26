@@ -32,6 +32,13 @@ RESOURCES_API = f"https://api.github.com/repos/{REPO_SLUG}/contents/"
 NEXUS_CLIENT_ID = ""
 NEXUS_CLIENT_SECRET = ""
 
+# How Caelumite names itself in HTTP requests (GitHub, LOOT, Thunderstore,
+# modl:// downloads) and in the Keychain, instead of upstream's name.
+from version import __version__ as _version  # noqa: E402
+
+USER_AGENT = f"{APP_NAME}/{_version}"
+KEYCHAIN_SERVICE = APP_NAME
+
 
 def config_dir() -> Path:
     """~/Library/Application Support/Caelumite (not created here)."""

@@ -9007,6 +9007,15 @@ class MainWindow(QMainWindow):
         """Register or unregister the nxm:// protocol handler (for Nexus
         'Download with Manager' links). Toasts the resulting state."""
         from Nexus.nxm_handler import NxmHandler
+        if sys.platform == "darwin":
+            # Caelumite: LaunchServices has no "unregister" (the menu item is
+            # hidden), so this only ever makes Caelumite the handler.
+            if NxmHandler.register():
+                self._notify(self.tr("NXM handler registered."), "info")
+                self._append_log("[nexus] NXM handler registered")
+            else:
+                self._notify(self.tr("Failed to register - xdg-mime not found?"), "error")
+            return
         try:
             if NxmHandler.is_registered():
                 NxmHandler.unregister()

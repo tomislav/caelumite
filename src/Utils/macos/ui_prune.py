@@ -46,13 +46,18 @@ _HIDE_TEXT = re.compile(
     r"|\.NET runtime"
     # Proton tool prefixes; tools run in the game's bottle on macOS.
     r"|Manage Prefixes.*"
+    # LaunchServices has no "unregister" (another app claiming nxm takes
+    # over), and link forwarding reads Linux .desktop handlers.
+    r"|Unregister NXM handler"
+    r"|Nexus link forwarding\u2026"
     r")$",
     re.DOTALL,
 )
 _HIDE_PLACEHOLDER = re.compile(r"%command%")
 # Settings sections whose every option is upstream-only on macOS: the Endorse
-# toggle (the Ko-Fi one isn't built), and upstream's release update check.
-_HIDE_GROUP = re.compile(r"^(?:Status bar|Updates)$")
+# toggle (the Ko-Fi one isn't built), upstream's release update check, and
+# the LoversLab login (only Wabbajack installs use it).
+_HIDE_GROUP = re.compile(r"^(?:Status bar|Updates|LoversLab)$")
 
 # Launch-via modes that need a Linux launcher; macOS launches through the
 # game's bottle (Auto/Steam) or runs the exe directly (None).
@@ -115,6 +120,10 @@ def _row_of(widget: QWidget) -> QWidget:
     parent = widget.parentWidget()
     if not isinstance(widget, QLabel) or parent is None or parent.layout() is None:
         return widget
+    # A titled settings box (exe settings): hiding its title hides the box,
+    # so no empty bordered frame is left behind.
+    if parent.objectName() == "SettingsSection":
+        return parent
     siblings = [parent.layout().itemAt(i).widget()
                 for i in range(parent.layout().count())]
     siblings = [w for w in siblings if w is not None and w is not widget]

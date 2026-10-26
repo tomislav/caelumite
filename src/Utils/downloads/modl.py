@@ -21,6 +21,10 @@ from Utils.app_log import app_log
 from Utils.ca_bundle import resolve_ca_bundle
 
 _SCHEME = "modl"
+_USER_AGENT = "Amethyst-Mod-Manager"
+if sys.platform == "darwin":
+    # Caelumite: its own name, not upstream's.
+    from Utils.macos.app import USER_AGENT as _USER_AGENT
 _FLAG = "--modl"
 _DESKTOP_FILE_NAME = "amethystmodmanager-modl.desktop"
 _GAME_ID_RE = re.compile(r"^[A-Za-z0-9._-]+$")
@@ -226,7 +230,7 @@ def download_modl_file(
     try:
         dest_dir.mkdir(parents=True, exist_ok=True)
         with requests.Session() as session:
-            session.headers["User-Agent"] = "Amethyst-Mod-Manager"
+            session.headers["User-Agent"] = _USER_AGENT
             session.verify = resolve_ca_bundle() or True
             with session.get(
                 link.download_url, stream=True, timeout=(15, 60),

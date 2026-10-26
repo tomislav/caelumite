@@ -68,6 +68,20 @@ rebuild after `scripts/setup-macos.sh` or a Homebrew Python upgrade. You can
 drag it into `/Applications`. `./caelumite` uses it when it exists. On start,
 Caelumite makes itself the default `nxm://` handler.
 
+## Importing from Mod Organizer 2
+
+Caelumite uses MO2's mod-folder and load-order formats, so an MO2 instance
+(for example one in a CrossOver bottle) imports as-is:
+
+```bash
+.venv/bin/python scripts/import_mo2.py "<MO2 instance folder>" ~/Games/Caelumite/<Game>
+```
+
+Mods and the overwrite folder are copied as APFS clones (instant, almost no
+extra disk space, independent of MO2), and the MO2 profile's load order
+replaces the Caelumite profile's after a backup. MO2 itself isn't changed.
+Close Caelumite first.
+
 ## Not supported on macOS (yet)
 
 - Tool prefixes separate from the game's bottle: every tool runs in the game's

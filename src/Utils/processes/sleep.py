@@ -28,6 +28,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import threading
 from contextlib import contextmanager
@@ -266,6 +267,12 @@ def inhibit_sleep(reason: str, log_fn: "LogFn | None" = None):
     if disabled():
         log("sleep inhibition disabled by AMM_NO_SLEEP_INHIBIT.")
         yield False
+        return
+    if sys.platform == "darwin":
+        # Caelumite: caffeinate instead of logind / the Inhibit portal.
+        from Utils.macos.sleep import keep_awake
+        with keep_awake(reason, log) as held:
+            yield held
         return
     try:
         held, failures = _acquire(reason, log)

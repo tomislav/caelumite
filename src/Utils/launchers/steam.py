@@ -13,6 +13,7 @@ import os
 import re
 import shutil
 import stat
+import sys
 import threading
 from pathlib import Path
 
@@ -35,6 +36,11 @@ _STEAM_CANDIDATES: list[Path] = [
     _HOME / ".steam" / "root",                                                      # Symlink fallback (Debian/Arch)
     _HOME / ".steam" / "debian-installation",                                       # Debian-packaged Steam
 ]
+
+if sys.platform == "darwin":
+    # Caelumite: Windows Steam installed inside CrossOver bottles.
+    from Utils.macos.crossover import bottle_steam_roots
+    _STEAM_CANDIDATES.extend(bottle_steam_roots())
 
 # Steam normally writes "libraryfolders.vdf", but some installs (and older
 # clients) use the singular "libraryfolder.vdf". Accept both spellings.
@@ -632,6 +638,13 @@ def proton_run_command(
     # must be passed when the caller has one. Defaults to "/" because the app's
     # own sandbox cwd does not exist on the host and the portal would fail to
     # chdir into it.
+    if sys.platform == "darwin":
+        # Caelumite: prefix commands run in the game's CrossOver bottle.
+        from Utils.macos.launch import proton_run_command as _bottle_command
+        cmd = _bottle_command(args, env)
+        if cmd is not None:
+            return cmd
+
     directory = str(host_cwd) if host_cwd is not None else "/"
 
     if env and env.get("_AMM_BOTTLES_PREFIX"):
@@ -1182,6 +1195,9 @@ def parse_vdf_libraries(vdf_path: Path) -> list[Path]:
 
     for match in pattern.finditer(text):
         raw = match.group(1)
+        if sys.platform == "darwin":
+            from Utils.macos.crossover import host_library_path
+            raw = host_library_path(vdf_path, raw)
         common = Path(raw) / "steamapps" / "common"
         _warn_vdf_library(raw, common)
         if common.is_dir():
@@ -1345,6 +1361,11 @@ def find_prefix(steam_id: str, game_path: "Path | str | None" = None) -> Path | 
     """
     if not steam_id:
         return None
+
+    if sys.platform == "darwin":
+        # Caelumite: the game's CrossOver bottle is its prefix.
+        from Utils.macos.crossover import prefix_for_game
+        return prefix_for_game(steam_id, game_path)
 
     # Primary: the library that owns this App ID.
     owner = owning_steamapps_dir(steam_id, game_path)

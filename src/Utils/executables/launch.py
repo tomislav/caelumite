@@ -31,6 +31,7 @@ import shlex
 import shutil
 import signal
 import subprocess
+import sys
 import threading
 import re
 from pathlib import Path
@@ -2199,6 +2200,10 @@ def prepare_tool_prefix(exe_path: Path, proton_name: str, game,
     on first use) - call from a worker thread.
     """
     prefix_dir = None
+    if sys.platform == "darwin":
+        # Caelumite: tools share the game's CrossOver bottle.
+        from Utils.macos.launch import tool_prefix_env
+        return tool_prefix_env(exe_path, game, log_fn, prefix_mode=prefix_mode)
     if prefix_mode == PREFIX_MODE_SHARED:
         from Utils.launchers.steam import find_any_installed_proton
         proton_script = find_any_installed_proton(proton_name)
@@ -2636,6 +2641,9 @@ def shutdown_prefix_wineserver(proton_script: Path, compat_data: Path,
     prefix's wineserver alive indefinitely after the tool itself closes;
     they outlive the app and linger until the desktop session ends.
     """
+    if sys.platform == "darwin":
+        # Caelumite: a bottle's wineserver also runs Steam and the game.
+        return
     try:
         script = Path(proton_script)
         if script.name in ("wine", "wine64"):
@@ -2676,6 +2684,10 @@ def get_game_prefix_env(game, log_fn=_noop_log, *,
     GOG installs - mirrors the Tk downgrade/Morrowind wizards' resolver).
     Returns None on failure (after logging why).
     """
+    if sys.platform == "darwin":
+        # Caelumite: the game's own prefix is its CrossOver bottle.
+        from Utils.macos.launch import tool_prefix_env
+        return tool_prefix_env(None, game, log_fn)
     from Utils.launchers.steam import (
         find_proton_for_game, find_steam_root_for_proton_script,
     )
@@ -2811,6 +2823,13 @@ def resolve_tool_prefix(exe: Path, game, proton_name: str, prefix_mode: str,
     Port of the Tk ProtonPrefixStepMixin._get_tool_env (note the different
     tuple order: compat_data before env, matching get_tool_prefix_env).
     """
+    if sys.platform == "darwin":
+        # Caelumite: wizard tools run in the game's CrossOver bottle.
+        from Utils.macos.launch import tool_prefix_env
+        result = tool_prefix_env(exe, game, log_fn, prefix_mode=prefix_mode)
+        if result is not None:
+            result[2].update(parse_env_overrides(load_tool_launch_env(exe)))
+        return result
     log_fn(f"prefix mode: {prefix_mode}"
            + (f", selected Proton '{proton_name}'"
               if prefix_mode != PREFIX_MODE_GAME else
@@ -3203,6 +3222,11 @@ def launch_wine_tool_in_prefix(proton_script: Path, prefix_dir: Path, env: dict,
 def launch_game(game, log_fn=_noop_log) -> None:
     """Launch the game itself: native command / Steam / Heroic / Proton,
     honouring the saved launch mode. Call from a worker thread."""
+    if sys.platform == "darwin":
+        # Caelumite: Play runs through the game's CrossOver bottle.
+        from Utils.macos.launch import launch_game as _bottle_launch_game
+        _bottle_launch_game(game, log_fn)
+        return
     from Utils.environment.xdg import host_env
 
     # Launcher Settings belongs to the Play entry, not necessarily to the
@@ -3889,6 +3913,12 @@ def launch_exe_via_proton(
     status in Steam, and the Steam Linux Runtime container is used (fixes
     missing audio vs a raw `proton run`).
     """
+    if sys.platform == "darwin":
+        # Caelumite: Run EXE runs through the game's CrossOver bottle.
+        from Utils.macos.launch import launch_exe as _bottle_launch_exe
+        _bottle_launch_exe(exe_path, game, log_fn,
+                           launch_settings_key=launch_settings_key)
+        return
     # A normal Run entry owns settings under its own filename.  Manager Play
     # can intentionally resolve to another executable, notably a VFS-only
     # script extender, so its caller supplies the canonical Play-entry key.

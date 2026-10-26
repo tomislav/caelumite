@@ -16,6 +16,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 import threading
 from pathlib import Path
 from typing import Callable
@@ -134,6 +135,10 @@ def xdg_download_dir() -> Path:
     environment, so check the env var first, then parse the file, then fall
     back to ~/Downloads.
     """
+    if sys.platform == "darwin":
+        # Caelumite: macOS never relocates ~/Downloads (Finder only
+        # localises its displayed name).
+        return Path.home() / "Downloads"
     env = os.environ.get("XDG_DOWNLOAD_DIR")
     if env:
         return Path(env)
@@ -258,6 +263,9 @@ def xdg_open(path: str | Path, log_fn: Callable[[str], None] | None = None) -> N
     Each step's failure is logged and triggers the next.
     """
     target = str(path)
+    if sys.platform == "darwin":
+        spawn_watched(["open", target], f"open {target!r}", log_fn)
+        return
     if not _in_flatpak():
         spawn_watched(["xdg-open", target], f"xdg-open {target!r}", log_fn)
         return
@@ -305,6 +313,9 @@ def open_url(url: str, log_fn: Callable[[str], None] | None = None) -> None:
       3. bare `xdg-open <url>` - last resort.
     Each step's failure is logged and triggers the next.
     """
+    if sys.platform == "darwin":
+        spawn_watched(["open", url], f"open {url!r}", log_fn)
+        return
     if not _in_flatpak():
         spawn_watched(["xdg-open", url], f"xdg-open {url!r}", log_fn)
         return

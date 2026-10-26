@@ -12,6 +12,7 @@ so all user config must be written outside the app bundle.
 import errno
 import os
 import shutil
+import sys
 import threading
 import uuid
 from pathlib import Path
@@ -24,6 +25,12 @@ def get_config_dir() -> Path:
 
     Respects $XDG_CONFIG_HOME; falls back to ~/.config/AmethystModManager.
     """
+    if sys.platform == "darwin":
+        # Caelumite: ~/Library/Application Support/Caelumite
+        from Utils.macos.app import config_dir as _macos_config_dir
+        config_dir = _macos_config_dir()
+        config_dir.mkdir(parents=True, exist_ok=True)
+        return config_dir
     xdg = os.environ.get("XDG_CONFIG_HOME")
     base = Path(xdg) if xdg else Path.home() / ".config"
     config_dir = base / APP_NAME
@@ -84,6 +91,9 @@ def get_default_staging_root() -> Path:
     on the ``--filesystem=home`` mount alongside the games, so hardlinks work in
     the Flatpak, AppImage and native installs alike.
     """
+    if sys.platform == "darwin":
+        # Caelumite: same volume as ~/Library's CrossOver bottles.
+        return Path.home() / "Games" / "Caelumite"
     return Path.home() / "Games" / "Amethyst"
 
 

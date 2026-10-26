@@ -11,6 +11,7 @@ call site.
 from __future__ import annotations
 
 import traceback
+import sys
 import time
 from pathlib import Path
 from typing import Callable, Optional
@@ -510,6 +511,14 @@ def run_deploy_pipeline(
     timeline = _DeployTimeline(log_fn, timing_origin)
     timeline.mark("pipeline worker entered")
     game_root = game.get_game_path()
+
+    if sys.platform == "darwin":
+        # Caelumite: handlers write to drive_c/users/steamuser; link it to
+        # the bottle's real user before anything is deployed there.
+        from Utils.macos.crossover import bottle_for_path, ensure_steamuser_alias
+        _bottle = bottle_for_path(game.get_prefix_path())
+        if _bottle is not None:
+            ensure_steamuser_alias(_bottle.path, log_fn)
 
     if not _ensure_flatpak_manager_access(game, log_fn=log_fn):
         return False

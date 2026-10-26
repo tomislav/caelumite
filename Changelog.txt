@@ -4,7 +4,7 @@ Initial release of Caelumite, a macOS fork of Amethyst Mod Manager 2.5.5 by Chri
 - Games run in CrossOver bottles: bottles, and the Windows Steam inside them, are detected automatically
 - Play, Run EXE, wizards and tools run in the game's bottle
 - Mods deploy as hardlinks by default
-- A Caelumite.app bundle with its own name, icon and native menu bar (Settings, Edit, Window, Help)
+- A self-contained, signed and notarized Caelumite.app for Apple silicon, with its own name, icon and native menu bar (Settings, Edit, Window, Help)
 - Native macOS open and save panels
 - nxm://, ror2mm:// and modl:// links open in Caelumite
 - Credentials are stored in the macOS Keychain
@@ -18,7 +18,8 @@ Initial release of Caelumite, a macOS fork of Amethyst Mod Manager 2.5.5 by Chri
 - Nexus requests identify as Caelumite. Nexus login stays off until Nexus registers Caelumite; a personal API key works for testing (see docs/NEXUS.md)
 - Game handlers, wizard plugins, translations and other resources sync from Caelumite's own Resources branch
 - Linux-only features are hidden on macOS: Wayland, LSFG, MangoHud, the VFS deploy method, winetricks and Proton component installers, Wabbajack, and the wizards for Linux-native or Proton-only tools
-- Upstream's Ko-Fi and Endorse buttons, update check and Crowdin link are removed
+- Upstream's Ko-Fi and Endorse buttons, Crowdin link and LoversLab login (only Wabbajack used it) are removed
+- App updates come from Caelumite's GitHub releases: the app offers to download the newest notarized DMG
 ### Bug Fixes
 - FOMOD: options are no longer dimmed when an unmet condition wouldn't make them recommended
 - Nexus update checks read MO2's installed file ids from meta.ini, so imported mods no longer report false updates

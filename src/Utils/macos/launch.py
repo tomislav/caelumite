@@ -202,16 +202,25 @@ def _steam_exe(bottle: Bottle) -> Path | None:
     return None
 
 
-def _script_extender_loader(game) -> Path | None:
-    """The game's installed script extender loader (sfse_loader.exe, ...)."""
+def script_extender_name(game) -> str:
+    """The script extender loader's file name (``sfse_loader.exe``), or ""."""
     if not getattr(game, "supports_script_extender_swap", False):
-        return None
-    name = getattr(game, "_script_extender_exe", "") or ""
-    game_path = game.get_game_path() if hasattr(game, "get_game_path") else None
-    if not name or game_path is None:
-        return None
-    loader = Path(game_path) / name
-    return loader if loader.is_file() else None
+        return ""
+    return getattr(game, "_script_extender_exe", "") or ""
+
+
+def play_menu(game, items: list[str], saved: str | None) -> tuple[list[str], str]:
+    """Order and default of the play-bar dropdown on macOS.
+
+    A detected script extender loader is listed first and is the default;
+    the game entry starts the game without it. *saved* is the profile's
+    explicit choice, the game entry included (see the app.py hook)."""
+    se = script_extender_name(game)
+    loader = next((i for i in items if se and i.lower() == se.lower()), None)
+    if loader is not None:
+        items = [loader, *(i for i in items if i != loader)]
+    current = saved if saved in items else (loader or game.name)
+    return items, current
 
 
 def _steam_running(bottle: Bottle) -> bool:
@@ -252,6 +261,18 @@ def _start_steam(bottle: Bottle, steam_exe: Path, log_fn, timeout: float = 90) -
     time.sleep(10)
 
 
+def _ensure_steam(game, bottle: Bottle, log_fn) -> None:
+    """Start the bottle's Steam unless it is running - before a script
+    extender loader, which starts the game exe directly: without Steam up,
+    the game's Steam check relaunches it through Steam, without the script
+    extender."""
+    from Utils.executables.launch import effective_steam_id
+
+    steam_exe = _steam_exe(bottle)
+    if effective_steam_id(game) and steam_exe and not _steam_running(bottle):
+        _start_steam(bottle, steam_exe, log_fn)
+
+
 def _fail(log_fn, reason: str) -> None:
     from Utils.processes import report as launch_report
     log_fn(f"Play: {reason}")
@@ -273,6 +294,9 @@ def launch_exe(exe_path: Path, game, log_fn=_noop_log, *,
     except ValueError as exc:
         _fail(log_fn, f"invalid launch arguments: {exc}")
         return
+    se = script_extender_name(game)
+    if se and exe_path.name.lower() == se.lower():
+        _ensure_steam(game, bottle, log_fn)
     cmd = exe_command(bottle, exe_path, args)
     label = label or f"Run EXE {exe_path.name}"
     log_fn(f"{label}: {' '.join(shlex.quote(c) for c in cmd)}")
@@ -285,8 +309,9 @@ def launch_game(game, log_fn=_noop_log) -> None:
 
     Launch mode "auto"/"steam" with a Steam app id hands the launch to the
     bottle's Windows Steam (``steam.exe -applaunch``), which the Steam API
-    needs. A present preferred launcher (a script extender loader) or mode
-    "none" runs the exe directly in the bottle.
+    needs. The game's preferred launch exe or mode "none" runs the exe
+    directly in the bottle. A script extender loader is not used here: it is
+    its own play-bar entry, run by launch_exe.
     """
     from Utils.executables.launch import (
         effective_steam_id, game_exe_key, load_exe_args, load_launch_mode,
@@ -313,16 +338,9 @@ def launch_game(game, log_fn=_noop_log) -> None:
     steam_exe = _steam_exe(bottle)
 
     # Bethesda script extenders: upstream swaps the loader in for the game
-    # exe, which CrossOver can't run (see the pipeline hook). Start the
-    # loader directly, like MO2 does, with the bottle's Steam already up -
-    # otherwise the game's Steam check relaunches it through Steam, without
-    # the script extender.
-    loader = _script_extender_loader(game)
-    if loader is not None:
-        if steam_id and steam_exe and not _steam_running(bottle):
-            _start_steam(bottle, steam_exe, log_fn)
-        exe, direct = loader, True
-        log_fn(f"Play: starting the script extender ({loader.name})")
+    # exe, which CrossOver can't run (see the pipeline hook). On macOS the
+    # loader is its own play-bar entry instead (play_menu, launch_exe), so
+    # the game entry always starts the game without it.
     if not direct and mode in ("auto", "steam") and steam_id and steam_exe:
         cmd = bottle_command(bottle, host_to_windows(bottle, steam_exe),
                              ["-applaunch", steam_id, *args], wait=False)

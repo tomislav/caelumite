@@ -13494,6 +13494,12 @@ class MainWindow(QMainWindow):
             saved = read_selected_exe(pdir)
             if saved in self._play_exe_paths:
                 current = saved
+        if sys.platform == "darwin":
+            # Caelumite: a detected script extender comes first and is the
+            # default; the game entry starts the game without it.
+            from Utils.macos.launch import play_menu
+            items, current = play_menu(
+                game, items, saved if pdir is not None else None)
         self._play_exe_selector.set_items(
             items, current=current, item_icons=self._build_exe_icon_map(game))
         self._update_play_btn_label(current)
@@ -13536,6 +13542,10 @@ class MainWindow(QMainWindow):
             return
         game = self._gs.game
         is_game = game is not None and label == game.name
+        if sys.platform == "darwin" and game is not None:
+            # Caelumite: the script extender entry plays the game too.
+            from Utils.macos.launch import script_extender_name
+            is_game = is_game or label.lower() == script_extender_name(game).lower()
         self._play_btn.setText(self.tr("▶  Play") if is_game else self.tr("▶  Run"))
 
     def _on_play_exe_selected(self, label):
@@ -13545,6 +13555,10 @@ class MainWindow(QMainWindow):
             from Utils.profiles.state import write_selected_exe
             is_game = game is not None and label == game.name
             write_selected_exe(pdir, None if is_game else label)
+            if sys.platform == "darwin":
+                # Caelumite: remember the game entry too - with no choice
+                # saved, the script extender is the default (play_menu).
+                write_selected_exe(pdir, label)
         self._update_play_btn_label(label)
         self._sync_play_deploy_suffix(label)
 

@@ -2172,6 +2172,19 @@ if sys.platform == "darwin":
     def load_update_notifications() -> bool:
         return False
 
+    # Mod list order: default to MO2's layout (lowest priority at the top),
+    # which most people moving to Caelumite know. An explicit choice in
+    # Settings still wins.
+    _upstream_load_default_priority_mode = load_default_priority_mode
+
+    def load_default_priority_mode() -> str:
+        try:
+            stored = _read_ini(get_ui_config_path()).get(
+                _INI_SECTION, "default_priority_mode", fallback="")
+        except (configparser.Error, OSError):
+            stored = ""
+        return _upstream_load_default_priority_mode() if stored.strip() else "reversed"
+
 
 def save_hidden_header_buttons(value) -> None:
     """Persist the set of hidden top-bar buttons to amethyst.ini."""

@@ -65,6 +65,10 @@ _CREDENTIAL_HEADERS = ("APIKEY", "Authorization")
 V3_BASE = "https://api.nexusmods.com/v3"
 APP_NAME = "amethyst"
 APP_VERSION = __version__
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: identify as Caelumite, never as Amethyst (Nexus API AUP).
+    from Utils.macos.nexus import APPLICATION_NAME as APP_NAME
 _SUPPORTED_COLLECTION_SCHEMA_ID = 1
 
 # How long to wait after a 429 before retrying (seconds)
@@ -466,6 +470,9 @@ class NexusCollectionMod:
 _KEYRING_SERVICE = "AmethystModManager"
 _KEYRING_USER = "nexus_api_key"
 _API_KEY_FILE = "nexus_api_key.bin"
+if _sys.platform == "darwin":
+    # Caelumite: its own keyring entry, not Amethyst's.
+    from Utils.macos.nexus import KEYRING_SERVICE as _KEYRING_SERVICE
 
 
 def _api_key_path() -> Path:

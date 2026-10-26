@@ -3411,6 +3411,15 @@ def _build_nexus_api():
     in. Neutral (no GUI dependency) so the install worker can reverse-look-up
     metadata by MD5 without the API being threaded down from the app. Mirrors
     what the Qt app's _ensure_nexus_api() does at startup."""
+    import sys
+    if sys.platform == "darwin":
+        # Caelumite: saved OAuth logins are Amethyst's; see Utils.macos.nexus.
+        from Utils.macos import nexus as _mac_nexus
+        if not _mac_nexus.registered():
+            try:
+                return _mac_nexus.load_saved_api()["api"]
+            except Exception:
+                return None
     try:
         from Nexus.nexus_oauth import load_oauth_tokens
         from Nexus.nexus_api import NexusAPI

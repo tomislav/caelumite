@@ -28,6 +28,12 @@ from gui_qt.worker import run_in_worker
 from Utils.collections.manifest import fmt_size
 from Utils.ui import config as uc
 
+_IMAGE_USER_AGENT = "Amethyst Mod Manager"
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: identify as Caelumite, never as Amethyst.
+    from Utils.macos.app import APP_NAME as _IMAGE_USER_AGENT
+
 
 class _DescriptionBrowser(QTextBrowser):
     """QTextBrowser that fetches remote BBCode/HTML images asynchronously."""
@@ -90,7 +96,7 @@ class _DescriptionBrowser(QTextBrowser):
                 from Utils.ca_bundle import resolve_ca_bundle
                 response = requests.get(
                     url, timeout=15, verify=resolve_ca_bundle() or True,
-                    headers={"User-Agent": "Amethyst Mod Manager"})
+                    headers={"User-Agent": _IMAGE_USER_AGENT})
                 if response.ok:
                     payload = bytes(response.content)
                     # QImage intentionally decodes only one frame. Preserve GIF

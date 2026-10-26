@@ -17,6 +17,13 @@ UPSTREAM_NAME = "Amethyst Mod Manager"
 UPSTREAM_URL = "https://github.com/ChrisDKN/Amethyst-Mod-Manager"
 REPO_URL = "https://github.com/tomislav/caelumite"
 
+# Nexus Mods OAuth credentials for Caelumite. Empty until Nexus registers the
+# app (support@nexusmods.com - see docs/NEXUS.md); until then OAuth login is
+# off and Nexus features only work with a personal API key in testing setups
+# (Utils/macos/nexus.py). Never fill these with another application's values.
+NEXUS_CLIENT_ID = ""
+NEXUS_CLIENT_SECRET = ""
+
 
 def config_dir() -> Path:
     """~/Library/Application Support/Caelumite (not created here)."""

@@ -4589,6 +4589,12 @@ class MainWindow(QMainWindow):
     @staticmethod
     def _load_saved_nexus_api() -> dict:
         """Worker-safe saved-login load; never touches Qt widgets."""
+        if sys.platform == "darwin":
+            # Caelumite: saved upstream OAuth logins are Amethyst's; until
+            # Caelumite is registered only a testing personal key loads.
+            from Utils.macos import nexus as _mac_nexus
+            if not _mac_nexus.registered():
+                return _mac_nexus.load_saved_api()
         result = {"api": None, "error": "", "revoked": False}
         # OAuth's module import probes DBus/keyring and imports its HTTP/crypto
         # stack. A v2 "cleared" authority record is definitive (it deliberately
@@ -8863,6 +8869,12 @@ class MainWindow(QMainWindow):
         return True
 
     def _nexus_start_sso(self, *, copy_link: bool):
+        if sys.platform == "darwin":
+            # Caelumite: no OAuth client until Nexus registers Caelumite.
+            from Utils.macos import nexus as _mac_nexus
+            if not _mac_nexus.registered():
+                _mac_nexus.login(self)
+                return
         if getattr(self, "_nexus_credentials_clearing", False):
             return
         if (getattr(self, "_nexus_login_starting", False)

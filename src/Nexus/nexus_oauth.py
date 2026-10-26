@@ -304,6 +304,13 @@ CLIENT_SECRET: str = "d6bc16f2c28a5c5bc19261d458b70117"
 
 _SCOPES = "openid profile public"
 
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own Nexus OAuth client - empty, so OAuth is off, until
+    # Nexus registers it. Amethyst's credentials must not be used (Nexus API AUP).
+    from Utils.macos.app import NEXUS_CLIENT_ID as CLIENT_ID
+    from Utils.macos.app import NEXUS_CLIENT_SECRET as CLIENT_SECRET
+
 _KEYRING_ACCESS_KEY   = "nexus_oauth_access_token"
 _KEYRING_REFRESH_KEY  = "nexus_oauth_refresh_token"
 _KEYRING_EXPIRES_KEY  = "nexus_oauth_expires_at"   # stored as str(float)

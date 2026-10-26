@@ -68,6 +68,12 @@ rebuild after `scripts/setup-macos.sh` or a Homebrew Python upgrade. You can
 drag it into `/Applications`. `./caelumite` uses it when it exists. On start,
 Caelumite makes itself the default `nxm://` handler.
 
+## Nexus Mods
+
+Caelumite isn't registered with Nexus Mods yet, so Nexus login is off in
+public builds. For testing and personal use you can log in with your personal
+API key; see [docs/NEXUS.md](docs/NEXUS.md).
+
 ## Importing from Mod Organizer 2
 
 Caelumite uses MO2's mod-folder and load-order formats, so an MO2 instance

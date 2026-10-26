@@ -62,11 +62,15 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `gui_qt/i18n.py` | installs the rename translator |
 | `gui_qt/shortcuts.py` | Install Mod defaults to Cmd+I so Cmd+M can minimize |
 | `Nexus/nxm_handler.py` | `NxmHandler` registration via LaunchServices (`Utils/macos/urls.py`) |
+| `Nexus/nexus_api.py` | requests identify as Caelumite; Caelumite's own keyring entry ([NEXUS.md](NEXUS.md)) |
+| `Nexus/nexus_oauth.py` | Caelumite's own OAuth client, empty (OAuth off) until Nexus registers it |
+| `Utils/mods/install.py` | the install worker's Nexus lookup ignores saved upstream OAuth logins |
+| `gui_qt/nexus_mod_detail_view.py` | image requests identify as Caelumite |
 | `wizards_qt/__init__.py` | wizards in `Utils/macos/wizard.py` `MACOS_UNSUPPORTED` join `EXCLUDED` (Linux-native tools, Proton-only texture conversion, Synthesis, ReShade) |
 | `Utils/wine/protontricks.py` | `build_proton_env_for_game` → bottle (dtkit-patch and other prefix installers) |
 | `Utils/ui/config.py` | the Wabbajack top-bar button is always hidden |
 | `wizards_qt/proton_step.py` | the wizard "Choose Proton Version" step shows the game's bottle instead (`Utils/macos/wizard.py`) |
-| `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository |
+| `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; Nexus login goes through `Utils/macos/nexus.py` until Caelumite is registered |
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |
 
 **Replaced files:** `src/icons/Logo.png` (from `scripts/make_icon.py`) and

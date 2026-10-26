@@ -91,7 +91,17 @@ class RenameTranslator(QTranslator):
         return False
 
 
+def _nexus_login_label() -> dict[str, str]:
+    """Upstream's OAuth login button, while Caelumite has no OAuth client."""
+    from Utils.macos import nexus
+    if nexus.registered():
+        return {}
+    return {"Login via SSO": "Log in with API key\u2026"
+            if nexus.personal_key_allowed() else "About Nexus login\u2026"}
+
+
 def install_rename_translator(app, language_translators) -> QTranslator:
+    _EXACT.update(_nexus_login_label())
     translator = RenameTranslator(app, language_translators)
     app.installTranslator(translator)
     return translator

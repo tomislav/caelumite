@@ -58,6 +58,11 @@ _HIDE_GROUP = re.compile(r"^(?:Status bar|Updates)$")
 # game's bottle (Auto/Steam) or runs the exe directly (None).
 _LINUX_LAUNCH_MODES = {"Heroic", "Lutris", "Faugus", "Bottles"}
 
+# Nexus OAuth-only buttons, hidden while Caelumite has no Nexus OAuth client
+# (Utils.macos.nexus); set by install().
+_HIDE_NEXUS_OAUTH = re.compile(r"^(?:Copy login link|Paste login code\u2026)$")
+_nexus_oauth_off = False
+
 
 def _clean(text: str) -> str:
     return text.replace("&", "").strip()
@@ -80,7 +85,10 @@ def _prune_combo(combo: QComboBox) -> None:
 
 def _should_hide(widget: QWidget) -> bool:
     if isinstance(widget, (QAbstractButton, QLabel)):
-        return bool(_HIDE_TEXT.match(_clean(widget.text())))
+        text = _clean(widget.text())
+        return bool(_HIDE_TEXT.match(text)
+                    or _nexus_oauth_off and isinstance(widget, QAbstractButton)
+                    and _HIDE_NEXUS_OAUTH.match(text))
     if isinstance(widget, QLineEdit):
         return bool(_HIDE_PLACEHOLDER.search(widget.placeholderText()))
     if isinstance(widget, QGroupBox):
@@ -117,5 +125,8 @@ def _row_of(widget: QWidget) -> QWidget:
 
 
 def install(app: QApplication) -> None:
+    global _nexus_oauth_off
+    from Utils.macos import nexus
+    _nexus_oauth_off = not nexus.registered()
     app._caelumite_prune_filter = _PruneFilter(app)
     app.installEventFilter(app._caelumite_prune_filter)

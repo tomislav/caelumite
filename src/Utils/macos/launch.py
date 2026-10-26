@@ -202,6 +202,56 @@ def _steam_exe(bottle: Bottle) -> Path | None:
     return None
 
 
+def _script_extender_loader(game) -> Path | None:
+    """The game's installed script extender loader (sfse_loader.exe, ...)."""
+    if not getattr(game, "supports_script_extender_swap", False):
+        return None
+    name = getattr(game, "_script_extender_exe", "") or ""
+    game_path = game.get_game_path() if hasattr(game, "get_game_path") else None
+    if not name or game_path is None:
+        return None
+    loader = Path(game_path) / name
+    return loader if loader.is_file() else None
+
+
+def _steam_running(bottle: Bottle) -> bool:
+    """True when Windows Steam is running in *bottle*."""
+    import re
+    import subprocess
+    from Utils.macos.processes import matching_pids
+
+    pids = matching_pids((f"WINEPREFIX={bottle.path}",)) or set()
+    if not pids:
+        return False
+    try:
+        out = subprocess.run(
+            ["/bin/ps", "-ww", "-o", "command=", "-p", ",".join(map(str, pids))],
+            capture_output=True, text=True, timeout=5).stdout
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return any(re.search(r"(?i)(^|\\)steam\.exe(\s|$)", line.strip())
+               for line in out.splitlines())
+
+
+def _start_steam(bottle: Bottle, steam_exe: Path, log_fn, timeout: float = 90) -> None:
+    """Start the bottle's Steam and give it time to sign in (worker thread)."""
+    import subprocess
+    import time
+
+    log_fn(f"Play: starting Steam in bottle '{bottle.name}' first ...")
+    cmd = bottle_command(bottle, host_to_windows(bottle, steam_exe), ["-silent"],
+                         wait=False)
+    subprocess.Popen(cmd, env=bottle_env(bottle), cwd=steam_exe.parent,
+                     stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                     stderr=subprocess.DEVNULL, start_new_session=True)
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline and not _steam_running(bottle):
+        time.sleep(1)
+    # Running is not signed in; the client needs a moment before games can
+    # check ownership.
+    time.sleep(10)
+
+
 def _fail(log_fn, reason: str) -> None:
     from Utils.processes import report as launch_report
     log_fn(f"Play: {reason}")
@@ -261,6 +311,18 @@ def launch_game(game, log_fn=_noop_log) -> None:
                                 and exe.name.lower() == Path(preferred).name.lower())
     steam_id = effective_steam_id(game)
     steam_exe = _steam_exe(bottle)
+
+    # Bethesda script extenders: upstream swaps the loader in for the game
+    # exe, which CrossOver can't run (see the pipeline hook). Start the
+    # loader directly, like MO2 does, with the bottle's Steam already up -
+    # otherwise the game's Steam check relaunches it through Steam, without
+    # the script extender.
+    loader = _script_extender_loader(game)
+    if loader is not None:
+        if steam_id and steam_exe and not _steam_running(bottle):
+            _start_steam(bottle, steam_exe, log_fn)
+        exe, direct = loader, True
+        log_fn(f"Play: starting the script extender ({loader.name})")
     if not direct and mode in ("auto", "steam") and steam_id and steam_exe:
         cmd = bottle_command(bottle, host_to_windows(bottle, steam_exe),
                              ["-applaunch", steam_id, *args], wait=False)

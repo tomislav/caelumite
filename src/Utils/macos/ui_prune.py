@@ -30,6 +30,9 @@ _HIDE_TEXT = re.compile(
     r"|Launch Options"
     r"|Steam syntax\. When set.*"
     r"|Create case-alias.*"
+    # Launcher swap: CrossOver can't run a renamed game exe; Play starts
+    # the script extender loader directly on macOS.
+    r"|Swap launcher with script extender.*"
     # Proton winetricks installers - CrossOver installs these itself.
     r"|Install Windows component.*"
     r"|Install VC\+\+ Redistributable"

@@ -9,6 +9,7 @@
 from __future__ import annotations
 
 import os
+import sys
 import time as _startup_time
 from collections import deque
 from pathlib import Path
@@ -24019,6 +24020,10 @@ def _apply_app_identity(app) -> None:
         app.setDesktopFileName("amethyst-mod-manager")
     else:
         app.setDesktopFileName("io.github.Amethyst.ModManager")
+    if sys.platform == "darwin":
+        # Caelumite: app name and icon.
+        from Utils.macos.branding import apply_identity
+        apply_identity(app)
 
 def run(startup_timing=None) -> int:
     phase_started = _startup_time.perf_counter()

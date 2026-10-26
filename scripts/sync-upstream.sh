@@ -20,6 +20,8 @@ if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
 fi
 
 git fetch upstream
+# .gitattributes marks files Caelumite replaces (e.g. the logo) merge=ours.
+git config merge.ours.driver true
 git merge --no-ff --no-commit "$REF" || true
 
 # `git rm` also resolves a modify/delete conflict as "deleted".

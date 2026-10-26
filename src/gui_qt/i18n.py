@@ -30,6 +30,7 @@ silently drops its translations.
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 from PySide6.QtCore import (QCoreApplication, QLocale, QTranslator,
@@ -178,6 +179,11 @@ def install_translators(app, code: str) -> list[QTranslator]:
         if qt_tr.load(f"qtbase_{lang}", qt_dir):
             app.installTranslator(qt_tr)
             installed.append(qt_tr)
+
+    if sys.platform == "darwin":
+        # Caelumite: show the fork's name; installed last so it is asked first.
+        from Utils.macos.branding import install_rename_translator
+        installed.append(install_rename_translator(app, installed))
 
     # Keep references alive - Qt does not retain installed translators.
     app._i18n_translators = installed

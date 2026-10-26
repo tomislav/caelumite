@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -94,6 +95,14 @@ class Instance:
 
 
 def _run(mode: str, instances=(), sig: int = 0) -> str:
+    if sys.platform == "darwin":
+        # Caelumite: no /proc on macOS - scan and signal with ps/kill.
+        from Utils.macos import instances as _mac
+        if mode == "scan":
+            return "".join(f"{i.pid}:{i.started}\n"
+                           for i in _mac.running_instances(Instance))
+        _mac.signal_instances(instances, sig)
+        return ""
     from Utils.environment.xdg import host_env
 
     command = ["bash", "-c", _SCRIPT, "amethyst-instance-check",

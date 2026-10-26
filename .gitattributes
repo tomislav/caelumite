@@ -1,0 +1,3 @@
+# Caelumite replaces these upstream files; keep our version on every merge
+# (scripts/sync-upstream.sh enables the "ours" merge driver).
+src/icons/Logo.png merge=ours

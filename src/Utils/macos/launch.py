@@ -358,6 +358,33 @@ def launch_exe(exe_path: Path, game, log_fn=_noop_log, *,
                           label=label, log_fn=log_fn)
 
 
+def _hand_off_to_steam(cmd: list[str], env: dict, cwd: Path, log_fn) -> None:
+    """Pass a launch request to the bottle's running Steam.
+
+    Run outside the Play session: the hand-off exits within a second, but
+    Steam starts the game seconds later, and a session that had seen the
+    hand-off would end in that gap. The session instead waits for the game's
+    exe (the marker launch_game arms) for up to its start timeout."""
+    import subprocess
+    from Utils.processes import report as launch_report
+    from Utils.processes.game import LAUNCH_ID_ENV
+
+    env = dict(env)
+    env.pop(LAUNCH_ID_ENV, None)
+    try:
+        result = subprocess.run(cmd, env=env, cwd=cwd, stdin=subprocess.DEVNULL,
+                                capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.SubprocessError) as exc:
+        _fail(log_fn, f"could not hand the launch to Steam: {exc}")
+        return
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout or "").strip().splitlines()[-1:]
+        _fail(log_fn, f"Steam hand-off exited {result.returncode}: {' '.join(detail)}")
+        return
+    launch_report.mark_spawned()
+    log_fn("Play: Steam has the launch request - waiting for the game to start.")
+
+
 def launch_game(game, log_fn=_noop_log) -> None:
     """The Play button on macOS (worker thread).
 
@@ -416,8 +443,7 @@ def launch_game(game, log_fn=_noop_log) -> None:
                              ["-applaunch", steam_id, *args], wait=False)
         log_fn(f"Play: handing off to Steam in bottle '{bottle.name}' "
                f"(app {steam_id})")
-        spawn_process_watched(cmd, env=env, cwd=steam_exe.parent,
-                              label="Play (Steam in CrossOver)", log_fn=log_fn)
+        _hand_off_to_steam(cmd, env, steam_exe.parent, log_fn)
         return
     if exe is None:
         _fail(log_fn, "could not find the game's executable - check the game "

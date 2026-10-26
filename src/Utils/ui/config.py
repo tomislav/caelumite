@@ -2162,13 +2162,9 @@ if sys.platform == "darwin":
         return _upstream_load_hidden_header_buttons() | {"wabbajack"}
 
     # Upstream's endorse button doesn't apply to Caelumite (its Ko-Fi button
-    # isn't built at all), and the update check looks for upstream's Linux
-    # releases.
+    # isn't built at all).
     def load_hide_endorse_button() -> bool:
         return True
-
-    def load_update_notifications() -> bool:
-        return False
 
     # Mod list order: default to MO2's layout (lowest priority at the top),
     # which most people moving to Caelumite know. An explicit choice in

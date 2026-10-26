@@ -98,7 +98,8 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/github/sync.py`, `Utils/profiles/curated.py`, `Utils/bethesda/synthesis.py` | resources come from Caelumite's `Resources` branch |
 | `Utils/github/wiki.py`, `gui_qt/onboarding_view.py` | the in-app wiki and onboarding link use Caelumite's wiki |
 | `Nexus/nexus_requirements.py` | the requirement filter list comes from Caelumite's `main` |
-| `Utils/github/app_updates.py` | release URLs point at Caelumite (the check itself is off) |
+| `Utils/github/app_updates.py` | release URLs point at Caelumite |
+| `gui_qt/app.py` (app update check), `gui_qt/update_overlay.py` | updates come from Caelumite's GitHub releases: the newest one with a DMG, which the banner's "Download update" opens (`Utils/macos/updates.py`) |
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |
 
 **Replaced files:** `src/icons/Logo.png` (from `scripts/make_icon.py`),

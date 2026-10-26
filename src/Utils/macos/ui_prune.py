@@ -55,9 +55,9 @@ _HIDE_TEXT = re.compile(
 )
 _HIDE_PLACEHOLDER = re.compile(r"%command%")
 # Settings sections whose every option is upstream-only on macOS: the Endorse
-# toggle (the Ko-Fi one isn't built), upstream's release update check, and
-# the LoversLab login (only Wabbajack installs use it).
-_HIDE_GROUP = re.compile(r"^(?:Status bar|Updates|LoversLab)$")
+# toggle (the Ko-Fi one isn't built) and the LoversLab login (only Wabbajack
+# installs use it).
+_HIDE_GROUP = re.compile(r"^(?:Status bar|LoversLab)$")
 
 # Launch-via modes that need a Linux launcher; macOS launches through the
 # game's bottle (Auto/Steam) or runs the exe directly (None).

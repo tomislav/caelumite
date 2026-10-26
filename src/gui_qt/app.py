@@ -4250,6 +4250,12 @@ class MainWindow(QMainWindow):
 
         def _do_check():
             allow_pre = load_allow_prerelease()
+            if sys.platform == "darwin":
+                # Caelumite: the newest GitHub release with a notarized DMG.
+                from Utils.macos.updates import check as _mac_check
+                return _mac_check(
+                    __version__, allow_pre, force_fresh, force_downgrade_prompt,
+                    lambda payload: safe_emit(self._app_update_found, payload))
             if is_appimage() or is_flatpak():
                 mode = "appimage" if is_appimage() else "flatpak"
                 if mode == "flatpak":
@@ -4342,6 +4348,13 @@ class MainWindow(QMainWindow):
             self._update_overlay = None
 
         def _on_update():
+            if sys.platform == "darwin" and mode == "macos":
+                # Caelumite: download the DMG in the browser; installing is
+                # dragging the new app over the old one.
+                from Utils.environment.xdg import open_url
+                from Utils.github.app_updates import _APP_UPDATE_RELEASES_URL
+                open_url(appimage_url or _APP_UPDATE_RELEASES_URL)
+                return
             if mode == "flatpak":
                 from Utils.ui.config import load_allow_prerelease
                 from Utils.github.app_updates import (

@@ -140,6 +140,11 @@ notary credentials stored once with:
 xcrun notarytool store-credentials caelumite --apple-id <Apple ID> --team-id <Team ID>
 ```
 
+Publish the DMG as an asset on a GitHub release tagged `v<version>`. On
+startup the app looks for the newest release with a DMG and offers to
+download it, with an option in Settings → Updates to turn that off or include
+pre-releases.
+
 `--identity -` builds an ad-hoc signed copy for local testing, and
 `--no-notarize` skips Apple's service. The pinned Python and 7-Zip downloads
 are cached and checksummed in `build/cache/`. Output goes to

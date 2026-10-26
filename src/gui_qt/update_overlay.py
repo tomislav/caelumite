@@ -90,6 +90,19 @@ class UpdateOverlay(QFrame):
         bar = QHBoxLayout()
         bar.setSpacing(8)
 
+        if mode == "macos":
+            # Caelumite: the update is a DMG download (Utils/macos/updates.py).
+            def _do_download():
+                self.close_overlay()
+                if on_update is not None:
+                    on_update()
+
+            dl = QPushButton(self.tr("Download update"))
+            dl.setObjectName("PrimaryButton")
+            dl.setCursor(Qt.PointingHandCursor)
+            dl.clicked.connect(_do_download)
+            bar.addWidget(dl)
+
         if mode in ("appimage", "flatpak"):
             def _do_update():
                 self.close_overlay()

@@ -20,6 +20,7 @@ import os
 import shutil
 import signal
 import subprocess
+import sys
 import threading
 import time
 import uuid
@@ -106,6 +107,10 @@ def matching_pids(markers: Iterable[str]) -> set[int] | None:
     wanted = tuple(dict.fromkeys(str(m) for m in markers if m))
     if not wanted:
         return set()
+    if sys.platform == "darwin":
+        # Caelumite: no /proc on macOS - read environments via sysctl.
+        from Utils.macos.processes import matching_pids as _mac_matching_pids
+        return _mac_matching_pids(wanted)
     if _inside_flatpak():
         cmd = ["flatpak-spawn", "--host", "bash", "-c",
                _PROC_SCAN_SCRIPT, "bash", *wanted]

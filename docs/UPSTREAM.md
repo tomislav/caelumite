@@ -57,6 +57,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/environment/xdg.py` | `open` instead of `xdg-open`; `~/Downloads` |
 | `Utils/processes/sleep.py` | `caffeinate` |
 | `Utils/processes/instances.py` | `ps`/`kill` instead of `/proc` |
+| `Utils/processes/game.py` | running-game tracking via `sysctl(KERN_PROCARGS2)` instead of `/proc/*/environ` |
 | `gui_qt/i18n.py` | installs the rename translator |
 | `gui_qt/app.py` | app name and UI filter |
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |

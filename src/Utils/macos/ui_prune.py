@@ -16,8 +16,8 @@ from __future__ import annotations
 import re
 
 from PySide6.QtCore import QEvent, QObject
-from PySide6.QtWidgets import (QAbstractButton, QApplication, QComboBox, QLabel,
-                               QLineEdit, QMenu, QWidget)
+from PySide6.QtWidgets import (QAbstractButton, QApplication, QComboBox,
+                               QGroupBox, QLabel, QLineEdit, QMenu, QWidget)
 
 _HIDE_TEXT = re.compile(
     r"^(?:"
@@ -48,6 +48,9 @@ _HIDE_TEXT = re.compile(
     re.DOTALL,
 )
 _HIDE_PLACEHOLDER = re.compile(r"%command%")
+# Settings sections whose every option is upstream-only on macOS: the Ko-Fi and
+# Endorse toggles, and upstream's release update check.
+_HIDE_GROUP = re.compile(r"^(?:Status bar|Updates)$")
 
 # Launch-via modes that need a Linux launcher; macOS launches through the
 # game's bottle (Auto/Steam) or runs the exe directly (None).
@@ -78,6 +81,8 @@ def _should_hide(widget: QWidget) -> bool:
         return bool(_HIDE_TEXT.match(_clean(widget.text())))
     if isinstance(widget, QLineEdit):
         return bool(_HIDE_PLACEHOLDER.search(widget.placeholderText()))
+    if isinstance(widget, QGroupBox):
+        return bool(_HIDE_GROUP.match(widget.title()))
     return False
 
 

@@ -36,6 +36,7 @@ Ctrl+F) and while an overlay / modal is open - mirroring the Tk guard.
 
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass
 
 # Crash-proof diagnostic prints (Flatpak stdout can raise BrokenPipeError and
@@ -106,6 +107,13 @@ SHORTCUT_DEFINITIONS = (
     ShortcutDefinition("browser_forward", QT_TRANSLATE_NOOP(
         "ShortcutEditor", "Browser forward"), "Mouse 5"),
 )
+
+if sys.platform == "darwin":
+    # Caelumite: Cmd+M minimizes on macOS, so Install Mod defaults to Cmd+I.
+    SHORTCUT_DEFINITIONS = tuple(
+        ShortcutDefinition(d.action_id, d.label, "Ctrl+I")
+        if d.action_id == "install_mod" else d
+        for d in SHORTCUT_DEFINITIONS)
 
 MOUSE_ACTION_IDS = (
     "open_mod_page", "browser_back", "browser_forward",

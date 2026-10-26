@@ -24378,6 +24378,10 @@ def run(startup_timing=None) -> int:
     if _splash is not None:
         win.setWindowOpacity(0.0)
     win.show()
+    if sys.platform == "darwin":
+        # Caelumite: native macOS menu bar.
+        from Utils.macos.menubar import install as _install_menubar
+        _install_menubar(win)
     if _splash is not None:
         try:
             _splash.raise_()

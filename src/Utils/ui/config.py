@@ -2161,6 +2161,17 @@ if sys.platform == "darwin":
     def load_hidden_header_buttons() -> set[str]:
         return _upstream_load_hidden_header_buttons() | {"wabbajack"}
 
+    # Upstream's donation/endorse buttons don't apply to Caelumite, and the
+    # update check looks for upstream's Linux releases.
+    def load_hide_kofi_button() -> bool:
+        return True
+
+    def load_hide_endorse_button() -> bool:
+        return True
+
+    def load_update_notifications() -> bool:
+        return False
+
 
 def save_hidden_header_buttons(value) -> None:
     """Persist the set of hidden top-bar buttons to amethyst.ini."""

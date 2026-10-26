@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # Start Caelumite from source (run scripts/setup-macos.sh once first).
-cd "$(dirname "$0")/src" || exit 1
+# Runs through build/Caelumite.app when it exists (scripts/build-app.sh), so
+# macOS shows the Caelumite name and icon instead of Python's.
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+if [ -x "$ROOT/build/Caelumite.app/Contents/MacOS/Caelumite" ]; then
+    exec "$ROOT/build/Caelumite.app/Contents/MacOS/Caelumite" "$@"
+fi
+cd "$ROOT/src" || exit 1
 if [ ! -x ../.venv/bin/python ]; then
     echo "error: .venv missing - run scripts/setup-macos.sh first" >&2
     exit 1

@@ -27,3 +27,4 @@ src/appimage/dist/
 /native/amethyst_filegraph/target/
 /assets
 result
+/build/

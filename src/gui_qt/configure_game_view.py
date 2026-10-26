@@ -14,6 +14,7 @@ Handles both cases in one view: "Add" framing when the game is unconfigured,
 from __future__ import annotations
 
 import shutil
+import sys
 import threading
 from pathlib import Path
 
@@ -2859,6 +2860,10 @@ class ConfigureGameView(QWidget):
         Progress is reported via ``Utils.app_log.app_log`` (thread-safe; wired
         into the Qt log panel by gui_qt.glue), so this worker touches no widgets.
         """
+        if sys.platform == "darwin":
+            # Caelumite: CrossOver manages what is installed in a bottle; never
+            # run dependency installers in it behind the user's back.
+            return
         game = self._game
         prefix = game.get_prefix_path() if hasattr(game, "get_prefix_path") else None
         if not (prefix and Path(prefix).is_dir()):

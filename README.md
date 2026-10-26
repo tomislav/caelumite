@@ -120,6 +120,31 @@ The app runs this checkout, so code changes need no rebuild; rebuild after
 makes itself the default `nxm://` handler, and the handler for Thunderstore
 `ror2mm://` and `modl://` links unless another app already handles them.
 
+## Building a release
+
+`scripts/build_release.py` builds a self-contained `Caelumite.app` for Apple
+silicon (macOS 14 or later):
+- it embeds its own Python ([python-build-standalone](https://github.com/astral-sh/python-build-standalone)),
+  the app code, the Qt parts the app uses and [7-Zip](https://www.7-zip.org);
+- it signs everything with your Developer ID and the hardened runtime;
+- it notarizes the app, then packages and notarizes a disk image.
+
+```bash
+.venv/bin/python scripts/build_release.py
+```
+
+It needs a "Developer ID Application" certificate in your keychain and
+notary credentials stored once with:
+
+```bash
+xcrun notarytool store-credentials caelumite --apple-id <Apple ID> --team-id <Team ID>
+```
+
+`--identity -` builds an ad-hoc signed copy for local testing, and
+`--no-notarize` skips Apple's service. The pinned Python and 7-Zip downloads
+are cached and checksummed in `build/cache/`. Output goes to
+`build/release/`.
+
 ## Nexus Mods
 
 Caelumite isn't registered with Nexus Mods yet, so Nexus login is off in

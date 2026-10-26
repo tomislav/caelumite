@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!-- Hardened-runtime exceptions for Caelumite's executables. None are needed
+     so far; add one here only when a feature is shown to need it. -->
+<dict/>
+</plist>

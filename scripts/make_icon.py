@@ -4,7 +4,10 @@
 A faceted sky-blue crystal on a night-sky tile, laid out on Apple's icon
 grid (an 824 px rounded square centred in the 1024 px canvas).
 
-Usage: .venv/bin/python scripts/make_icon.py [master-1024.png]
+Usage: .venv/bin/python scripts/make_icon.py [master-1024.png ...]
+
+Without arguments it rewrites src/icons/Logo.png; with paths it renders only
+those 1024 px masters (the app bundle builds use this).
 """
 
 from __future__ import annotations
@@ -98,7 +101,9 @@ def main() -> int:
     the full 1024 px master there (for the .app icon)."""
     app = QGuiApplication(sys.argv[:1])  # noqa: F841 - QImage/QPainter need it
     img = draw()
-    targets = [(OUT, LOGO_PX)] + [(Path(a), SIZE) for a in sys.argv[1:]]
+    # With paths, render only those (the app bundle builds); without, refresh
+    # the tracked logo - so building never dirties the working tree.
+    targets = [(Path(a), SIZE) for a in sys.argv[1:]] or [(OUT, LOGO_PX)]
     for path, px in targets:
         path.parent.mkdir(parents=True, exist_ok=True)
         out = img if px == SIZE else img.scaled(

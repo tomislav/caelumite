@@ -19,6 +19,16 @@ _APP_UPDATE_FLATPAK_BUNDLE_URL = (
 )
 _APP_ID = "io.github.Amethyst.ModManager"
 
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own releases (the update check is off on macOS - see
+    # Utils/ui/config.py - but nothing should point at upstream's builds).
+    from Utils.macos.app import REPO_SLUG as _REPO
+    _APP_UPDATE_RELEASES_API_URL = f"https://api.github.com/repos/{_REPO}/releases/latest"
+    _APP_UPDATE_RELEASES_LIST_API_URL = (
+        f"https://api.github.com/repos/{_REPO}/releases?per_page=20")
+    _APP_UPDATE_RELEASES_URL = f"https://github.com/{_REPO}/releases"
+
 # Hosted Flatpak remote (GitHub Pages). Adding this remote lets the OS handle
 # updates natively (`flatpak update`, GNOME Software, Discover) with delta
 # downloads. `stable` and `beta` are the two OSTree branches published to it.

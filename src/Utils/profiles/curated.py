@@ -16,6 +16,10 @@ from pathlib import Path
 from Utils.config_paths import get_application_cache_dir, get_config_dir
 
 RAW_BASE = "https://raw.githubusercontent.com/ChrisDKN/Amethyst-Mod-Manager/Resources/"
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own Resources branch.
+    from Utils.macos.app import RESOURCES_RAW as RAW_BASE
 
 
 def cache_dir() -> Path:

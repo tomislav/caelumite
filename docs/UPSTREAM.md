@@ -20,11 +20,30 @@ later merges small. After the merge it:
   packaging, CI, Nix, meson), which also resolves conflicts where upstream
   edited one of them;
 - keeps Caelumite's copy of files marked `merge=ours` in `.gitattributes`
-  (the logo, the README).
+  (the logo, the README, the changelog).
 
 Any other conflict is left for you to resolve; the merge isn't committed
 until none remain. After merging, start the app and check that a game
 deploys and launches.
+
+### The Resources branch
+
+Caelumite downloads game handlers, wizard plugins, translations, curated
+profiles and the Synthesis NuGet config at runtime from its own `Resources`
+branch, a copy of upstream's. Merge upstream's into it from a worktree:
+
+```bash
+git worktree add ../caelumite-resources Resources
+```
+
+```bash
+cd ../caelumite-resources && ../Caelumite/scripts/sync-upstream.sh
+```
+
+On `Resources` the script merges `upstream/Resources`, removes upstream's
+GitHub Actions workflows and Crowdin config, and stops before committing if
+any `.py` file changed. Caelumite runs plugin code, so review it first, then
+`git commit --no-edit` and push.
 
 ## Where Caelumite differs from upstream
 
@@ -73,10 +92,14 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `gui_qt/settings_view.py` | no "Hide Ko-Fi button" setting |
 | `wizards_qt/proton_step.py` | the wizard "Choose Proton Version" step shows the game's bottle instead (`Utils/macos/wizard.py`) |
 | `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; Nexus login goes through `Utils/macos/nexus.py` until Caelumite is registered; no Ko-Fi button |
+| `Utils/github/sync.py`, `Utils/profiles/curated.py`, `Utils/bethesda/synthesis.py` | resources come from Caelumite's `Resources` branch |
+| `Utils/github/wiki.py`, `gui_qt/onboarding_view.py` | the in-app wiki and onboarding link use Caelumite's wiki |
+| `Nexus/nexus_requirements.py` | the requirement filter list comes from Caelumite's `main` |
+| `Utils/github/app_updates.py` | release URLs point at Caelumite (the check itself is off) |
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |
 
-**Replaced files:** `src/icons/Logo.png` (from `scripts/make_icon.py`) and
-`README.md`.
+**Replaced files:** `src/icons/Logo.png` (from `scripts/make_icon.py`),
+`README.md` and `Changelog.txt`.
 
 ## Editing upstream files
 

@@ -59,6 +59,15 @@ _LUDUSAVI_RAW_URL = (
     "Resources/Ludusavi/ludusavi_saves.json"
 )
 
+if sys.platform == "darwin":
+    # Caelumite: its own Resources branch (Utils/macos/app.py).
+    from Utils.macos.app import RESOURCES_API as _API, RESOURCES_BRANCH as _BR
+    from Utils.macos.app import RESOURCES_RAW as _RAW
+    _CUSTOM_HANDLERS_API_URL = f"{_API}Custom%20Handlers?ref={_BR}"
+    _PLUGINS_API_URL = f"{_API}Plugins/v2?ref={_BR}"
+    _LANGUAGES_API_URL = f"{_API}Localisation?ref={_BR}"
+    _LUDUSAVI_RAW_URL = f"{_RAW}Ludusavi/ludusavi_saves.json"
+
 
 def _log_sync(what: str, detail) -> None:
     """Log a background-sync problem to stderr (sync must never crash the UI)."""

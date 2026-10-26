@@ -112,8 +112,8 @@ def install(window) -> QMenuBar:
     _action(help_menu, f"{APP_NAME} on GitHub", lambda: _open(REPO_URL))
     _action(help_menu, "Report an Issue…", lambda: _open(f"{REPO_URL}/issues"))
     help_menu.addSeparator()
-    _action(help_menu, f"{UPSTREAM_NAME} Wiki", _call(window, "_open_wiki_tab"))
-    _action(help_menu, f"{UPSTREAM_NAME} Changelog", _call(window, "_open_changelog_tab"))
+    _action(help_menu, f"{APP_NAME} Wiki", _call(window, "_open_wiki_tab"))
+    _action(help_menu, f"{APP_NAME} Changelog", _call(window, "_open_changelog_tab"))
     _action(help_menu, f"{UPSTREAM_NAME} on GitHub", lambda: _open(UPSTREAM_URL))
 
     # nxm:// links that arrived while the window was being built.

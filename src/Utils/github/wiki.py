@@ -41,6 +41,14 @@ _PAGES_URL = f"https://github.com/{WIKI_REPO}/wiki/_pages"
 _RAW_BASE = f"https://raw.githubusercontent.com/wiki/{WIKI_REPO}/"
 _WEB_BASE = f"https://github.com/{WIKI_REPO}/wiki/"
 
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own wiki.
+    from Utils.macos.app import REPO_SLUG as WIKI_REPO
+    _PAGES_URL = f"https://github.com/{WIKI_REPO}/wiki/_pages"
+    _RAW_BASE = f"https://raw.githubusercontent.com/wiki/{WIKI_REPO}/"
+    _WEB_BASE = f"https://github.com/{WIKI_REPO}/wiki/"
+
 # Throttles. The page list and page bodies can change any time the wiki is
 # edited, so they re-check often; images are content-addressed attachment URLs
 # whose bytes never change, so they are effectively fetched once.

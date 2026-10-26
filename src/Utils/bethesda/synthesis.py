@@ -833,6 +833,11 @@ _NUGET_CONFIG_URL = (
     "https://raw.githubusercontent.com/ChrisDKN/Amethyst-Mod-Manager/"
     "Resources/Synthesis/NuGet.Config"
 )
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own Resources branch.
+    from Utils.macos.app import RESOURCES_RAW as _RAW
+    _NUGET_CONFIG_URL = f"{_RAW}Synthesis/NuGet.Config"
 
 _NUGET_CONFIG_FALLBACK = (
     '﻿<?xml version="1.0" encoding="utf-8"?>\n'

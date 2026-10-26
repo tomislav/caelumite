@@ -43,6 +43,12 @@ ProgressCallback = Callable[[str], None]
 REQUIREMENT_FILTER_URL = (
     "https://raw.githubusercontent.com/ChrisDKN/Amethyst-Mod-Manager/main/src/Nexus/updatefilter.txt"
 )
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: the copy in its own repository.
+    from Utils.macos.app import REPO_SLUG as _REPO
+    REQUIREMENT_FILTER_URL = (
+        f"https://raw.githubusercontent.com/{_REPO}/main/src/Nexus/updatefilter.txt")
 _FETCH_TIMEOUT = 10
 
 # Requirements a game satisfies with something outside the mod list, such as

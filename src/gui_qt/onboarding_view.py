@@ -39,6 +39,11 @@ from Utils.environment.xdg import open_url
 
 _ICONS_DIR = Path(__file__).resolve().parent.parent / "icons"
 _WIKI_URL = "https://github.com/ChrisDKN/Amethyst-Mod-Manager/wiki"
+import sys as _sys
+if _sys.platform == "darwin":
+    # Caelumite: its own wiki.
+    from Utils.macos.app import REPO_URL as _REPO_URL
+    _WIKI_URL = f"{_REPO_URL}/wiki"
 _TOTAL_PAGES = 3
 
 

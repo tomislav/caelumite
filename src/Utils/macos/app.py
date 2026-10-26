@@ -16,7 +16,14 @@ APP_NAME = "Caelumite"
 BUNDLE_ID = "io.github.caelumite"
 UPSTREAM_NAME = "Amethyst Mod Manager"
 UPSTREAM_URL = "https://github.com/ChrisDKN/Amethyst-Mod-Manager"
-REPO_URL = "https://github.com/tomislav/caelumite"
+REPO_SLUG = "tomislav/caelumite"
+REPO_URL = f"https://github.com/{REPO_SLUG}"
+# Branch holding the synced resources (game handlers, wizard plugins,
+# translations, Ludusavi data, curated profiles) - Caelumite's copy of
+# upstream's Resources branch, so only reviewed plugin code reaches users.
+RESOURCES_BRANCH = "Resources"
+RESOURCES_RAW = f"https://raw.githubusercontent.com/{REPO_SLUG}/{RESOURCES_BRANCH}/"
+RESOURCES_API = f"https://api.github.com/repos/{REPO_SLUG}/contents/"
 
 # Nexus Mods OAuth credentials for Caelumite. Empty until Nexus registers the
 # app (support@nexusmods.com - see docs/NEXUS.md); until then OAuth login is

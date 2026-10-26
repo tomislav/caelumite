@@ -16,6 +16,7 @@ into the portal that just failed.
 from __future__ import annotations
 
 import re
+import sys
 from pathlib import Path
 
 from PySide6.QtWidgets import QFileDialog
@@ -52,6 +53,10 @@ def _build(parent, title: str, mode, *, filters=None, save_name: str = "",
     """Create a non-native QFileDialog seeded at the last-used directory."""
     dlg = QFileDialog(parent, title)
     dlg.setOption(QFileDialog.DontUseNativeDialog, True)
+    if sys.platform == "darwin":
+        # Caelumite: the native macOS open/save panel has no portal to
+        # loop back into, and gives Go to Folder, the sidebar and so on.
+        dlg.setOption(QFileDialog.DontUseNativeDialog, False)
     dlg.setFileMode(mode)
     if initial_dir or _last_dir:
         dlg.setDirectory(initial_dir or _last_dir)

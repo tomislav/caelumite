@@ -9,6 +9,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 import threading
 import traceback
 import uuid
@@ -579,6 +580,10 @@ def _run_waterfall(
     Returns the chosen result (typed), or `empty` if the user cancelled or
     every step was unavailable.
     """
+    if sys.platform == "darwin":
+        # Caelumite: no portal, zenity or kdialog on macOS - go straight to
+        # the toolkit picker, which is the native open/save panel there.
+        steps = steps[-1:]
     for name, fn in steps:
         _debug_log(f"Trying {name}...")
         try:

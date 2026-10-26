@@ -20,9 +20,14 @@
 Caelumite is a macOS-only fork of
 [Amethyst Mod Manager](https://github.com/ChrisDKN/Amethyst-Mod-Manager) by
 ChrisDKN. Nearly all of the mod-management code is Amethyst's; Caelumite adds
-the macOS platform layer and keeps merging upstream releases. Please send
-game-support and mod-management bug reports and feature ideas upstream, and
-support the original project.
+the macOS platform layer and keeps merging upstream releases.
+
+Report bugs and ideas in this repository's
+[issues](https://github.com/tomislav/caelumite/issues). If Caelumite is
+useful to you, please support the original project: endorse
+[Amethyst on Nexus Mods](https://www.nexusmods.com/site/mods/1714), star
+[its repository](https://github.com/ChrisDKN/Amethyst-Mod-Manager) or
+[buy ChrisDKN a coffee on Ko-fi](https://ko-fi.com/chrisdkn).
 
 ## Key Features
 

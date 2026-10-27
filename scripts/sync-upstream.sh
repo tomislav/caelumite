@@ -31,7 +31,9 @@ if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
     exit 1
 fi
 
-git fetch upstream
+# No tags: upstream's version tags (v1.1.0, v2.5.5, ...) would clash with
+# Caelumite's own release tags.
+git fetch --no-tags upstream
 # .gitattributes marks files Caelumite replaces (e.g. the logo) merge=ours.
 git config merge.ours.driver true
 MERGE_HEAD_FILE="$(git rev-parse --git-dir)/MERGE_HEAD"

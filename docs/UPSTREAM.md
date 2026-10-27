@@ -12,7 +12,8 @@ cleanly.
 scripts/sync-upstream.sh
 ```
 
-The script fetches the `upstream` remote and merges `upstream/main` with a
+The script fetches the `upstream` remote, without its tags (upstream's
+version tags would clash with Caelumite's), and merges `upstream/main` with a
 merge commit. Never rebase or squash: git needs upstream's history to keep
 later merges small. After the merge it:
 

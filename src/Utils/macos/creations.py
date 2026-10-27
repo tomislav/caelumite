@@ -640,15 +640,22 @@ def _refresh_version(run: _Run, creation: Creation, mod: _Mod) -> None:
     if mod.meta.get("creationid", creation.id) != creation.id:
         return
     recorded = mod.meta.get("creationversion")
+    # The Version column shows `version`; fill it when empty, never replace
+    # one the user set.
+    missing_version = not mod.meta.get("version", "").strip()
     if not recorded:
         values = {"creationId": creation.id,
                   "creationTitle": creation.title,
                   "creationVersion": creation.version}
         if not mod.meta.get("categoryname"):
             values["categoryName"] = CATEGORY
+        if missing_version:
+            values["version"] = display_version(creation.version)
         _set_meta(mod, values)
         return
     if recorded == creation.version:
+        if missing_version:
+            _set_meta(mod, {"version": display_version(recorded)})
         return
     version = display_version(creation.version)
     values = {"creationVersion": creation.version, "version": version,

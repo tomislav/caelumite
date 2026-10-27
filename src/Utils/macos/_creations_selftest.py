@@ -237,6 +237,7 @@ def test_same_version_keeps_xedit_flag() -> None:
         mod = t.mod(ACD, {ACD_FILES[0]: b"esm", ACD_FILES[1]: b"ba2",
                           "bnw_autoclosedoors - old.ba2": b"old"},
                     creationId="TM_a", creationVersion="1792106932.3.2.2",
+                    version="3.2.2",
                     xeditModifiedPlugins="bnw_autoclosedoors.esm;Other.esp")
         before = (mod / "meta.ini").stat().st_mtime_ns
         assert t.adopt() == [], t.logs
@@ -697,6 +698,28 @@ def test_failed_case_rename_is_logged() -> None:
                    for line in t.logs), t.logs
 
 
+def test_empty_versions_are_filled() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        t = Layout(Path(tmp))
+        t.catalog({
+            "TM_a": ACD_ENTRY,
+            "TM_d": ("Deimog", "1700000000.1.0", ["deimog.esm"]),
+            "TM_s": ("Ship Builder", "1700000000.1.0", ["ship.esm"]),
+        })
+        first = t.mod(ACD, {ACD_FILES[0]: b"esm"})       # never imported
+        recorded = t.mod("[Creations] Deimog", {"deimog.esm": b"esm"},
+                         creationId="TM_d", creationVersion="1700000000.1.0",
+                         version="")
+        custom = t.mod("[Creations] Ship Builder", {"ship.esm": b"esm"},
+                       creationId="TM_s", creationVersion="1700000000.1.0",
+                       version="1.0-mine")
+        assert t.adopt() == [], t.logs
+        assert read_meta_ini(first)["version"] == "3.2.2"
+        assert read_meta_ini(recorded)["version"] == "1.0"
+        assert read_meta_ini(custom)["version"] == "1.0-mine"
+        assert not any("updated to" in line for line in t.logs), t.logs
+
+
 def test_creation_url_rejects_odd_ids() -> None:
     from Games.Bethesda.starfield import Starfield
     with tempfile.TemporaryDirectory() as tmp:
@@ -812,6 +835,8 @@ if __name__ == "__main__":
     print("✓ Creation links read only [General], last entry wins")
     test_failed_case_rename_is_logged()
     print("✓ a failed case rename is logged")
+    test_empty_versions_are_filled()
+    print("✓ empty versions are filled in, set ones are kept")
     test_creation_url_rejects_odd_ids()
     print("✓ Creation links reject ids that aren't UUIDs")
     test_creation_url_reads_upstream_format()

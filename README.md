@@ -65,7 +65,7 @@ useful to you, please support the original project: endorse
   for credentials, and a title bar that follows the theme.
 - **Many games** - Caelumite inherits Amethyst's support for almost 100
   games (all Bethesda titles, Cyberpunk 2077, Baldur's Gate 3, RE Engine and
-  BepInEx games, ...). So far it has been tested on macOS with Starfield.
+  BepInEx games, ...).
 
 ## Download
 

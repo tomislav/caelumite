@@ -881,6 +881,14 @@ class MainWindow(QMainWindow):
         if not self._filegraph_loading:
             self._reload_plugins(startup_stage="initial")
         self._update_deployed_profile_highlight()
+        # Caelumite: Creations installed or updated in-game while Caelumite
+        # wasn't running wait for a Deploy.
+        if sys.platform == "darwin" and self._gs.game is not None:
+            from Utils.macos.creations import creations_changed
+            if creations_changed(self._gs.game):
+                QTimer.singleShot(0, lambda: self._notify(self.tr(
+                    "Creations changed in the game - press Deploy to import "
+                    "them."), "info"))
         phase_started = _startup_time.perf_counter()
 
         # Configurable keyboard/mouse shortcuts + last-panel tracking so
@@ -13740,6 +13748,16 @@ class MainWindow(QMainWindow):
                 or getattr(self, "_install_running", False)
                 or self._col_install_running or self._tool_busy)
         self._set_deploy_buttons_enabled(not busy)
+        # Caelumite: Creations downloaded or updated in-game are imported by
+        # a Deploy (Utils/macos/creations.py); run it when the game exits.
+        game = self._gs.game
+        if sys.platform == "darwin" and not busy and game is not None:
+            from Utils.macos.creations import creations_changed
+            if creations_changed(game):
+                self._append_log("Creations changed in the game - deploying.")
+                self._notify(self.tr("Importing Creations from the game…"), "info")
+                self._auto_deploy_in_progress = True
+                self._on_deploy(silent=True)
         if stopped_by_user:
             self._notify(self.tr("{0} stopped").format(session.label), "info")
 

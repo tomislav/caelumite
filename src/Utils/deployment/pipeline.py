@@ -619,6 +619,15 @@ def run_deploy_pipeline(
                     log_fn("New unmanaged Data plugins require runtime capture "
                            "before deployment: " + ", ".join(new_data_plugins))
                     incr_plan = None
+            # Caelumite: a Creation installed, updated or removed in-game
+            # changes ContentCatalog.txt; take the full path so Restore and
+            # the Creations import below see the new files.
+            if sys.platform == "darwin" and incr_plan is not None:
+                from Utils.macos.creations import creations_changed
+                if creations_changed(game):
+                    log_fn("Creations changed in the game - using the full "
+                           "deploy path.")
+                    incr_plan = None
             if incr_plan is None and not new_data_plugins:
                 vfs_redeploy = _incr.plan_vfs_redeploy(
                     game, profile, log_fn=log_fn)
@@ -769,6 +778,26 @@ def run_deploy_pipeline(
             filegraph_profile.ensure_reconciled(
                 operation_hint={"kind": "deployment"})
             filegraph_generation = filegraph_profile.snapshot().generation
+
+        # Caelumite: Creations downloaded in-game become mods
+        # (Utils/macos/creations.py) before the deployment is planned.
+        # Only after a full restore: an incremental plan computed above
+        # would not see the moved files, and a deployed Data folder holds
+        # mod copies with Creation file names.
+        if (sys.platform == "darwin" and incr_plan is None
+                and not vfs_redeploy):
+            from Utils.macos.creations import adopt_creations, creations_changed
+            if game.get_deploy_active():
+                if creations_changed(game):
+                    log_fn("Creations: not imported - the game is still "
+                           "deployed. Restore it, then deploy again.")
+            elif adopt_creations(game, profile_dir, log_fn=log_fn,
+                                 enabled_states=runtime_plugin_states):
+                filegraph_library.refresh(profile_dir)
+                filegraph_profile = filegraph_library.open_profile(profile_dir)
+                filegraph_profile.ensure_reconciled(
+                    operation_hint={"kind": "deployment"})
+                filegraph_generation = filegraph_profile.snapshot().generation
 
         deploy_mode = (
             game.get_deploy_mode()

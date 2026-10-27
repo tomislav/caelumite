@@ -52,8 +52,9 @@ any `.py` file changed. Caelumite runs plugin code, so review it first, then
 - `src/Utils/macos/` — CrossOver bottle discovery and path translation
   (`crossover.py`), the bottle runner for Play, Run EXE and tools
   (`launch.py`), the rename translator and identity (`branding.py`, `app.py`),
-  hiding Linux-only UI (`ui_prune.py`), and the `caffeinate` and `ps`
-  backends (`sleep.py`, `instances.py`).
+  hiding Linux-only UI (`ui_prune.py`), the `caffeinate` and `ps`
+  backends (`sleep.py`, `instances.py`), and the import of in-game Bethesda
+  Creations into mods (`creations.py`).
 - `src/LOOT/build_libloot_macos.sh`, `native/amethyst_filegraph/.cargo/`,
   `scripts/`, `caelumite`, `docs/`.
 
@@ -71,7 +72,8 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/executables/launch.py` | Play, Run EXE, tool prefixes and the game prefix use the bottle; no `wineserver -k` |
 | `Utils/wine/proton.py` | `resolve_proton_env` → bottle (winecfg, regedit, registry repair) |
 | `Utils/deployment/wine_dll.py` | DLL overrides go through `reg import` in the bottle (`Utils/macos/registry.py`), not a direct `user.reg` edit a running Wine would overwrite |
-| `Utils/deployment/pipeline.py` | `steamuser` and `pfx` links before deploying (`prepare_bottle`); no script-extender launcher swap (CrossOver can't run a renamed game exe); instead a detected loader is the first, default play-bar entry and starts the bottle's Steam first, and the game entry starts the game without it (`Utils/macos/launch.py`, `gui_qt/app.py` play bar) |
+| `Utils/deployment/pipeline.py` | `steamuser` and `pfx` links before deploying (`prepare_bottle`); no script-extender launcher swap (CrossOver can't run a renamed game exe); instead a detected loader is the first, default play-bar entry and starts the bottle's Steam first, and the game entry starts the game without it (`Utils/macos/launch.py`, `gui_qt/app.py` play bar); a changed `ContentCatalog.txt` forces the full deploy path, and after the restore in-game Creations become mods (`Utils/macos/creations.py`) |
+| `Utils/deployment/standard.py` | Restore discards a deployed file the game rewrote with identical bytes (an in-game Creation re-download) instead of moving it back into its mod and flagging it as edited in xEdit (`Utils/macos/creations.py`) |
 | `Utils/config_paths.py` | config dir and default staging root |
 | `Games/base_game.py` | Hardlink is the default deploy method (games that ask for Symlink keep it) |
 | `Utils/environment/xdg.py` | `open` instead of `xdg-open`; `~/Downloads` |
@@ -94,7 +96,9 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/github/cache.py`, `Utils/sharing/paste.py`, `Thunderstore/thunderstore_download.py`, `Utils/downloads/modl.py`, `LOOT/loot_sorter.py`, `Games/Baldur's Gate 3/modio_api.py`, `Games/Baldur's Gate 3/bg3le_runtime.py` | User-Agent `Caelumite/<version>` |
 | `Utils/loverslab/credentials.py`, `Games/Baldur's Gate 3/modio_key.py` | Keychain service `Caelumite` |
 | `wizards_qt/proton_step.py` | the wizard "Choose Proton Version" step shows the game's bottle instead (`Utils/macos/wizard.py`) |
-| `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; Nexus login goes through `Utils/macos/nexus.py` until Caelumite is registered; no Ko-Fi button |
+| `gui_qt/modlist_menu.py` | "Open on Creations" in a Creation mod's right-click menu (one or several mods) opens its creations.bethesda.net page (`Utils/macos/creations.py`) |
+| `gui_qt/plugin_model.py` | a Creation plugin's name has a tooltip with the Creation's title and version (`Utils/macos/creations.py`) |
+| `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; Nexus login goes through `Utils/macos/nexus.py` until Caelumite is registered; no Ko-Fi button; after a Play session, a Deploy imports Creations changed in-game, and a startup notice appears when they changed while Caelumite wasn't running (`Utils/macos/creations.py`) |
 | `Utils/github/sync.py`, `Utils/profiles/curated.py`, `Utils/bethesda/synthesis.py` | resources come from Caelumite's `Resources` branch |
 | `Utils/github/wiki.py`, `gui_qt/onboarding_view.py` | the in-app wiki and onboarding link use Caelumite's wiki |
 | `Nexus/nexus_requirements.py` | the requirement filter list comes from Caelumite's `main` |

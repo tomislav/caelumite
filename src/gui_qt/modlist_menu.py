@@ -9,6 +9,8 @@ Qt backend, and even those appear only when their Tk show-condition passes.
 
 from __future__ import annotations
 
+import sys
+
 # Crash-proof diagnostic prints (Flatpak stdout can raise BrokenPipeError and
 # kill worker threads). See Utils.app_log.safe_print.
 from Utils.app_log import safe_print as print  # noqa: A004
@@ -337,6 +339,16 @@ def _build_mod_menu(view, model, row, entry, sel_mods, multi, act, stub, divider
                  lambda ns=_nexus_multi: _open_on_nexus_multi(view, ns)))
         if _nexus_sub:
             submenu(_mt("Nexus Actions"), _nexus_sub)
+        # Caelumite: Creation mods' pages on Bethesda's Creations site.
+        if sys.platform == "darwin" and getattr(view, "staging_dir", None):
+            from Utils.macos.creations import creation_url
+            _creation_urls = [u for u in (
+                creation_url(getattr(view, "game", None), view.staging_dir / nm)
+                for nm in _names) if u]
+            if _creation_urls:
+                from Utils.environment.xdg import open_url
+                act(_mtf("Open on Creations ({0})", len(_creation_urls)),
+                    lambda us=_creation_urls: [open_url(u) for u in us])
         updates = _update_menu_items(view, _names, True)
         if updates:
             submenu(_mt("Updates"), updates)
@@ -448,6 +460,14 @@ def _build_mod_menu(view, model, row, entry, sel_mods, multi, act, stub, divider
         ])
     if _modio_url(view, name):
         act(_mt("Open on mod.io"), lambda: _open_on_modio(view, name))
+    # Caelumite: a Creation mod's page on Bethesda's Creations site.
+    if sys.platform == "darwin" and _staging_ok:
+        from Utils.macos.creations import creation_url
+        _creation_url = creation_url(getattr(view, "game", None),
+                                     view.staging_dir / name)
+        if _creation_url:
+            from Utils.environment.xdg import open_url
+            act(_mt("Open on Creations"), lambda: open_url(_creation_url))
     workshop_url = _workshop_url(view, name)
     if workshop_url:
         from Utils.environment.xdg import open_url

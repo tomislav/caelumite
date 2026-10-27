@@ -6,6 +6,8 @@ by the delegate). Toggling enable writes back via plugin_state.save.
 
 from __future__ import annotations
 
+import sys
+
 # Crash-proof diagnostic prints (Flatpak stdout can raise BrokenPipeError and
 # kill worker threads). See Utils.app_log.safe_print.
 from Utils.app_log import safe_print as print  # noqa: A004
@@ -79,6 +81,8 @@ class PluginModel(QAbstractTableModel):
         # Engine parity: masters load before non-masters, so a drag/keyboard
         # move may not cross that boundary. Set from game.plugins_master_block.
         self._master_block = False
+        # Caelumite: plugin name (lower) → in-game Creation (name tooltip).
+        self._creations: dict = {}
 
     def set_rows(self, rows, game=None, profile=None, profile_dir=None):
         self.beginResetModel()
@@ -91,6 +95,10 @@ class PluginModel(QAbstractTableModel):
         self._highlights = {}
         self._refresh_natural_caches()
         self._rows = self._derive_display()
+        # Caelumite: Creation titles from the game's ContentCatalog.txt.
+        if sys.platform == "darwin" and game is not None:
+            from Utils.macos.creations import plugin_creations
+            self._creations = plugin_creations(game)
         if profile_dir is not None:
             try:
                 from Utils.profiles.state import read_plugin_locks
@@ -283,6 +291,12 @@ class PluginModel(QAbstractTableModel):
             if col == COL_GAME_INDEX:
                 return self._game_index_map.get(r.name.lower(), "")
             return ""
+        # Caelumite: a Creation plugin's name shows the Creation's title.
+        if sys.platform == "darwin":
+            if (role == Qt.ToolTipRole and col == COL_NAME
+                    and r.name.lower() in self._creations):
+                from Utils.macos.creations import creation_tooltip
+                return creation_tooltip(self._creations[r.name.lower()])
         # Flags-column tooltips are handled per-icon by PluginDelegate.helpEvent
         # (Tk parity), not via a whole-cell Qt.ToolTipRole.
         return None

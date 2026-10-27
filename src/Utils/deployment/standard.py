@@ -13,6 +13,7 @@ import inspect
 import os
 import re as _re
 import shutil
+import sys
 import threading as _threading
 import time as _time
 import uuid
@@ -1899,6 +1900,14 @@ def restore_data_core(
                          f"catalogued staging copy in '{target_mod}'.")
                     discarded_empty += 1
                     continue
+                # Caelumite: a plugin with the same bytes again (the game
+                # re-downloaded a Creation) isn't an edit; keep the mod's
+                # copy, no xEdit flag.
+                if (sys.platform == "darwin"
+                        and rel_str.lower().endswith(_PLUGIN_EXTS)):
+                    from Utils.macos.creations import same_content
+                    if same_content(src_str, staging_path):
+                        continue
                 _move_crash_safe(src_str, staging_path)
                 rescued += 1
                 if target_mod == _OVERWRITE_NAME:

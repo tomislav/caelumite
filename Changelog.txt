@@ -1,3 +1,7 @@
+- v1.1.1
+### Bug Fixes
+- With the Change Version tab open, selecting a Creation no longer leaves the previous mod's Nexus files on screen. The tab says the mod is a Creation and points to Open on Creations
+
 - v1.1.0
 ### macOS
 - System Information shows the macOS version, run mode and installed CrossOver builds instead of the Linux distribution, libc, Flatpak/AppImage and desktop-session rows

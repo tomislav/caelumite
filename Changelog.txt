@@ -1,3 +1,15 @@
+- v1.1.0
+### macOS
+- System Information shows the macOS version, run mode and installed CrossOver builds instead of the Linux distribution, libc, Flatpak/AppImage and desktop-session rows
+### Additions
+- Creations downloaded from the in-game Creations menu become mods on the next deploy: one mod per Creation, named after it, in the Creations category and enabled at the top of the mod list. Mods you already made for a Creation are reused and never renamed
+- Deploy runs by itself when a game started with Play exits and its Creations changed. If they changed while Caelumite wasn't running, a notice at startup says to deploy
+- Updates from the Creations menu go into the same mod: its version and Updated date are refreshed, the xEdit flag Restore would set is cleared, and plugins or archives the update dropped are moved to creations_backup/ next to your profiles
+- Creation plugins show the Creation's title and version as a tooltip in the plugin list
+- "Open on Creations" in the mod list's right-click menu opens a Creation mod's page on creations.bethesda.net
+### Bug Fixes
+- Restore no longer flags a plugin as edited in xEdit when the game rewrote it with identical bytes (for example when a Creation is downloaded again)
+
 - v1.0.0
 Initial release of Caelumite, a macOS fork of Amethyst Mod Manager 2.5.5 by ChrisDKN.
 ### macOS

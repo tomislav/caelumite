@@ -196,6 +196,16 @@ def creation_url(game, mod_dir: Path) -> str:
     return f"https://creations.bethesda.net/en/{site_game}/details/{uuid}"
 
 
+def is_creation(meta) -> bool:
+    """Whether a mod's NexusModMeta describes a Creation mod: no Nexus id, and
+    the Creations category or the "[Creations]" name of older imports."""
+    if int(getattr(meta, "mod_id", 0) or 0) > 0:
+        return False
+    return (str(getattr(meta, "category_name", "") or "").strip().lower()
+            == CATEGORY.lower()
+            or str(getattr(meta, "mod_name", "") or "").startswith(_NAME_PREFIX))
+
+
 def same_content(path: str, other: str) -> bool:
     """Whether two files hold the same bytes; False when either is unreadable.
 

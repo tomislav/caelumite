@@ -10,6 +10,7 @@ download → build_meta → install_fn flow as the Nexus browser tab.
 
 from __future__ import annotations
 
+import sys
 import threading
 from pathlib import Path
 
@@ -289,6 +290,12 @@ class ChangeVersionView(QWidget):
 
     # ---- fetch ------------------------------------------------------------
     def _start_fetch(self):
+        # Caelumite: a Creation has no Nexus files - show a notice instead of
+        # asking Nexus for them (Utils/macos/change_version.py).
+        if sys.platform == "darwin":
+            from Utils.macos.change_version import show_creation_notice
+            if show_creation_notice(self):
+                return
         self._loading_overlay.show_over()
         self._body.setEnabled(False)
         if not self._install_status:

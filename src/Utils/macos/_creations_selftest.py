@@ -17,7 +17,7 @@ from pathlib import Path
 from Utils.macos.creations import (
     Creation, adopt_creations, catalog_path, creation_mod_name,
     creation_tooltip, creation_url, creations_changed, display_version,
-    files_index,
+    files_index, is_creation,
     plugin_creations, read_catalog,
 )
 from Utils.mods.modlist import ModEntry, read_modlist
@@ -760,6 +760,119 @@ def test_pipeline_skips_the_import_while_deployed() -> None:
     assert any(line.startswith("Creations: not imported") for line in logs), logs
 
 
+def test_is_creation() -> None:
+    from types import SimpleNamespace
+    def meta(name, mod_id=0, category=""):
+        return SimpleNamespace(mod_name=name, mod_id=mod_id,
+                               category_name=category)
+    assert is_creation(meta("Neon Houseboat", category="Creations"))
+    assert is_creation(meta(ACD))
+    assert not is_creation(meta("Manual Mod"))
+    assert not is_creation(meta("Nexus Mod", mod_id=5, category="Creations"))
+
+
+def _qt_app():
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication
+    return QApplication.instance() or QApplication([])
+
+
+class _FakeNexus:
+    def __init__(self) -> None:
+        self.asked: list[int] = []
+
+    def get_mod_files(self, domain, mod_id):
+        from types import SimpleNamespace
+        self.asked.append(mod_id)
+        return SimpleNamespace(files=[])
+
+
+def _wait_for(condition, app, what: str) -> None:
+    import time
+    deadline = time.monotonic() + 5
+    while not condition():
+        if time.monotonic() > deadline:
+            raise AssertionError(f"timed out waiting for {what}")
+        app.processEvents()
+        time.sleep(0.01)
+
+
+def _meta(name: str, mod_id: int = 0, category: str = ""):
+    from types import SimpleNamespace
+    return SimpleNamespace(mod_name=name, mod_id=mod_id, category_name=category,
+                           ignore_update=False, game_domain="")
+
+
+def test_change_version_shows_a_creation() -> None:
+    from Games.Bethesda.starfield import Starfield
+    from gui_qt.change_version_view import ChangeVersionView, _LegendBar
+    app = _qt_app()
+    api = _FakeNexus()
+    nexus = _meta("Nexus Mod", 123)
+    view = ChangeVersionView(api, Starfield(), "Nexus Mod", nexus,
+                             install_fn=None, on_close=None)
+    legend = view.findChild(_LegendBar)
+    _wait_for(lambda: api.asked == [123], app, "the Nexus fetch")
+    view.retarget("Neon Houseboat", _meta("Neon Houseboat", category="Creations"))
+    assert view.current_mod_name() == "Neon Houseboat"
+    assert view._status.text() == ("Neon Houseboat is a Creation. Right-click "
+                                   "it and choose Open on Creations.")
+    assert not view._status.isHidden()
+    assert not view._ignore_cb.isEnabled()
+    assert legend.isHidden()
+    view.retarget("Nexus Mod", nexus)
+    _wait_for(lambda: len(api.asked) == 2, app, "the second Nexus fetch")
+    assert api.asked == [123, 123], api.asked
+    assert view._ignore_cb.isEnabled()
+    assert not legend.isHidden()
+    view.deleteLater()
+
+
+def test_change_version_leaves_other_mods_to_upstream() -> None:
+    from Games.Bethesda.starfield import Starfield
+    from gui_qt.change_version_view import ChangeVersionView
+    app = _qt_app()
+    api = _FakeNexus()
+    view = ChangeVersionView(api, Starfield(), "Nexus Mod", _meta("Nexus Mod", 123),
+                             install_fn=None, on_close=None)
+    _wait_for(lambda: api.asked == [123], app, "the Nexus fetch")
+    view.retarget("Manual Mod", _meta("Manual Mod"))
+    _wait_for(lambda: len(api.asked) == 2, app, "the upstream fetch")
+    assert "is a Creation" not in view._status.text()
+    view.deleteLater()
+
+
+def test_change_version_follows_selection_to_a_creation() -> None:
+    from types import SimpleNamespace
+    from gui_qt.app import MainWindow
+    with tempfile.TemporaryDirectory() as tmp:
+        t = Layout(Path(tmp))
+        t.mod(ACD, {ACD_FILES[0]: b"esm"},
+              creationId="TM_afe907c3-d65d-4578-a512-4cd684fd7b38")
+        t.mod("Neon Houseboat", {"neon.esm": b"x"}, categoryName="Creations")
+        t.mod("Manual Mod", {"x.esm": b"x"}, modid="0")
+        retargeted: list[str] = []
+        view = SimpleNamespace(
+            isVisible=lambda: True, busy=lambda: False,
+            current_mod_name=lambda: "Nexus Mod",
+            retarget=lambda name, meta: retargeted.append(name))
+        for name in (ACD, "Neon Houseboat", "Manual Mod"):
+            entry = SimpleNamespace(name=name, is_separator=False,
+                                    is_group_header=False)
+            rows = [SimpleNamespace(row=lambda: 0)]
+            mod_view = SimpleNamespace(
+                selectionModel=lambda: SimpleNamespace(
+                    selectedRows=lambda: rows),
+                model=lambda: SimpleNamespace(entry=lambda row: entry))
+            window = SimpleNamespace(
+                _change_version_view=view,
+                _selected_modlist_view=lambda: mod_view,
+                _gs=SimpleNamespace(game=t.game,
+                                    staging_dir=lambda: t.staging))
+            MainWindow._retarget_change_version_to_selection(window)
+        assert retargeted == [ACD, "Neon Houseboat"], retargeted
+
+
 if __name__ == "__main__":
     test_read_catalog()
     print("✓ reads ContentCatalog.txt with a BOM")
@@ -843,3 +956,11 @@ if __name__ == "__main__":
     print("✓ Creation links read meta.ini as upstream writes it")
     test_pipeline_skips_the_import_while_deployed()
     print("✓ the pipeline skips the import while the game is deployed")
+    test_is_creation()
+    print("✓ Creation mods are told apart from Nexus and manual mods")
+    test_change_version_shows_a_creation()
+    print("✓ Change Version shows that a mod is a Creation")
+    test_change_version_leaves_other_mods_to_upstream()
+    print("✓ Change Version leaves other mods without a Nexus ID to upstream")
+    test_change_version_follows_selection_to_a_creation()
+    print("✓ Change Version follows the selection to a Creation only")

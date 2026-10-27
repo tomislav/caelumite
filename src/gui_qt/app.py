@@ -10751,6 +10751,12 @@ class MainWindow(QMainWindow):
         from Nexus.nexus_meta import read_meta
         meta = read_meta(staging / e.name / "meta.ini")
         if int(getattr(meta, "mod_id", 0) or 0) <= 0:
+            # Caelumite: a Creation shows that it's a Creation instead of
+            # keeping the previous mod (Utils/macos/change_version.py).
+            if sys.platform == "darwin":
+                from Utils.macos.creations import is_creation
+                if is_creation(meta):
+                    view.retarget(e.name, meta)
             return    # not a Nexus mod - keep showing the current one
         view.retarget(e.name, meta)
 

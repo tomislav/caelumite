@@ -54,8 +54,9 @@ any `.py` file changed. Caelumite runs plugin code, so review it first, then
   (`crossover.py`), the bottle runner for Play, Run EXE and tools
   (`launch.py`), the rename translator and identity (`branding.py`, `app.py`),
   hiding Linux-only UI (`ui_prune.py`), the `caffeinate` and `ps`
-  backends (`sleep.py`, `instances.py`), and the import of in-game Bethesda
-  Creations into mods (`creations.py`).
+  backends (`sleep.py`, `instances.py`), the import of in-game Bethesda
+  Creations into mods (`creations.py`), and their Change Version notice
+  (`change_version.py`).
 - `src/LOOT/build_libloot_macos.sh`, `native/amethyst_filegraph/.cargo/`,
   `scripts/`, `caelumite`, `docs/`.
 
@@ -99,7 +100,8 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `wizards_qt/proton_step.py` | the wizard "Choose Proton Version" step shows the game's bottle instead (`Utils/macos/wizard.py`) |
 | `gui_qt/modlist_menu.py` | "Open on Creations" in a Creation mod's right-click menu (one or several mods) opens its creations.bethesda.net page (`Utils/macos/creations.py`) |
 | `gui_qt/plugin_model.py` | a Creation plugin's name has a tooltip with the Creation's title and version (`Utils/macos/creations.py`) |
-| `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; Nexus login goes through `Utils/macos/nexus.py` until Caelumite is registered; no Ko-Fi button; after a Play session, a Deploy imports Creations changed in-game, and a startup notice appears when they changed while Caelumite wasn't running (`Utils/macos/creations.py`) |
+| `gui_qt/change_version_view.py` | a Creation shows a notice instead of asking Nexus for its files; Ignore Update and the legend are off meanwhile (`Utils/macos/change_version.py`) |
+| `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; Nexus login goes through `Utils/macos/nexus.py` until Caelumite is registered; no Ko-Fi button; after a Play session, a Deploy imports Creations changed in-game, and a startup notice appears when they changed while Caelumite wasn't running; the Change Version tab follows the selection to a Creation and says it's a Creation (`Utils/macos/creations.py`, `Utils/macos/change_version.py`) |
 | `Utils/github/sync.py`, `Utils/profiles/curated.py`, `Utils/bethesda/synthesis.py` | resources come from Caelumite's `Resources` branch |
 | `Utils/github/wiki.py`, `gui_qt/onboarding_view.py` | the in-app wiki and onboarding link use Caelumite's wiki |
 | `Nexus/nexus_requirements.py` | the requirement filter list comes from Caelumite's `main` |

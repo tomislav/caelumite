@@ -22,7 +22,9 @@ reaches this module from small darwin branches in:
 from __future__ import annotations
 
 import os
+import re
 import shlex
+from datetime import datetime, timedelta
 from pathlib import Path, PureWindowsPath
 
 from Utils.macos.crossover import (
@@ -243,8 +245,150 @@ def _steam_running(bottle: Bottle) -> bool:
     return bool(matching_pids((exe_marker(bottle.name, bottle.path, "steam.exe"),)))
 
 
-def _start_steam(bottle: Bottle, steam_exe: Path, log_fn, timeout: float = 90) -> None:
-    """Start the bottle's Steam and give it time to sign in (worker thread).
+# Steam writes this to logs/connection_log.txt once it is signed in; a game
+# started before then asks Steam to restart it (without a script extender).
+_STEAM_SIGNED_IN = b"RecvMsgClientLogOnResponse() : processing complete"
+# Steam writes this line first in every session; the log keeps old sessions,
+# and the last one may still end signed in.
+_STEAM_SESSION_START = b"] Client version: "
+# "[2026-10-28 09:48:33] [Logged On, 4, 7] ..." - Steam's sign-in state.
+_STEAM_STATE = re.compile(rb"^\[[^\]]*\] \[([A-Za-z ]+), ")
+_STEAM_TIME = "%Y-%m-%d %H:%M:%S"
+# Only the end of the log is read: it grows by every session.
+_STEAM_LOG_TAIL = 1 << 20
+# The Play session gives up when no process appears within 90 s.
+_STEAM_TIMEOUT_SECONDS = 60
+_STEAM_POLL_SECONDS = 1.0
+# After signing in, Steam needs a moment before it answers games.
+_STEAM_SETTLE_SECONDS = 3.0
+# In offline mode there is no sign-in to wait for; give Steam this long.
+_STEAM_OFFLINE_SECONDS = 10.0
+# A running Steam not signed in this long after it started is offline or
+# at its login window; waiting won't sign it in.
+_STEAM_STALE_SECONDS = 120
+# A Steam session that started this shortly before Play (opened from
+# CrossOver, say) counts as the one Play started.
+_STEAM_START_SLACK_SECONDS = 15
+
+
+def _steam_connection_log(steam_exe: Path) -> Path:
+    return steam_exe.parent / "logs" / "connection_log.txt"
+
+
+def _steam_session(log: Path) -> "tuple[datetime | None, bool]":
+    """(start, signed in) of the latest session in Steam's connection log.
+    The start is None when the log is missing or has no session start; signed
+    in means the session's last state is a completed sign-in."""
+    try:
+        with log.open("rb") as fh:
+            fh.seek(0, os.SEEK_END)
+            fh.seek(max(0, fh.tell() - _STEAM_LOG_TAIL))
+            data = fh.read()
+    except OSError:
+        return None, False
+    i = data.rfind(_STEAM_SESSION_START)
+    if i < 0:
+        return None, False
+    line_start = data.rfind(b"\n", 0, i) + 1
+    try:
+        start = datetime.strptime(
+            data[line_start:i].decode("ascii").lstrip("["), _STEAM_TIME)
+    except ValueError:
+        return None, False
+    signed_in = False
+    for line in data[line_start:].splitlines():
+        m = _STEAM_STATE.match(line)
+        if m is None:
+            continue
+        if m.group(1) == b"Logged On":
+            signed_in = signed_in or _STEAM_SIGNED_IN in line
+        else:
+            signed_in = False
+    return start, signed_in
+
+
+def _steam_offline(steam_exe: Path) -> bool:
+    """Whether the bottle's Steam signs in its most recent user in offline
+    mode (config/loginusers.vdf)."""
+    try:
+        text = (steam_exe.parent / "config" / "loginusers.vdf").read_text(
+            encoding="utf-8", errors="replace")
+    except OSError:
+        return False
+
+    def value(block: str, key: str) -> str:
+        m = re.search(rf'"{key}"\s+"([^"]*)"', block, re.IGNORECASE)
+        return m.group(1) if m else ""
+
+    users = re.findall(r"\{([^{}]*)\}", text)
+    if not users:
+        return False
+    recent = [u for u in users if value(u, "MostRecent") == "1"]
+    user = recent[0] if recent else max(
+        users, key=lambda u: int(value(u, "timestamp") or 0)
+        if value(u, "timestamp").isdigit() else 0)
+    return value(user, "WantsOfflineMode") == "1"
+
+
+def _arm_play(bottle: Bottle, exe_name: str):
+    """Show the Play session as running while Steam gets ready, watching for
+    *exe_name* in the bottle - the game, however it ends up started. The
+    session, or None outside one."""
+    from Utils.macos.processes import exe_marker
+    from Utils.processes import game as game_process
+
+    session = game_process.current()
+    if session is not None:
+        game_process.arm_external(
+            [exe_marker(bottle.name, bottle.path, exe_name)] if exe_name else [],
+            "Steam")
+    return session
+
+
+def _pause(session, seconds: float) -> bool:
+    """Sleep *seconds*; False when the Play session was stopped."""
+    import time
+
+    deadline = time.monotonic() + seconds
+    while True:
+        if session is not None and (session.stopping or not session.active):
+            return False
+        left = deadline - time.monotonic()
+        if left <= 0:
+            return True
+        time.sleep(min(left, _STEAM_POLL_SECONDS))
+
+
+def _wait_signed_in(steam_exe: Path, session, log_fn, *, since, started: float,
+                    timeout: float) -> bool:
+    """Wait until Steam's latest session (started at *since* or later, when
+    given) is signed in, or *timeout* seconds after *started* pass. False
+    when the Play session was stopped meanwhile."""
+    import time
+
+    log = _steam_connection_log(steam_exe)
+    deadline = started + timeout
+    while True:
+        start, signed_in = _steam_session(log)
+        if signed_in and start is not None and (since is None or start >= since):
+            if not _pause(session, _STEAM_SETTLE_SECONDS):
+                break
+            log_fn(f"Play: Steam signed in after {time.monotonic() - started:.0f} s.")
+            return True
+        if time.monotonic() >= deadline:
+            log_fn(f"Play: Steam didn't sign in within {timeout:.0f} s - "
+                   "launching anyway.")
+            return True
+        if not _pause(session, _STEAM_POLL_SECONDS):
+            break
+    log_fn("Play: stopped while waiting for Steam.")
+    return False
+
+
+def _start_steam(bottle: Bottle, steam_exe: Path, log_fn, session,
+                 timeout: float) -> bool:
+    """Start the bottle's Steam and wait until it is signed in (worker thread).
+    False when the Play session was stopped meanwhile.
 
     Started outside the Play session (plain Popen, no launch marker), so
     Steam is not tracked as the game and Stop never terminates it."""
@@ -252,6 +396,8 @@ def _start_steam(bottle: Bottle, steam_exe: Path, log_fn, timeout: float = 90) -
     import time
 
     log_fn(f"Play: starting Steam in bottle '{bottle.name}' first ...")
+    since = (datetime.now() - timedelta(seconds=_STEAM_START_SLACK_SECONDS)
+             ).replace(microsecond=0)
     cmd = bottle_command(bottle, host_to_windows(bottle, steam_exe), ["-silent"],
                          wait=False)
     env = bottle_env(bottle)
@@ -260,29 +406,55 @@ def _start_steam(bottle: Bottle, steam_exe: Path, log_fn, timeout: float = 90) -
     subprocess.Popen(cmd, env=env, cwd=steam_exe.parent,
                      stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                      stderr=subprocess.DEVNULL, start_new_session=True)
-    deadline = time.monotonic() + timeout
-    while time.monotonic() < deadline and not _steam_running(bottle):
-        time.sleep(1)
+    started = time.monotonic()
+    while time.monotonic() < started + timeout and not _steam_running(bottle):
+        if not _pause(session, _STEAM_POLL_SECONDS):
+            log_fn("Play: stopped while waiting for Steam.")
+            return False
     if not _steam_running(bottle):
         log_fn(f"Play: Steam did not start within {timeout:.0f} s - "
                "launching anyway.")
-        return
-    # Running is not signed in; the client needs a moment before games can
-    # check ownership.
-    time.sleep(10)
+        return True
+    if _steam_offline(steam_exe):
+        log_fn("Play: Steam is in offline mode - not waiting for it to sign in.")
+        if not _pause(session, _STEAM_OFFLINE_SECONDS):
+            log_fn("Play: stopped while waiting for Steam.")
+            return False
+        return True
+    return _wait_signed_in(steam_exe, session, log_fn, since=since,
+                           started=started, timeout=timeout)
 
 
-def _ensure_steam(game, bottle: Bottle, log_fn) -> None:
-    """Start the bottle's Steam unless it is running. Before a script
-    extender loader, which starts the game exe directly: without Steam up,
-    the game's Steam check relaunches it through Steam, without the script
-    extender. Before a Steam hand-off, so the hand-off doesn't become Steam
-    itself (and the Play session doesn't track Steam as the game)."""
+def _ensure_steam(game, bottle: Bottle, log_fn, exe_name: str,
+                  timeout: float = _STEAM_TIMEOUT_SECONDS) -> bool:
+    """Start the bottle's Steam unless it is running, and wait until it is
+    signed in; meanwhile the Play session shows as running and watches for
+    *exe_name*. False when the session was stopped meanwhile (don't launch).
+
+    Before a script extender loader, which starts the game exe directly:
+    without Steam signed in, the game's Steam check relaunches it through
+    Steam, without the script extender. Before a Steam hand-off, so the
+    hand-off doesn't become Steam itself (and the Play session doesn't
+    track Steam as the game)."""
+    import time
+
     from Utils.executables.launch import effective_steam_id
 
     steam_exe = _steam_exe(bottle)
-    if effective_steam_id(game) and steam_exe and not _steam_running(bottle):
-        _start_steam(bottle, steam_exe, log_fn)
+    if not (effective_steam_id(game) and steam_exe):
+        return True
+    session = _arm_play(bottle, exe_name)
+    if not _steam_running(bottle):
+        return _start_steam(bottle, steam_exe, log_fn, session, timeout)
+    start, signed_in = _steam_session(_steam_connection_log(steam_exe))
+    if start is None or signed_in or _steam_offline(steam_exe):
+        return True
+    if datetime.now() - start > timedelta(seconds=_STEAM_STALE_SECONDS):
+        log_fn("Play: Steam isn't signed in - launching without waiting.")
+        return True
+    log_fn("Play: Steam is still signing in - waiting ...")
+    return _wait_signed_in(steam_exe, session, log_fn, since=None,
+                           started=time.monotonic(), timeout=timeout)
 
 
 def _launch_inputs(game, settings_key: str, exe_name: str, launches_game: bool,
@@ -348,7 +520,12 @@ def launch_exe(exe_path: Path, game, log_fn=_noop_log, *,
         return
     args, env_updates = inputs
     if is_loader:
-        _ensure_steam(game, bottle, log_fn)
+        # The loader exits once the game runs: watch for the game's exe.
+        from Utils.executables.launch import resolve_game_exe
+        game_exe = resolve_game_exe(game)
+        if not _ensure_steam(game, bottle, log_fn,
+                             game_exe.name if game_exe is not None else ""):
+            return
     cmd = exe_command(bottle, exe_path, args)
     label = label or f"Run EXE {exe_path.name}"
     log_fn(f"{label}: {' '.join(shlex.quote(c) for c in cmd)}")
@@ -399,7 +576,6 @@ def launch_game(game, log_fn=_noop_log) -> None:
         effective_steam_id, game_exe_key, load_launch_mode, resolve_game_exe,
         spawn_process_watched,
     )
-    from Utils.processes import game as game_process
 
     bottle = bottle_for_game(game, log_fn)
     if bottle is None:
@@ -430,12 +606,11 @@ def launch_game(game, log_fn=_noop_log) -> None:
         # Steam owns the game's process tree; the hand-off below exits once
         # it has passed the request on. Upstream watches the app id Steam
         # stamps on the game's environment, but under Wine that stays on the
-        # Windows side - so watch for the game's exe in the bottle instead.
-        _ensure_steam(game, bottle, log_fn)
-        from Utils.macos.processes import exe_marker
-        game_process.arm_external(
-            [exe_marker(bottle.name, bottle.path, exe.name)] if exe is not None else [],
-            "Steam")
+        # Windows side - so watch for the game's exe in the bottle instead
+        # (_ensure_steam arms that watch).
+        if not _ensure_steam(game, bottle, log_fn,
+                             exe.name if exe is not None else ""):
+            return
         if env_updates:
             log_fn("Play: Launch Options variables don't reach a game that "
                    "Steam starts; use launch mode None to apply them.")

@@ -21685,6 +21685,14 @@ class MainWindow(QMainWindow):
                 or getattr(self, "_deploy_running", False)):
             self._notify(self.tr("Plugin sources are being refreshed. Run LOOT when loading finishes."), "info")
             return
+        if sys.platform == "darwin":
+            # Caelumite: name the plugin and its missing master instead of
+            # LOOT's "has not been loaded".
+            from Utils.macos.loot import missing_master_notice
+            notice = missing_master_notice(self, rows, game)
+            if notice:
+                self._notify(notice, "error")
+                return
         try:
             plugin_winner_paths = plugin_source_paths(snapshot, game)
             profile_sources = ProfileSources.from_game(snapshot, game)
@@ -21868,6 +21876,14 @@ class MainWindow(QMainWindow):
         if getattr(self, "_overlap_running", False):
             self._notify(self.tr("An overlap check is already running."), "info")
             return
+        if sys.platform == "darwin":
+            # Caelumite: name the plugin and its missing master instead of
+            # LOOT's "has not been loaded".
+            from Utils.macos.loot import missing_master_notice
+            notice = missing_master_notice(self, rows, game)
+            if notice:
+                self._notify(notice, "error")
+                return
 
         # Snapshot everything the worker needs - no model access mid-flight.
         plugin_names = [r.name for r in rows]

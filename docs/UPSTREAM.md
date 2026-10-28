@@ -55,8 +55,9 @@ any `.py` file changed. Caelumite runs plugin code, so review it first, then
   (`launch.py`), the rename translator and identity (`branding.py`, `app.py`),
   hiding Linux-only UI (`ui_prune.py`), the `caffeinate` and `ps`
   backends (`sleep.py`, `instances.py`), the import of in-game Bethesda
-  Creations into mods (`creations.py`), and their Change Version notice
-  (`change_version.py`).
+  Creations into mods (`creations.py`), their Change Version notice
+  (`change_version.py`), and the missing-master check before a LOOT sort
+  (`loot.py`).
 - `src/LOOT/build_libloot_macos.sh`, `native/amethyst_filegraph/.cargo/`,
   `scripts/`, `caelumite`, `docs/`.
 
@@ -106,6 +107,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/github/wiki.py`, `gui_qt/onboarding_view.py` | the in-app wiki and onboarding link use Caelumite's wiki |
 | `Nexus/nexus_requirements.py` | the requirement filter list comes from Caelumite's `main` |
 | `Utils/github/app_updates.py` | release URLs point at Caelumite |
+| `gui_qt/app.py` (LOOT sort, overlap check) | for games whose LOOT loads masters first (Starfield, Morrowind, OpenMW), a plugin with a missing master stops Sort, Refresh and the record-overlap check with a notice naming the plugin and the master, instead of LOOT's "has not been loaded" (`Utils/macos/loot.py`) |
 | `gui_qt/app.py` (app update check), `gui_qt/update_overlay.py` | updates come from Caelumite's GitHub releases: the newest one with a DMG, which the banner's "Download update" opens; the check repeats daily while the app is open, and the menu bar's "Check for Updates…" runs it right away (`Utils/macos/updates.py`, `Utils/macos/menubar.py`) |
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |
 | `Utils/diagnostics/system.py` | System Information shows the macOS version, run mode and installed CrossOver builds instead of the Linux distribution, libc, Flatpak/AppImage and desktop-session rows (`Utils/macos/diagnostics.py`) |

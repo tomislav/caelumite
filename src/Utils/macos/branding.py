@@ -52,6 +52,10 @@ _EXACT = {
     # Theme editor: Caelumite has no Ko-Fi button.
     "Special-purpose accent buttons such as Ko-Fi.": "Special-purpose accent buttons.",
     "Accent buttons like Ko-Fi.": "Accent buttons.",
+    # Plugin Rules has no right-click entry; the footer button opens it and
+    # it follows the Plugins panel's selection.
+    "No plugin selected.\nRight-click a plugin and choose 'Plugin Rules'.":
+        "No plugin selected.\nSelect a plugin in the Plugins panel to add rules for it.",
     # Settings > Updates: the check also repeats daily (Utils.macos.updates).
     "Notify about new versions on startup": "Notify about new versions",
     "Show a notification when a new version of Amethyst is available. You can "

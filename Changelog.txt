@@ -1,3 +1,8 @@
+- v1.1.2
+### Bug Fixes
+- Play through a script extender (SFSE, SKSE64, F4SE, ...) when the bottle's Steam isn't running yet waits until Steam has signed in. Before, the game could start before Steam was ready, restart through Steam without the script extender, and the Play button went back to Play while the game ran
+- While Play waits for Steam, the button shows Stop, and Stop cancels the launch. If Steam is in offline mode, or has been running without signing in, Play doesn't wait
+
 - v1.1.1
 ### Bug Fixes
 - With the Change Version tab open, selecting a Creation no longer leaves the previous mod's Nexus files on screen. The tab says the mod is a Creation and points to Open on Creations

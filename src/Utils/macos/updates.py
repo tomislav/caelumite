@@ -12,8 +12,49 @@ is dragging the new app over the old one.
 from __future__ import annotations
 
 import json
+import time
 
 MODE = "macos"
+# Upstream checks once, at startup; a Mac app often stays open for days.
+DAY_SECONDS = 24 * 60 * 60
+# A QTimer stops counting while the Mac sleeps, so wake hourly and compare
+# the wall clock instead of waiting out 24 hours of awake time.
+_WAKE_MS = 60 * 60 * 1000
+# Main-window flags upstream sets while files are in use or changing.
+_BUSY_FLAGS = ("_deploy_running", "_install_running", "_col_install_running",
+               "_tool_busy")
+
+
+def _busy(window) -> bool:
+    """A game or tool is running, or a deploy or install is: no banner now."""
+    session = getattr(window, "_play_session", None)
+    if session is not None and getattr(session, "active", False):
+        return True
+    return any(getattr(window, flag, False) for flag in _BUSY_FLAGS)
+
+
+def start_daily_check(window, *, clock=time.time):
+    """Repeat the startup update check once a day while *window* is open,
+    the first idle hour after a day has passed. It is the automatic check:
+    it honours "Notify about new versions" and shows the banner again for an
+    update that is still waiting."""
+    from PySide6.QtCore import QTimer
+
+    last = [clock()]    # the startup check
+
+    def wake():
+        if clock() - last[0] < DAY_SECONDS or _busy(window):
+            return
+        check = getattr(window, "_check_for_app_update", None)
+        if callable(check):
+            last[0] = clock()
+            check()
+
+    timer = QTimer(window)
+    timer.setInterval(_WAKE_MS)
+    timer.timeout.connect(wake)
+    timer.start()
+    return timer
 
 
 def latest_release(allow_prerelease: bool, *, force: bool = False):

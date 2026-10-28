@@ -45,12 +45,12 @@ def _action(menu, text, slot=None, shortcut=None, role=None):
     return action
 
 
-def _call(window, name: str):
+def _call(window, name: str, **kwargs):
     """A slot calling the main window's handler *name* when it exists."""
     def run():
         fn = getattr(window, name, None)
         if callable(fn):
-            fn()
+            fn(**kwargs)
     return run
 
 
@@ -79,6 +79,10 @@ def install(window) -> QMenuBar:
     app_menu = bar.addMenu(APP_NAME)
     _action(app_menu, f"About {APP_NAME}", lambda: _about(window),
             role=QAction.AboutRole)
+    # The same check as Settings ▸ Updates ▸ Check for updates.
+    _action(app_menu, "Check for Updates…",
+            _call(window, "_check_for_app_update", force_fresh=True, notify_result=True),
+            role=QAction.ApplicationSpecificRole)
     _action(app_menu, "Settings…", _call(window, "_open_settings_modal"),
             "Ctrl+,", QAction.PreferencesRole)
     _action(app_menu, f"Quit {APP_NAME}", window.close,

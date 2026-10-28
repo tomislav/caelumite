@@ -52,6 +52,13 @@ _EXACT = {
     # Theme editor: Caelumite has no Ko-Fi button.
     "Special-purpose accent buttons such as Ko-Fi.": "Special-purpose accent buttons.",
     "Accent buttons like Ko-Fi.": "Accent buttons.",
+    # Settings > Updates: the check also repeats daily (Utils.macos.updates).
+    "Notify about new versions on startup": "Notify about new versions",
+    "Show a notification when a new version of Amethyst is available. You can "
+    "still check for updates manually when this is turned off.":
+        "Show a banner when a new version of Caelumite is available: at startup "
+        "and once a day while it's open. Check for Updates… in the "
+        "Caelumite menu still works when this is turned off.",
     "Auto detects Steam/Heroic/Lutris/Faugus/Bottles ownership. Force a specific "
     "launcher, or None to always launch the exe directly via Proton.":
         "Auto launches through Steam in the game's CrossOver bottle. None always "

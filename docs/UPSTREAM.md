@@ -106,7 +106,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/github/wiki.py`, `gui_qt/onboarding_view.py` | the in-app wiki and onboarding link use Caelumite's wiki |
 | `Nexus/nexus_requirements.py` | the requirement filter list comes from Caelumite's `main` |
 | `Utils/github/app_updates.py` | release URLs point at Caelumite |
-| `gui_qt/app.py` (app update check), `gui_qt/update_overlay.py` | updates come from Caelumite's GitHub releases: the newest one with a DMG, which the banner's "Download update" opens (`Utils/macos/updates.py`) |
+| `gui_qt/app.py` (app update check), `gui_qt/update_overlay.py` | updates come from Caelumite's GitHub releases: the newest one with a DMG, which the banner's "Download update" opens; the check repeats daily while the app is open, and the menu bar's "Check for Updates…" runs it right away (`Utils/macos/updates.py`, `Utils/macos/menubar.py`) |
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |
 | `Utils/diagnostics/system.py` | System Information shows the macOS version, run mode and installed CrossOver builds instead of the Linux distribution, libc, Flatpak/AppImage and desktop-session rows (`Utils/macos/diagnostics.py`) |
 

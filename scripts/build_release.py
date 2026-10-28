@@ -26,8 +26,9 @@ Usage:
   .venv/bin/python scripts/build_release.py --no-notarize # sign only (or ad hoc)
   .venv/bin/python scripts/build_release.py --identity -  # ad-hoc, for testing
 
-Downloads (cached in build/cache/, checksummed): the CPython build and 7-Zip
-pinned below. Output: build/release/Caelumite.app and Caelumite-<ver>.dmg.
+Downloads (cached in build/cache/, checksummed): the CPython build, 7-Zip and
+dmgbuild (which lays out the DMG window) pinned below. Output:
+build/release/Caelumite.app and Caelumite-<ver>.dmg.
 """
 
 from __future__ import annotations
@@ -61,6 +62,13 @@ PY_SUMS_URL = ("https://github.com/astral-sh/python-build-standalone/releases/do
 SEVENZIP_ARCHIVE = "7z2605-mac.tar.xz"
 SEVENZIP_URL = f"https://github.com/ip7z/7zip/releases/download/26.05/{SEVENZIP_ARCHIVE}"
 SEVENZIP_SHA256 = "12ef6830317743cfd3f0ab1724bde43fcc270d8b6d8564f8c12c2a2b7f993570"
+# dmgbuild lays out the DMG window. Build-time only: installed into
+# build/cache, never into .venv (whose site-packages the app ships).
+DMGBUILD_WHEELS = {
+    "dmgbuild==1.6.7": "37ee5771c377beb3203d9164aae8046ffed8531c06edf9227f5788b3c599b1bf",
+    "ds_store==1.3.3": "b92a371efbf1b4ccce2a04d1ed13fceacc4736c81ba09cf5aefb74c088160a35",
+    "mac_alias==2.2.3": "7362b521d2132ef92f606a37abfed5fcd849ceb2f28b6f9743e014b02af92f0d",
+}
 
 PY_VER = "3.14"
 MIN_MACOS = "14.0"   # PySide6 6.12 wheels are built for macOS 14
@@ -443,17 +451,58 @@ def notarize(path: Path, profile: str) -> None:
     print("  ticket stapled")
 
 
+def load_dmgbuild():
+    """dmgbuild from build/cache, installed there from the pinned wheels."""
+    target = CACHE / "dmgbuild"
+    stamp = target / "pins.txt"
+    pins = "".join(f"{spec} --hash=sha256:{sha}\n"
+                   for spec, sha in DMGBUILD_WHEELS.items())
+    if not stamp.is_file() or stamp.read_text() != pins:
+        shutil.rmtree(target, ignore_errors=True)
+        target.mkdir(parents=True)
+        req = target / "requirements.txt"
+        req.write_text(pins)
+        run(sys.executable, "-m", "pip", "install", "-q", "--disable-pip-version-check",
+            "--no-deps", "--require-hashes", "--only-binary=:all:",
+            "--target", target, "-r", req)
+        stamp.write_text(pins)
+    sys.path.insert(0, str(target))
+    import dmgbuild
+    return dmgbuild
+
+
 def make_dmg(identity: str) -> Path:
+    """The DMG: a window with the app, an Applications link and an arrow
+    between them on the background from scripts/make_dmg_background.py."""
     step("Building the disk image")
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import make_dmg_background as bg
+    dmgbuild = load_dmgbuild()
     dmg = OUT / f"Caelumite-{version()}.dmg"
     dmg.unlink(missing_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
-        stage = Path(tmp) / "Caelumite"
-        stage.mkdir()
-        run("ditto", APP, stage / APP.name)
-        (stage / "Applications").symlink_to("/Applications")
-        run("hdiutil", "create", "-volname", "Caelumite", "-srcfolder", stage,
-            "-format", "UDZO", "-fs", "APFS", "-quiet", dmg)
+        run(sys.executable, ROOT / "scripts" / "make_dmg_background.py", tmp,
+            env={**os.environ, "QT_QPA_PLATFORM": "offscreen"},
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        dmgbuild.build_dmg(str(dmg), "Caelumite", settings={
+            "format": "ULFO",
+            "filesystem": "APFS",
+            "files": [str(APP)],
+            "symlinks": {"Applications": "/Applications"},
+            "icon": str(APP / "Contents" / "Resources" / "Caelumite.icns"),
+            "background": str(Path(tmp) / "background.png"),
+            "window_rect": ((200, 120), (bg.WIDTH, bg.HEIGHT)),
+            "default_view": "icon-view",
+            "icon_size": 128,
+            "text_size": 13,
+            "icon_locations": {APP.name: bg.ICON_APP, "Applications": bg.ICON_APPS},
+            "hide_extensions": [APP.name],
+            "show_status_bar": False,
+            "show_tab_view": False,
+            "show_toolbar": False,
+            "show_pathbar": False,
+            "show_sidebar": False,
+        })
     if identity != "-":
         run("codesign", "--sign", identity, "--timestamp", dmg, stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL)

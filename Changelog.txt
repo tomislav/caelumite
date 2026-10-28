@@ -1,3 +1,10 @@
+- v1.1.3
+### macOS
+- The DMG opens a laid-out install window: drag Caelumite onto Applications. It's also smaller, about 90 MB instead of 146 MB
+### Additions
+- "Check for Updates..." in the Caelumite menu
+- The update check repeats once a day while Caelumite is open, and waits while a game, deploy or install is running. "Notify about new versions" in Settings turns it off along with the check at startup
+
 - v1.1.2
 ### Bug Fixes
 - Play through a script extender (SFSE, SKSE64, F4SE, ...) when the bottle's Steam isn't running yet waits until Steam has signed in. Before, the game could start before Steam was ready, restart through Steam without the script extender, and the Play button went back to Play while the game ran

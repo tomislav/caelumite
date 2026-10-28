@@ -63,7 +63,10 @@ SEVENZIP_ARCHIVE = "7z2605-mac.tar.xz"
 SEVENZIP_URL = f"https://github.com/ip7z/7zip/releases/download/26.05/{SEVENZIP_ARCHIVE}"
 SEVENZIP_SHA256 = "12ef6830317743cfd3f0ab1724bde43fcc270d8b6d8564f8c12c2a2b7f993570"
 # dmgbuild lays out the DMG window. Build-time only: installed into
-# build/cache, never into .venv (whose site-packages the app ships).
+# build/cache, never into .venv (whose site-packages the app ships). It runs
+# hdiutil create/attach/convert, which macOS 27 reports as deprecated in
+# favour of `diskutil image`; if a macOS update removes them, the DMG step
+# fails until a newer dmgbuild is pinned here.
 DMGBUILD_WHEELS = {
     "dmgbuild==1.6.7": "37ee5771c377beb3203d9164aae8046ffed8531c06edf9227f5788b3c599b1bf",
     "ds_store==1.3.3": "b92a371efbf1b4ccce2a04d1ed13fceacc4736c81ba09cf5aefb74c088160a35",
@@ -451,24 +454,58 @@ def notarize(path: Path, profile: str) -> None:
     print("  ticket stapled")
 
 
+def _dmgbuild_pins() -> str:
+    return "".join(f"{spec} --hash=sha256:{sha}\n"
+                   for spec, sha in DMGBUILD_WHEELS.items())
+
+
 def load_dmgbuild():
-    """dmgbuild from build/cache, installed there from the pinned wheels."""
+    """dmgbuild from build/cache, installed there from the pinned wheels (again
+    when the pins changed or the cached copy no longer imports)."""
+    import importlib
+
     target = CACHE / "dmgbuild"
     stamp = target / "pins.txt"
-    pins = "".join(f"{spec} --hash=sha256:{sha}\n"
-                   for spec, sha in DMGBUILD_WHEELS.items())
-    if not stamp.is_file() or stamp.read_text() != pins:
-        shutil.rmtree(target, ignore_errors=True)
-        target.mkdir(parents=True)
-        req = target / "requirements.txt"
-        req.write_text(pins)
-        run(sys.executable, "-m", "pip", "install", "-q", "--disable-pip-version-check",
-            "--no-deps", "--require-hashes", "--only-binary=:all:",
-            "--target", target, "-r", req)
-        stamp.write_text(pins)
-    sys.path.insert(0, str(target))
-    import dmgbuild
-    return dmgbuild
+    pins = _dmgbuild_pins()
+    if str(target) not in sys.path:
+        sys.path.insert(0, str(target))
+    for attempt in range(2):
+        if attempt or not stamp.is_file() or stamp.read_text() != pins:
+            shutil.rmtree(target, ignore_errors=True)
+            target.mkdir(parents=True)
+            req = target / "requirements.txt"
+            req.write_text(pins)
+            run(sys.executable, "-m", "pip", "install", "-q",
+                "--disable-pip-version-check", "--no-deps", "--require-hashes",
+                "--only-binary=:all:", "--target", target, "-r", req)
+            stamp.write_text(pins)
+            importlib.invalidate_caches()
+        try:
+            return importlib.import_module("dmgbuild")
+        except ImportError:
+            if attempt:
+                raise
+
+
+def run_quiet(*cmd, **kw) -> None:
+    """Run *cmd* without its output; when it fails, stop the build with it."""
+    result = subprocess.run([str(c) for c in cmd], capture_output=True, text=True, **kw)
+    if result.returncode != 0:
+        output = (result.stderr or result.stdout).strip()
+        raise SystemExit(f"error: {' '.join(str(c) for c in cmd)} exited "
+                         f"{result.returncode}:\n{output}")
+
+
+def verify_dmg(dmg: Path) -> None:
+    """Check the app inside *dmg* still passes strict signature checks: Finder
+    metadata on the bundle (a hidden extension, say) would fail them."""
+    with tempfile.TemporaryDirectory() as mount:
+        run("hdiutil", "attach", "-nobrowse", "-readonly", "-quiet",
+            "-mountpoint", mount, dmg)
+        try:
+            run("codesign", "--verify", "--deep", "--strict", Path(mount) / APP.name)
+        finally:
+            subprocess.run(["hdiutil", "detach", "-quiet", mount], check=False)
 
 
 def make_dmg(identity: str) -> Path:
@@ -481,9 +518,8 @@ def make_dmg(identity: str) -> Path:
     dmg = OUT / f"Caelumite-{version()}.dmg"
     dmg.unlink(missing_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
-        run(sys.executable, ROOT / "scripts" / "make_dmg_background.py", tmp,
-            env={**os.environ, "QT_QPA_PLATFORM": "offscreen"},
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        run_quiet(sys.executable, ROOT / "scripts" / "make_dmg_background.py", tmp,
+                  env={**os.environ, "QT_QPA_PLATFORM": "offscreen"})
         dmgbuild.build_dmg(str(dmg), "Caelumite", settings={
             "format": "ULFO",
             "filesystem": "APFS",
@@ -496,13 +532,13 @@ def make_dmg(identity: str) -> Path:
             "icon_size": 128,
             "text_size": 13,
             "icon_locations": {APP.name: bg.ICON_APP, "Applications": bg.ICON_APPS},
-            "hide_extensions": [APP.name],
             "show_status_bar": False,
             "show_tab_view": False,
             "show_toolbar": False,
             "show_pathbar": False,
             "show_sidebar": False,
         })
+    verify_dmg(dmg)
     if identity != "-":
         run("codesign", "--sign", identity, "--timestamp", dmg, stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL)

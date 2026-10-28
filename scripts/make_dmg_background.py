@@ -20,6 +20,7 @@ from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import (QColor, QFont, QGuiApplication, QImage, QLinearGradient,
                            QPainter, QPainterPath, QPen)
 
+USAGE = "Usage: .venv/bin/python scripts/make_dmg_background.py <dir>"
 WIDTH, HEIGHT = 640, 400
 ICON_APP = (170, 180)
 ICON_APPS = (470, 180)
@@ -70,7 +71,7 @@ def draw(scale: int) -> QImage:
 
 def main() -> int:
     if len(sys.argv) != 2:
-        print(__doc__.strip().splitlines()[-4], file=sys.stderr)
+        print(USAGE, file=sys.stderr)
         return 2
     app = QGuiApplication(sys.argv[:1])  # noqa: F841 - QImage/QPainter need it
     out = Path(sys.argv[1])

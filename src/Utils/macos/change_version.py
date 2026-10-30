@@ -1,6 +1,6 @@
 """
 Utils.macos.change_version
-The Change Version tab (gui_qt/change_version_view.py) for Creation mods.
+The Change Version tab (gui_qt/nexus/change_version.py) for Creation mods.
 
 A Creation has no Nexus files, so instead of asking Nexus for mod 0 the tab
 says the mod is a Creation and points at its right-click menu. Ignore Update
@@ -16,7 +16,7 @@ from Utils.macos.creations import is_creation
 def show_creation_notice(view) -> bool:
     """Set up *view* for the mod it now shows. True when that mod is a
     Creation and the notice replaced the Nexus fetch."""
-    from gui_qt.change_version_view import _LegendBar
+    from gui_qt.nexus.change_version import _LegendBar
     creation = is_creation(view._meta)
     view._ignore_cb.setEnabled(not creation)
     legend = view.findChild(_LegendBar)

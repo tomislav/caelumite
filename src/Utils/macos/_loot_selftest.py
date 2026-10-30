@@ -29,7 +29,7 @@ class _Game:
 
 
 def _rows(*missing: tuple[str, list[str] | None, bool]):
-    from gui_qt.plugin_state import PluginRow
+    from Utils.plugins.state import PluginRow
     return [PluginRow(name=name, enabled=enabled, missing_masters=masters)
             for name, masters, enabled in missing]
 
@@ -113,7 +113,7 @@ def test_plugin_rules_points_at_the_plugins_panel() -> None:
     from Utils.macos.branding import rebrand
     source = ("No plugin selected.\n"
               "Right-click a plugin and choose 'Plugin Rules'.")
-    view = (SRC / "gui_qt" / "plugin_rules_view.py").read_text(encoding="utf-8")
+    view = (SRC / "gui_qt" / "plugins" / "rules.py").read_text(encoding="utf-8")
     assert '"No plugin selected.\\n"\n' in view and \
         "\"Right-click a plugin and choose 'Plugin Rules'.\"" in view, \
         "upstream changed the Plugin Rules hint"

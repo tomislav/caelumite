@@ -1,0 +1,12 @@
+# Paths of upstream's Resources branch that Caelumite's Resources branch
+# does not carry. One git pathspec per line; scripts/sync-upstream.sh removes
+# these again after every merge of upstream/Resources.
+:(glob).github/**
+crowdin.yml
+# Manager plugins that don't run on macOS (a Linux SteamKit helper, a
+# Windows .NET runtime through Proton, Proton-managed prefixes) and the
+# source archives of one of them.
+Plugins/v2/steam_workshop
+Plugins/v2/legacy_installers
+Plugins/v2/application_launcher
+Plugins/Sources/legacy_installers

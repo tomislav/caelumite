@@ -5,8 +5,9 @@
 # again after the merge, which resolves the modify/delete conflicts upstream
 # edits to them would otherwise cause. On the Resources branch (check it out
 # in a worktree and run this script from main's checkout) the default ref is
-# upstream/Resources, upstream's workflows and Crowdin config are removed
-# instead, and changed plugin code is listed for review - Caelumite runs it.
+# upstream/Resources, the paths in scripts/removed-resources-paths.txt are
+# removed instead, and changed plugin code is listed for review - Caelumite
+# runs it.
 # Any other conflict is left for you to resolve; the merge is not committed
 # until there are none.
 #
@@ -20,7 +21,7 @@ cd "$(git rev-parse --show-toplevel)"
 BRANCH="$(git symbolic-ref --short HEAD)"
 if [ "$BRANCH" = "Resources" ]; then
     REF="${1:-upstream/Resources}"
-    REMOVED=$':(glob).github/**\ncrowdin.yml'
+    REMOVED="$(cat "$SCRIPTS/removed-resources-paths.txt")"
 else
     REF="${1:-upstream/main}"
     REMOVED="$(cat "$SCRIPTS/removed-upstream-paths.txt")"

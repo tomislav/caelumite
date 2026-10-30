@@ -747,7 +747,11 @@ def test_pipeline_skips_the_import_while_deployed() -> None:
     case = deploy_tests.DeploymentTransferFailureTests(
         "test_successful_transfer_commits_filegraph")
     try:
-        with (patch.object(deploy_tests._PipelineGame, "get_deploy_active",
+        # Upstream's fake game predates the deploy events, which need a
+        # game_id (its own pipeline tests fail the same way).
+        with (patch.object(deploy_tests._PipelineGame, "game_id",
+                           "transfer_failure_test", create=True),
+              patch.object(deploy_tests._PipelineGame, "get_deploy_active",
                            return_value=True),
               patch("Utils.macos.creations.creations_changed",
                     return_value=True),
@@ -805,7 +809,7 @@ def _meta(name: str, mod_id: int = 0, category: str = ""):
 
 def test_change_version_shows_a_creation() -> None:
     from Games.Bethesda.starfield import Starfield
-    from gui_qt.change_version_view import ChangeVersionView, _LegendBar
+    from gui_qt.nexus.change_version import ChangeVersionView, _LegendBar
     app = _qt_app()
     api = _FakeNexus()
     nexus = _meta("Nexus Mod", 123)
@@ -830,7 +834,7 @@ def test_change_version_shows_a_creation() -> None:
 
 def test_change_version_leaves_other_mods_to_upstream() -> None:
     from Games.Bethesda.starfield import Starfield
-    from gui_qt.change_version_view import ChangeVersionView
+    from gui_qt.nexus.change_version import ChangeVersionView
     app = _qt_app()
     api = _FakeNexus()
     view = ChangeVersionView(api, Starfield(), "Nexus Mod", _meta("Nexus Mod", 123),

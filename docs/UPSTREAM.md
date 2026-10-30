@@ -41,9 +41,10 @@ git worktree add ../caelumite-resources Resources
 cd ../caelumite-resources && ../Caelumite/scripts/sync-upstream.sh
 ```
 
-On `Resources` the script merges `upstream/Resources`, removes upstream's
-GitHub Actions workflows and Crowdin config, and stops before committing if
-any `.py` file changed. Caelumite runs plugin code, so review it first, then
+On `Resources` the script merges `upstream/Resources`, removes the paths in
+`scripts/removed-resources-paths.txt` (upstream's GitHub Actions workflows,
+its Crowdin config, and the manager plugins that don't run on macOS), and
+stops before committing if any `.py` file changed. Caelumite runs plugin code, so review it first, then
 `git commit --no-edit` and push.
 
 ## Where Caelumite differs from upstream
@@ -56,8 +57,9 @@ any `.py` file changed. Caelumite runs plugin code, so review it first, then
   hiding Linux-only UI (`ui_prune.py`), the `caffeinate` and `ps`
   backends (`sleep.py`, `instances.py`), the import of in-game Bethesda
   Creations into mods (`creations.py`), their Change Version notice
-  (`change_version.py`), and the missing-master check before a LOOT sort
-  (`loot.py`).
+  (`change_version.py`), the missing-master check before a LOOT sort
+  (`loot.py`), and the built-in plugin and game-handler repositories
+  (`resources.py`).
 - `src/LOOT/build_libloot_macos.sh`, `native/amethyst_filegraph/.cargo/`,
   `scripts/`, `caelumite`, `docs/`.
 
@@ -84,31 +86,35 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/processes/instances.py` | `ps`/`kill` instead of `/proc` |
 | `Utils/processes/game.py` | running-game tracking via `sysctl(KERN_PROCARGS2)` instead of `/proc/*/environ` |
 | `gui_qt/i18n.py` | installs the rename translator |
-| `gui_qt/shortcuts.py` | Install Mod defaults to Cmd+I so Cmd+M can minimize |
+| `Utils/ui/portal.py`, `gui_qt/dialogs/file_pickers.py` | file pickers skip the XDG portal, zenity and kdialog and use the native macOS open and save panels |
+| `gui_qt/games/configure.py` | no dependency installers run in a game's CrossOver bottle |
+| `Utils/ui/shortcut_bindings.py` | Install Mod defaults to Cmd+I so Cmd+M can minimize |
 | `Nexus/nxm_handler.py` | `NxmHandler` registration via LaunchServices (`Utils/macos/urls.py`); the single-instance socket is in the per-user temp folder, not XDG/Flatpak/`~/.local/share` paths |
 | `Thunderstore/ror2mm_handler.py` | `ror2mm://` and `modl://` registration via LaunchServices, only when no other app handles them |
 | `Nexus/nexus_api.py` | requests identify as Caelumite; Caelumite's own keyring entry; no weak key-file fallback - a key the Keychain can't store is kept for the session ([NEXUS.md](NEXUS.md)) |
 | `Nexus/nexus_oauth.py` | Caelumite's own OAuth client, empty (OAuth off) until Nexus registers it; the keyring probe checks for the macOS Keychain instead of DBus |
+| `Nexus/session.py` | the saved Nexus login loads only Caelumite's testing personal key until Caelumite is registered, never Amethyst's OAuth login; the app and headless mode both load it here (`Utils/macos/nexus.py`) |
 | `Utils/mods/install.py` | the install worker's Nexus lookup ignores saved upstream OAuth logins |
-| `gui_qt/nexus_mod_detail_view.py` | image requests identify as Caelumite |
+| `gui_qt/nexus/mod_detail.py` | image requests identify as Caelumite |
 | `wizards_qt/__init__.py` | wizards in `Utils/macos/wizard.py` `MACOS_UNSUPPORTED` join `EXCLUDED` (Linux-native tools, Proton-only texture conversion, Synthesis, ReShade) |
 | `Utils/wine/protontricks.py` | `build_proton_env_for_game` → bottle (dtkit-patch and other prefix installers) |
 | `Utils/ui/config.py` | the Wabbajack top-bar button is always hidden; the Endorse button is off; the mod list defaults to MO2's order |
-| `gui_qt/settings_view.py` | no "Hide Ko-Fi button" setting (a hook appended at the end skips that checkbox) |
+| `gui_qt/settings/view.py` | no "Hide Ko-Fi button" setting (a hook appended at the end skips that checkbox) |
 | `Utils/bethesda/xedit.py` | the xEdit Windows XP flag goes through `reg import` (`Utils/macos/registry.py`) |
 | `Utils/github/cache.py`, `Utils/sharing/paste.py`, `Thunderstore/thunderstore_download.py`, `Utils/downloads/modl.py`, `LOOT/loot_sorter.py`, `Games/Baldur's Gate 3/modio_api.py`, `Games/Baldur's Gate 3/bg3le_runtime.py` | User-Agent `Caelumite/<version>` |
 | `Utils/loverslab/credentials.py`, `Games/Baldur's Gate 3/modio_key.py` | Keychain service `Caelumite` |
 | `wizards_qt/proton_step.py` | the wizard "Choose Proton Version" step shows the game's bottle instead (`Utils/macos/wizard.py`) |
-| `gui_qt/modlist_menu.py` | "Open on Creations" in a Creation mod's right-click menu (one or several mods) opens its creations.bethesda.net page (`Utils/macos/creations.py`) |
-| `gui_qt/plugin_model.py` | a Creation plugin's name has a tooltip with the Creation's title and version (`Utils/macos/creations.py`) |
-| `gui_qt/change_version_view.py` | a Creation shows a notice instead of asking Nexus for its files; Ignore Update and the legend are off meanwhile (`Utils/macos/change_version.py`) |
-| `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; Nexus login goes through `Utils/macos/nexus.py` until Caelumite is registered; no Ko-Fi button; after a Play session, a Deploy imports Creations changed in-game, and a startup notice appears when they changed while Caelumite wasn't running; the Change Version tab follows the selection to a Creation and says it's a Creation (`Utils/macos/creations.py`, `Utils/macos/change_version.py`) |
+| `gui_qt/modlist/menu.py` | "Open on Creations" in a Creation mod's right-click menu (one or several mods) opens its creations.bethesda.net page (`Utils/macos/creations.py`) |
+| `gui_qt/plugins/model.py` | a Creation plugin's name has a tooltip with the Creation's title and version (`Utils/macos/creations.py`) |
+| `gui_qt/nexus/change_version.py` | a Creation shows a notice instead of asking Nexus for its files; Ignore Update and the legend are off meanwhile (`Utils/macos/change_version.py`) |
+| `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; the Nexus login button goes through `Utils/macos/nexus.py` until Caelumite is registered; no Ko-Fi button; after a Play session, a Deploy imports Creations changed in-game, and a startup notice appears when they changed while Caelumite wasn't running; the Change Version tab follows the selection to a Creation and says it's a Creation (`Utils/macos/creations.py`, `Utils/macos/change_version.py`) |
 | `Utils/github/sync.py`, `Utils/profiles/curated.py`, `Utils/bethesda/synthesis.py` | resources come from Caelumite's `Resources` branch |
-| `Utils/github/wiki.py`, `gui_qt/onboarding_view.py` | the in-app wiki and onboarding link use Caelumite's wiki |
+| `amethyst_plugins/sources.py`, `Utils/github/handler_sources.py` | the built-in manager-plugin catalogue and game-handler repository are Caelumite's `Resources` branch; upstream's is an ordinary repository (`Utils/macos/resources.py`) |
+| `Utils/github/wiki.py`, `gui_qt/games/onboarding.py` | the in-app wiki and onboarding link use Caelumite's wiki |
 | `Nexus/nexus_requirements.py` | the requirement filter list comes from Caelumite's `main` |
 | `Utils/github/app_updates.py` | release URLs point at Caelumite |
 | `gui_qt/app.py` (LOOT sort, overlap check) | for games whose LOOT loads masters first (Starfield, Morrowind, OpenMW), a plugin with a missing master stops Sort, Refresh and the record-overlap check with a notice naming the plugin and the master, instead of LOOT's "has not been loaded" (`Utils/macos/loot.py`) |
-| `gui_qt/app.py` (app update check), `gui_qt/update_overlay.py` | updates come from Caelumite's GitHub releases: the newest one with a DMG, which the banner's "Download update" opens; the check repeats daily while the app is open, and the menu bar's "Check for Updates…" runs it right away (`Utils/macos/updates.py`, `Utils/macos/menubar.py`) |
+| `gui_qt/app.py` (app update check), `gui_qt/support/update.py` | updates come from Caelumite's GitHub releases: the newest one with a DMG, which the banner's "Download update" opens; the check repeats daily while the app is open, and the menu bar's "Check for Updates…" runs it right away (`Utils/macos/updates.py`, `Utils/macos/menubar.py`) |
 | `native/amethyst_filegraph/build_extension.py` | `.dylib` output on macOS |
 | `Utils/diagnostics/system.py` | System Information shows the macOS version, run mode and installed CrossOver builds instead of the Linux distribution, libc, Flatpak/AppImage and desktop-session rows (`Utils/macos/diagnostics.py`) |
 

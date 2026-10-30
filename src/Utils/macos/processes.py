@@ -67,6 +67,44 @@ def environ_of(pid: int) -> set[str] | None:
     return None if info is None else info[1]
 
 
+# Launch leases (Utils/processes/leases.py) tell a process from a later one
+# with the same pid, and a boot from the next, by these identities.
+_KERN_PROC = 14
+_KERN_PROC_PID = 1
+# struct kinfo_proc on arm64: kp_proc (struct extern_proc) starts with
+# p_starttime (timeval: 8-byte seconds, 4-byte microseconds), p_stat is at
+# offset 36 and p_pid at 40.
+_KINFO_PROC_SIZE = 648
+_SZOMB = 5
+
+
+def boot_identity() -> str:
+    """This boot's session UUID (kern.bootsessionuuid)."""
+    size = ctypes.c_size_t(0)
+    if _libc.sysctlbyname(b"kern.bootsessionuuid", None, ctypes.byref(size), None, 0) != 0:
+        raise OSError(ctypes.get_errno(), "sysctl kern.bootsessionuuid failed")
+    buf = ctypes.create_string_buffer(size.value)
+    if _libc.sysctlbyname(b"kern.bootsessionuuid", buf, ctypes.byref(size), None, 0) != 0:
+        raise OSError(ctypes.get_errno(), "sysctl kern.bootsessionuuid failed")
+    return buf.value.decode()
+
+
+def process_identity(pid: int) -> str | None:
+    """The process's start time as "seconds.microseconds", or None when
+    there's no such process or it's a zombie."""
+    mib = (ctypes.c_int * 4)(_CTL_KERN, _KERN_PROC, _KERN_PROC_PID, pid)
+    buf = ctypes.create_string_buffer(_KINFO_PROC_SIZE)
+    size = ctypes.c_size_t(_KINFO_PROC_SIZE)
+    if _libc.sysctl(mib, 4, buf, ctypes.byref(size), None, 0) != 0 or size.value == 0:
+        return None
+    raw = buf.raw
+    seconds, micros = struct.unpack_from("qi", raw, 0)
+    stat, found = struct.unpack_from("b", raw, 36)[0], struct.unpack_from("i", raw, 40)[0]
+    if found != pid or stat == _SZOMB:
+        return None
+    return f"{seconds}.{micros:06d}"
+
+
 EXE_MARKER = "CAELUMITE_EXE="
 # The program of a command line: a quoted path; a macOS program (CrossOver's
 # Perl wine wrapper, whose arguments name the exe it starts); a Windows path

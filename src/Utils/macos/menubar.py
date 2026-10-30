@@ -8,7 +8,7 @@ other menus forward to the main window's existing handlers, so they behave
 exactly like the toolbar buttons they mirror.
 
 Shortcuts: only the standard macOS ones are bound here. Upstream's own
-shortcuts (Deploy, Restore, Select All, ... - see gui_qt.shortcuts) stay
+shortcuts (Deploy, Restore, Select All, ... - see Utils.ui.shortcut_bindings) stay
 with upstream; binding them twice would make both ambiguous. Upstream's
 default Install Mod shortcut moves from Ctrl+M (Cmd+M) to Cmd+I on macOS so
 Cmd+M can minimize, as on every Mac app.

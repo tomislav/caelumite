@@ -1,3 +1,25 @@
+- v1.2.0
+Based on Amethyst Mod Manager 2.6.0.
+### macOS
+- Manager plugins: a Plugins button at the top right browses and installs plugins from Caelumite's own repository. Four run on macOS: Category Sorter, Auto Theme Switcher, MO2 Icons and Nexus mod info (which needs a Nexus login). Plugin requirements are shown as Caelumite versions
+- xEdit, QuickAutoClean, the LOD tools and Wrye Bash run while the bottle's Steam is running. A blocked tool or registry repair names the programs to close
+- Headless mode (cli.py headless --stdio) runs on macOS; see docs/MACOS-API.md
+### Additions
+- Prey (2017) and Nivalis Nights
+- A LOOT report button in the Plugins tab, showing the masterlist's general messages and download locations
+- Open as tab for every plugin panel tab
+- Saves can be exported with a profile and imported with it
+- Thunderstore share codes can be imported from the Thunderstore menu
+### Changes
+- Script extender wizards install the extender into the mod list by default instead of the game folder
+- Custom repositories can be added for game handlers in Add Game
+- The Plugins panel buttons are centred like the mod list's
+### Bug Fixes
+- Some ZIP archives made on Windows no longer install empty folders as files
+- Restore no longer fails when the profile's save state is empty or malformed
+- FOMOD installers work when paths start with a slash or backslash
+- The text files tab shows the game folder's text files again
+
 - v1.1.4
 ### Bug Fixes
 - For Starfield, Morrowind and OpenMW, a plugin whose master isn't in the load order stops Sort, Refresh and the record-overlap check with a notice naming the plugin and the missing master. Before, LOOT failed with "the plugin X has not been loaded" and the notice only said to see the log

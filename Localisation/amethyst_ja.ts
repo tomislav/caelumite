@@ -242,6 +242,22 @@ Choose Roads or Paths Only, click Generate, then close it when finished.</source
       <translation>名前で検索…</translation>
     </message>
     <message>
+      <source>Repositories…</source>
+      <translation>リポジトリ…</translation>
+    </message>
+    <message>
+      <source>Syncing game handlers…</source>
+      <translation type="unfinished">Syncing game handlers…</translation>
+    </message>
+    <message>
+      <source>Handler sync finished with {0} error(s). {1}</source>
+      <translation>ハンドラの同期が {0} エラーで完了しました。 {1}</translation>
+    </message>
+    <message>
+      <source>Game handlers are up to date.</source>
+      <translation>ゲームハンドラーは最新です。</translation>
+    </message>
+    <message>
       <source>Installed</source>
       <translation>インストール済み</translation>
     </message>
@@ -3026,6 +3042,52 @@ md5 キャッシュは保持されます。 アーカイブは必要に応じて
     </message>
   </context>
   <context>
+    <name>ColumnModel</name>
+    <message>
+      <source>Yes</source>
+      <translation>はい</translation>
+    </message>
+    <message>
+      <source>No</source>
+      <translation>いいえ</translation>
+    </message>
+  </context>
+  <context>
+    <name>CommandPalette</name>
+    <message>
+      <source>Plugin commands</source>
+      <translation>プラグインコマンド</translation>
+    </message>
+    <message>
+      <source>Search commands…</source>
+      <translation type="unfinished">Search commands…</translation>
+    </message>
+    <message>
+      <source>Command</source>
+      <translation>(Command)</translation>
+    </message>
+    <message>
+      <source>Shortcut</source>
+      <translation>ショートカット</translation>
+    </message>
+    <message>
+      <source>Toolbar</source>
+      <translation>ツールバー</translation>
+    </message>
+    <message>
+      <source>Assign shortcuts in Settings → Shortcuts. Select Toolbar to pin a command.</source>
+      <translation>設定 → ショートカット でショートカットを割り当てます。 コマンドを固定するにはツールバーを選択します。</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>閉じる</translation>
+    </message>
+    <message>
+      <source>Run</source>
+      <translation>実行</translation>
+    </message>
+  </context>
+  <context>
     <name>ConfigureGameView</name>
     <message>
       <source>{0} Game - {1}</source>
@@ -3512,6 +3574,14 @@ The default profile's settings are not affected.</source>
       <translation>設定</translation>
     </message>
     <message>
+      <source>A previous deployment needs restoring before you can change locations. You can restore it here before adding the game.</source>
+      <translation>場所を変更する前に、以前のデプロイメントを復元する必要があります。ゲームを追加する前に、ここで復元できます。</translation>
+    </message>
+    <message>
+      <source>Restore previous deployment</source>
+      <translation>以前のデプロイを復元</translation>
+    </message>
+    <message>
       <source>Configured</source>
       <translation>設定済み</translation>
     </message>
@@ -3562,6 +3632,14 @@ The default profile's settings are not affected.</source>
     <message>
       <source>Mod staging</source>
       <translation>Mod staging</translation>
+    </message>
+    <message>
+      <source>Previous deployment's staging folder. Restore before changing it.</source>
+      <translation>以前のデプロイ先のステージングフォルダ。変更する前に復元します。</translation>
+    </message>
+    <message>
+      <source>Found via launcher plugin.</source>
+      <translation>ランチャープラグイン経由で見つかりました。</translation>
     </message>
     <message>
       <source>Game executable not found on any drive.</source>
@@ -3700,6 +3778,34 @@ Flatpakは次の起動時に新しいファイルシステムアクセスを適�
       <translation>移動 Mod のステージング ファイル</translation>
     </message>
     <message>
+      <source>Restore the previous deployment of {0} using its saved locations?
+
+Your unsaved location changes will be kept in this form. After Restore succeeds, save to finish adding or reconfiguring the game.</source>
+      <translation>保存された場所を使用して {0} の以前のデプロイを復元しますか？
+
+保存されていない場所の変更はこのフォームに保存されます。 復元に成功したら、ゲームの追加または再構成を完了するために保存します。</translation>
+    </message>
+    <message>
+      <source>Restoring previous deployment…</source>
+      <translation type="unfinished">Restoring previous deployment…</translation>
+    </message>
+    <message>
+      <source>Unexpected restore failure.</source>
+      <translation>予期しない復元に失敗しました。</translation>
+    </message>
+    <message>
+      <source>Previous deployment restored. Save to finish configuring the game.</source>
+      <translation>以前のデプロイが復元されました。ゲームの構成を完了するには保存してください。</translation>
+    </message>
+    <message>
+      <source>The staging folder can now be changed.</source>
+      <translation>ステージングフォルダを変更できるようになりました。</translation>
+    </message>
+    <message>
+      <source>Restore failed: {0}</source>
+      <translation>復元に失敗しました: {0}</translation>
+    </message>
+    <message>
       <source>Yes</source>
       <translation>お問い合わせ</translation>
     </message>
@@ -3726,16 +3832,24 @@ Kept: mods、プロファイル、および上書きフォルダ。
       <translation>インスタンスを削除中…</translation>
     </message>
     <message>
-      <source>Scan {0} and remove leftover deployed mod files (hardlinks/symlinks/copies) that weren't restored?
+      <source>Clean {0}, including its mod data and root folders?
 
-Vanilla game files are kept. This cannot be undone.</source>
-      <translation>{0} をスキャンし、復元されていない mod ファイル (hardlinks/symlinks/copies) をデプロイした残りのファイルを削除しますか?
+Remove recorded mod files and links to staged mods, restore vanilla backups, and remove case aliases. Unrecorded copies are kept. This cannot be undone.</source>
+      <translation type="unfinished">Clean {0}, including its mod data and root folders?
 
-バニラゲームファイルは保存されます。 これは元に戻すことができません.</translation>
+Remove recorded mod files and links to staged mods, restore vanilla backups, and remove case aliases. Unrecorded copies are kept. This cannot be undone.</translation>
+    </message>
+    <message>
+      <source>Game folder cleanup complete.</source>
+      <translation>ゲームフォルダのクリーンアップが完了しました。</translation>
     </message>
     <message>
       <source>Clean Game Folder - {0}</source>
       <translation>クリーンゲームフォルダ - {0}</translation>
+    </message>
+    <message>
+      <source>Cannot clean the game folder while a VFS deployment exists. Use Restore first. If game files are already missing, recover them from the VFS view before restoring.</source>
+      <translation>VFSデプロイメントが存在する間はゲームフォルダをクリーンアップできません。最初に復元を使用してください。 ゲームファイルがすでに存在しない場合は、復元する前にVFSビューから復元してください。</translation>
     </message>
     <message>
       <source>Cleaning game folder…</source>
@@ -3744,10 +3858,6 @@ Vanilla game files are kept. This cannot be undone.</source>
     <message>
       <source>Clean failed: {0}</source>
       <translation>クリーン処理に失敗しました：{0}</translation>
-    </message>
-    <message>
-      <source>Clean complete - {0} deployed file(s) removed.</source>
-      <translation>完了 - {0} の展開ファイル(s) を削除.</translation>
     </message>
   </context>
   <context>
@@ -5368,6 +5478,10 @@ When it completes, the app switches to the new profile - then come back here and
   <context>
     <name>DetachableTabWidget</name>
     <message>
+      <source>Detach</source>
+      <translation>Detach</translation>
+    </message>
+    <message>
       <source>Pin to Modlist Panel</source>
       <translation>「Modlist」パネルにピン留め</translation>
     </message>
@@ -5380,8 +5494,20 @@ When it completes, the app switches to the new profile - then come back here and
       <translation>全画面表示に固定</translation>
     </message>
     <message>
-      <source>Drop to redock</source>
-      <translation>ドロップして再ドッキング</translation>
+      <source>Close</source>
+      <translation>閉じる</translation>
+    </message>
+    <message>
+      <source>Close Others</source>
+      <translation>他を閉じる</translation>
+    </message>
+    <message>
+      <source>Close All to the Right</source>
+      <translation>すべて右に閉じる</translation>
+    </message>
+    <message>
+      <source>Close Tab</source>
+      <translation>タブを閉じる</translation>
     </message>
   </context>
   <context>
@@ -5801,10 +5927,6 @@ Download the archive manually (do NOT use the Mod Manager download button), then
       <translation>{0}のダウンロード中…</translation>
     </message>
     <message>
-      <source>{0} not found after extraction.</source>
-      <translation>抽出後に{0}が見つかりません.</translation>
-    </message>
-    <message>
       <source>Downloaded and extracted {0}.</source>
       <translation>{0}をダウンロードして抽出しました.</translation>
     </message>
@@ -5857,28 +5979,12 @@ or use Browse to select it manually.</source>
       <translation>{0}を抽出する..</translation>
     </message>
     <message>
-      <source>{0} not found after extraction.
-Check that the archive contains {0}.</source>
-      <translation>抽出後に{0}が見つかりません。
-アーカイブに{0}が含まれていることを確認してください.</translation>
-    </message>
-    <message>
       <source>Extracted {0} file(s).</source>
       <translation>{0} ファイルを抽出しました.</translation>
     </message>
     <message>
       <source>Step 4: Deploy Modlist</source>
       <translation>ステップ 4: Modlist のデプロイ</translation>
-    </message>
-    <message>
-      <source>Before deploying, please delete any output from a previous
-{0} run (the '{1}' mod in your mod list).
-
-Once you have done this, click Deploy.</source>
-      <translation>デプロイを行う前に、前回の
-{0}の実行で生成された出力（MODリスト内の「{1}」MOD）をすべて削除してください。
-
-削除が完了したら、「デプロイ」をクリックしてください。</translation>
     </message>
     <message>
       <source>Skip</source>
@@ -5935,14 +6041,6 @@ Please restart the wizard and install {1} first.</source>
       <translation>{0}の起動中…</translation>
     </message>
     <message>
-      <source>xLODGen does not support {0}.</source>
-      <translation>xLODGENは {0}をサポートしていません。</translation>
-    </message>
-    <message>
-      <source>Game path not configured.</source>
-      <translation>設定されていないゲームパス.</translation>
-    </message>
-    <message>
       <source>{0} finished.</source>
       <translation>{0} が完成しました.</translation>
     </message>
@@ -5951,22 +6049,8 @@ Please restart the wizard and install {1} first.</source>
       <translation>起動エラー: {0}</translation>
     </message>
     <message>
-      <source>{0} is running.
-Close it when you are done, then click Done.</source>
-      <translation>{0} 実行中です。
-作業が終わったらこれを閉じ、[完了] をクリックしてください。</translation>
-    </message>
-    <message>
       <source>Fetching latest release from GitHub…</source>
       <translation>GitHubから最新リリースを取得中…</translation>
-    </message>
-    <message>
-      <source>Could not resolve the Proton version for the game's own prefix - launch the game once, or pick a different prefix option.</source>
-      <translation>ゲーム独自のプレフィックスのProtonバージョンを解決できません。一度ゲームを起動するか、異なるプレフィックスオプションを選択します.</translation>
-    </message>
-    <message>
-      <source>Could not find Proton '{0}' - check that it is installed in Steam, Heroic or ProtonPlus.</source>
-      <translation>Proton '{0}'が見つかりません - Steam、Heric、ProtonPlusにインストールされていることを確認してください.</translation>
     </message>
     <message>
       <source>Searching Downloads folder…</source>
@@ -6808,10 +6892,6 @@ Changes take effect on the next launch. If a variable ever stops the app from st
       <translation>スクリプトに渡された引数。 下のボタンはファイル引数のLinuxパスをインサートします.</translation>
     </message>
     <message>
-      <source>Game default uses the game's prefix. A specific Proton version uses an isolated prefix next to the exe, or a shared prefix when selected below. For Bethesda games the game path (registry), plugins.txt and My Games INIs are set up in the prefix automatically at launch.</source>
-      <translation>ゲームのデフォルトでは、ゲームのプレフィックスが使用されます。特定のProtonバージョンでは、exeの隣に隔離されたプレフィックスを使用するか、下で選択したプレフィックスを共有します。 Bethesdaゲームの場合、ゲームパス(レジストリ)、plugins.txt、My Games INIは起動時にプレフィックスに自動的に設定されます。</translation>
-    </message>
-    <message>
       <source>Use shared prefix</source>
       <translation>共有プレフィックスを使用</translation>
     </message>
@@ -6870,6 +6950,10 @@ Proton prefix: click 'Install Java into prefix' once, then it runs automatically
       <translation>この .jar を実行する方法:
 Host: お使いのシステムのJava(Protonなし)で実行します。 「java -jar %command%」(%command% は jar パス) の起動オプションで Java コマンドを設定します。
 Proton プレフィックス: 'Install Java をプレフィックスに一度クリックすると、'java.exe -jar &lt;jar&gt;' として自動的に実行されます。 起動オプション / 起動引数に入れるものは、追加のフラグとして追加されます。 'Game default' は、ゲームのプレフィックスを使用します。 特定の Proton バージョンでは、jar や wizard ツールで使用される共有プレフィックスの横にある独立したプレフィックスを選択します.</translation>
+    </message>
+    <message>
+      <source>Game default uses the game's prefix. A specific Proton version uses an isolated prefix for the tool, or a shared prefix when selected below. For Bethesda games the game path (registry), plugins.txt and My Games INIs are set up in the prefix automatically at launch.</source>
+      <translation>ゲームのデフォルトでは、ゲームのプレフィックスが使用されます。特定のProtonバージョンでは、ツールの孤立したプレフィックスを使用するか、以下で選択した場合は共有プレフィックスを使用します。 Bethesdaゲームの場合、ゲームパス(レジストリ)、plugins.txt、My Games INIは起動時にプレフィックスに自動的に設定されます。</translation>
     </message>
     <message>
       <source>Game loaders always run in the game's own prefix with the game's Proton version: they launch the game itself, which needs the game's Steam app ID and its INIs, saves and mod DLLs. Change the game's Proton version in the game settings instead.</source>
@@ -6983,6 +7067,10 @@ Proton プレフィックス: 'Install Java をプレフィックスに一度ク
       <translation>サンダーストア</translation>
     </message>
     <message>
+      <source>Mod provider</source>
+      <translation>Mod provider</translation>
+    </message>
+    <message>
       <source>Direct</source>
       <translation>アクセス</translation>
     </message>
@@ -7041,6 +7129,14 @@ Proton プレフィックス: 'Install Java をプレフィックスに一度ク
     <message>
       <source>Export…</source>
       <translation>エクスポート…</translation>
+    </message>
+    <message>
+      <source>Include saves</source>
+      <translation>セーブを含める</translation>
+    </message>
+    <message>
+      <source>Include a Saves tab export in the profile archive. Importing the profile will offer to restore these saves.</source>
+      <translation>プロファイル アーカイブに保存タブのエクスポートを含めます。プロファイルをインポートすると、これらの保存を復元することができます。</translation>
     </message>
     <message>
       <source>Mod Name</source>
@@ -7133,6 +7229,10 @@ Proton プレフィックス: 'Install Java をプレフィックスに一度ク
     <message>
       <source>This mod was not installed from Thunderstore.</source>
       <translation>Thunderstoreからこのmodがインストールされていない.</translation>
+    </message>
+    <message>
+      <source>This mod has no portable provider source.</source>
+      <translation>このMODにはポータブルプロバイダのソースがありません。</translation>
     </message>
     <message>
       <source>Could not load versions from Thunderstore.</source>
@@ -7229,6 +7329,10 @@ That is fine for your own backup. Do not share or upload the file in this state 
     <message>
       <source>Building file-edit patches…</source>
       <translation>ビルドファイル編集パッチ..</translation>
+    </message>
+    <message>
+      <source>Packing saves: {0}</source>
+      <translation>パッキングセーブ: {0}</translation>
     </message>
     <message>
       <source>Packing mod: {0}</source>
@@ -7402,6 +7506,10 @@ Doneをクリックして抽出されたファイルをクリーンアップし�
     <message>
       <source>Clear all filters</source>
       <translation>すべてのフィルターをクリア</translation>
+    </message>
+    <message>
+      <source>Open as tab</source>
+      <translation>タブとして開く</translation>
     </message>
   </context>
   <context>
@@ -7946,6 +8054,64 @@ SHA-1:{1}
     <message>
       <source>✘  {0} Not Present</source>
       <translation>̇ {0} 未発表</translation>
+    </message>
+  </context>
+  <context>
+    <name>GameRepositoriesOverlay</name>
+    <message>
+      <source>Custom game repositories</source>
+      <translation>カスタムゲームリポジトリ</translation>
+    </message>
+    <message>
+      <source>Choose a folder containing custom game handler JSON files. Blank branch uses the default branch; blank folder uses the repository root. Close to sync changes. Use Game sources to choose between handlers with the same game ID. Disabling or removing a repository keeps downloaded games.</source>
+      <translation>カスタムゲームハンドラJSONファイルを含むフォルダを選択します。ブランクブランチはデフォルトブランチを使用します。ブランクフォルダはリポジトリのルートを使用します。 変更を同期するには閉じます。ゲームソースを使用して、同じゲームIDを持つハンドラーを選択します。リポジトリを無効にしたり削除したりすると、ダウンロードしたゲームは保持されます。</translation>
+    </message>
+    <message>
+      <source>Repository removed. Downloaded games are kept.</source>
+      <translation>リポジトリが削除されました。ダウンロードしたゲームは保持されます。</translation>
+    </message>
+    <message>
+      <source>Game sources…</source>
+      <translation>ゲームソース…</translation>
+    </message>
+  </context>
+  <context>
+    <name>GameSourcesOverlay</name>
+    <message>
+      <source>Game handler sources</source>
+      <translation>ゲームハンドラのソース</translation>
+    </message>
+    <message>
+      <source>Choose one handler source for each game ID. The game's existing name is kept so saved paths and profiles continue to work. Other downloaded versions are kept. Disabled or removed repositories keep their last downloaded version.</source>
+      <translation>ゲームIDごとに1つのハンドラーソースを選択します。ゲームの既存の名前は保存されたパスとプロファイルが機能します。 ダウンロードした他のバージョンは保持されています。最後にダウンロードしたバージョンは無効または削除されたリポジトリは保持されます。</translation>
+    </message>
+    <message>
+      <source>Use selected source</source>
+      <translation>選択したソースを使用</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>閉じる</translation>
+    </message>
+    <message>
+      <source>{0} sources</source>
+      <translation>{0} ソース</translation>
+    </message>
+    <message>
+      <source>No downloaded handlers. Close the repositories window to sync first.</source>
+      <translation>ダウンロードしたハンドラがありません。リポジトリウィンドウを閉じて同期してください。</translation>
+    </message>
+    <message>
+      <source>Local definition</source>
+      <translation>ローカル定義</translation>
+    </message>
+    <message>
+      <source>Retained download; updates disabled</source>
+      <translation>ダウンロードを保持しました; 更新は無効です</translation>
+    </message>
+    <message>
+      <source>Handler source selected.</source>
+      <translation>ハンドラソースが選択されています。</translation>
     </message>
   </context>
   <context>
@@ -8531,6 +8697,132 @@ Managed directory: {2}</source>
     <message>
       <source>Copied ✓</source>
       <translation>コピッド ✓</translation>
+    </message>
+  </context>
+  <context>
+    <name>LootReportOverlay</name>
+    <message>
+      <source>LOOT diagnostics</source>
+      <translation>LOOT診断</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>閉じる</translation>
+    </message>
+  </context>
+  <context>
+    <name>LootReportView</name>
+    <message>
+      <source>LOOT has not run for this profile yet. Use Sort Plugins or Refresh to generate a report.</source>
+      <translation>LOOTはまだこのプロファイルで実行されていません。レポートを生成するには、ソートプラグインまたは更新を使用してください。</translation>
+    </message>
+    <message>
+      <source>Last LOOT run: {0}</source>
+      <translation>最後の戦利品： {0}</translation>
+    </message>
+    <message>
+      <source>{0} plugin(s) with metadata</source>
+      <translation type="unfinished">{0} plugin(s) with metadata</translation>
+    </message>
+    <message>
+      <source>Error</source>
+      <translation>エラー</translation>
+    </message>
+    <message>
+      <source>Warning</source>
+      <translation>警告</translation>
+    </message>
+    <message>
+      <source>Note</source>
+      <translation>メモ</translation>
+    </message>
+    <message>
+      <source>General</source>
+      <translation>全般</translation>
+    </message>
+    <message>
+      <source>The masterlist reported no general messages.</source>
+      <translation>マスタリストは、一般的なメッセージを報告しませんでした。</translation>
+    </message>
+    <message>
+      <source>The masterlist has no metadata for the loaded plugins.</source>
+      <translation>マスターリストには、ロードされたプラグインのメタデータがありません。</translation>
+    </message>
+    <message>
+      <source>Errors</source>
+      <translation>エラー</translation>
+    </message>
+    <message>
+      <source>Warnings</source>
+      <translation>警告</translation>
+    </message>
+    <message>
+      <source>Dirty plugins</source>
+      <translation>Dirty プラグイン</translation>
+    </message>
+    <message>
+      <source>Notes</source>
+      <translation>メモ</translation>
+    </message>
+    <message>
+      <source>Messages</source>
+      <translation>メッセージ</translation>
+    </message>
+    <message>
+      <source>Requirements</source>
+      <translation>要件</translation>
+    </message>
+    <message>
+      <source>Incompatibilities</source>
+      <translation>互換性なし</translation>
+    </message>
+    <message>
+      <source>Locations</source>
+      <translation>場所</translation>
+    </message>
+    <message>
+      <source>Dirty edits</source>
+      <translation>汚い編集</translation>
+    </message>
+    <message>
+      <source>Verified clean</source>
+      <translation>確認済みのクリーンアップ</translation>
+    </message>
+    <message>
+      <source>Bash Tags</source>
+      <translation>バッシュタグ</translation>
+    </message>
+    <message>
+      <source>{0} ITM</source>
+      <translation>{0} ITM</translation>
+    </message>
+    <message>
+      <source>{0} UDR</source>
+      <translation>{0} UDR</translation>
+    </message>
+    <message>
+      <source>{0} deleted navmesh</source>
+      <translation>{0} がナビメッシュを削除しました</translation>
+    </message>
+    <message>
+      <source>CRC {0}</source>
+      <translation type="unfinished">CRC {0}</translation>
+    </message>
+    <message>
+      <source>clean with</source>
+      <translation>できれいにする</translation>
+    </message>
+    <message>
+      <source>Current</source>
+      <translation>現在</translation>
+    </message>
+    <message>
+      <source>Suggested (add)</source>
+      <translation>推奨（追加）</translation>
+    </message>
+    <message>
+      <source>Suggested (remove)</source>
+      <translation>提案（削除）</translation>
     </message>
   </context>
   <context>
@@ -9540,70 +9832,6 @@ Linuxファイルシステム(ext4/btrfs)は、ゲームとMODのステージン
       <translation>同期</translation>
     </message>
     <message>
-      <source>Match plugin load order to modlist priority</source>
-      <translation>プラグインの読み込み順をModlistの優先順位に合わせる</translation>
-    </message>
-    <message>
-      <source>Groups</source>
-      <translation>グループ</translation>
-    </message>
-    <message>
-      <source>Plugin Rules</source>
-      <translation>プラグインのルール</translation>
-    </message>
-    <message>
-      <source>Search plugins…</source>
-      <translation>プラグインを検索…</translation>
-    </message>
-    <message>
-      <source>Pack BSA</source>
-      <translation>BSAパック</translation>
-    </message>
-    <message>
-      <source>Unpack BSA</source>
-      <translation>BSAを展開する</translation>
-    </message>
-    <message>
-      <source>⊞ Expand all</source>
-      <translation>⊞ すべて展開</translation>
-    </message>
-    <message>
-      <source>⊟ Collapse all</source>
-      <translation>⊟ すべて折りたたむ</translation>
-    </message>
-    <message>
-      <source>Install Selected</source>
-      <translation>選択したものをインストール</translation>
-    </message>
-    <message>
-      <source>Move Selected</source>
-      <translation>選択したものを移動</translation>
-    </message>
-    <message>
-      <source>Hide Selected</source>
-      <translation>選択したものを隠す</translation>
-    </message>
-    <message>
-      <source>Unhide Selected</source>
-      <translation>選択したものを再表示する</translation>
-    </message>
-    <message>
-      <source>Remove Selected</source>
-      <translation>選択した項目を削除</translation>
-    </message>
-    <message>
-      <source>Locations</source>
-      <translation>所在地</translation>
-    </message>
-    <message>
-      <source>Search downloads…</source>
-      <translation>ダウンロードを検索…</translation>
-    </message>
-    <message>
-      <source>{0} ({1})</source>
-      <translation>{0} ({1})</translation>
-    </message>
-    <message>
       <source>Removed {0} archive(s)</source>
       <translation>{0} のアーカイブを削除しました</translation>
     </message>
@@ -9626,30 +9854,6 @@ Linuxファイルシステム(ext4/btrfs)は、ゲームとMODのステージン
     <message>
       <source>Moved {0} archive(s)</source>
       <translation>{0}のアーカイブを移動しました</translation>
-    </message>
-    <message>
-      <source>Find in files:</source>
-      <translation>ファイル内で検索：</translation>
-    </message>
-    <message>
-      <source>Text to search for…</source>
-      <translation>検索対象のテキスト…</translation>
-    </message>
-    <message>
-      <source>Search</source>
-      <translation>検索</translation>
-    </message>
-    <message>
-      <source>Search Content</source>
-      <translation>コンテンツを検索</translation>
-    </message>
-    <message>
-      <source>Content: "{0}"</source>
-      <translation>内容：「{0}」</translation>
-    </message>
-    <message>
-      <source>Clear Content</source>
-      <translation>コンテンツをクリア</translation>
     </message>
     <message>
       <source>Add game…</source>
@@ -9912,28 +10116,8 @@ Linuxファイルシステム(ext4/btrfs)は、ゲームとMODのステージン
       <translation>リセット</translation>
     </message>
     <message>
-      <source>Undo this mod's Mod Files changes (Top Level, Root, Disable). Mod files themselves are not touched.</source>
-      <translation>このmod の Mod ファイルの変更 (トップ レベル, ルート, 無効). Mod ファイル自体は触れません.</translation>
-    </message>
-    <message>
-      <source>Search files… (try !.dds)</source>
-      <translation>ファイルを検索... ( !.dds)</translation>
-    </message>
-    <message>
-      <source>Open folder</source>
-      <translation>フォルダを開く</translation>
-    </message>
-    <message>
-      <source>Export</source>
-      <translation>エクスポート</translation>
-    </message>
-    <message>
       <source>Import</source>
       <translation>インポート</translation>
-    </message>
-    <message>
-      <source>Search saves… (try !.ess)</source>
-      <translation>保存検索... (試 !.ess)</translation>
     </message>
     <message>
       <source>Remove archives</source>
@@ -10180,14 +10364,6 @@ The collection may not work correctly. You can still install it.</source>
       <translation>再び表示しないでください</translation>
     </message>
     <message>
-      <source>Refresh Plugins</source>
-      <translation>プラグインをリフレッシュ</translation>
-    </message>
-    <message>
-      <source>↻ Refresh</source>
-      <translation>最近の投稿</translation>
-    </message>
-    <message>
       <source>Permanently delete {0} archive(s) from disk?</source>
       <translation>ディスクから{0}アーカイブを永久に削除しますか?</translation>
     </message>
@@ -10198,10 +10374,6 @@ The collection may not work correctly. You can still install it.</source>
     <message>
       <source>Updating handler…</source>
       <translation>ハンドラの更新..</translation>
-    </message>
-    <message>
-      <source>Handler not found on the Resources branch.</source>
-      <translation>リソースブランチに見つからないハンドラ.</translation>
     </message>
     <message>
       <source>Handler is already up to date.</source>
@@ -11466,6 +11638,18 @@ Run Quick Update on all of them now?</source>
       <translation>({0})</translation>
     </message>
     <message>
+      <source>Handler not found in an enabled game repository.</source>
+      <translation>有効なゲームリポジトリにハンドラが見つかりません。</translation>
+    </message>
+    <message>
+      <source>Select a configured game before opening a provider install link.</source>
+      <translation>プロバイダのインストールリンクを開く前に設定されたゲームを選択します。</translation>
+    </message>
+    <message>
+      <source>The install link requires exactly one enabled provider for the selected game.</source>
+      <translation>インストールリンクは、選択したゲームの有効化されたプロバイダを1つだけ必要とします。</translation>
+    </message>
+    <message>
       <source>Received a malformed MODL link.</source>
       <translation>不正な形式のMODLリンクを受け取りました。</translation>
     </message>
@@ -11786,6 +11970,14 @@ Run Quick Update on all of them now?</source>
       <translation>mod.io 更新チェックは mod.io API キーツールで API パスが追加されるまで無効です.</translation>
     </message>
     <message>
+      <source>Mod providers: {0} updates</source>
+      <translation>Mod providers: {0} updates</translation>
+    </message>
+    <message>
+      <source>{0} provider checks failed; see log</source>
+      <translation>{0} プロバイダのチェックに失敗しました。ログを見る</translation>
+    </message>
+    <message>
       <source>Rolled back {0} of {1} mod(s).</source>
       <translation>{1} mod(s) の {0} をロールバックしました.</translation>
     </message>
@@ -12030,6 +12222,10 @@ Press Deploy to apply your mods, then start the game from Steam, Heroic, Lutris,
       <translation>プロファイルの更新を待って..</translation>
     </message>
     <message>
+      <source>Finish the plugin store operation before closing Amethyst.</source>
+      <translation>アメジストを閉じる前にプラグインストアの操作を終了します。</translation>
+    </message>
+    <message>
       <source>Wait for Wabbajack list removal to finish before closing Amethyst.</source>
       <translation>アメジストを閉じる前に、Wabbajackリストの削除が完了するのを待ちます。</translation>
     </message>
@@ -12046,6 +12242,14 @@ Press Deploy to apply your mods, then start the game from Steam, Heroic, Lutris,
       <translation>抽出/インストール</translation>
     </message>
     <message>
+      <source>Deploy failed: {0}</source>
+      <translation>デプロイに失敗しました: {0}</translation>
+    </message>
+    <message>
+      <source>Deployment failed</source>
+      <translation>デプロイに失敗しました</translation>
+    </message>
+    <message>
       <source>Restore the game before changing the preferred OpenMW package.</source>
       <translation>推奨OpenMWパッケージを変更する前に、ゲームを復元します.</translation>
     </message>
@@ -12056,6 +12260,46 @@ Press Deploy to apply your mods, then start the game from Steam, Heroic, Lutris,
     <message>
       <source>Installing .NET Framework 4.8</source>
       <translation>Installing .NET Framework 4.8</translation>
+    </message>
+    <message>
+      <source>No plugins available</source>
+      <translation>利用可能なプラグインがありません</translation>
+    </message>
+    <message>
+      <source>{0} (theme pack)</source>
+      <translation>{0} (テーマパック)</translation>
+    </message>
+    <message>
+      <source>{0} (icon pack)</source>
+      <translation>{0} (アイコンパック)</translation>
+    </message>
+    <message>
+      <source>Some plugins could not be loaded…</source>
+      <translation type="unfinished">Some plugins could not be loaded…</translation>
+    </message>
+    <message>
+      <source>Browse plugins…</source>
+      <translation type="unfinished">Browse plugins…</translation>
+    </message>
+    <message>
+      <source>Open Plugins Folder…</source>
+      <translation type="unfinished">Open Plugins Folder…</translation>
+    </message>
+    <message>
+      <source>Plugin store</source>
+      <translation>プラグインストア</translation>
+    </message>
+    <message>
+      <source>Wait for the current manager operation to finish.</source>
+      <translation>現在のマネージャー操作が完了するのを待ちます。</translation>
+    </message>
+    <message>
+      <source>Wait for the mod list to finish refreshing.</source>
+      <translation>リフレッシュが完了するまでお待ちください。</translation>
+    </message>
+    <message>
+      <source>Could not open plugin: {0}</source>
+      <translation>プラグインを開けませんでした: {0}</translation>
     </message>
     <message>
       <source>Wizard Settings…</source>
@@ -12150,14 +12394,6 @@ Run the Downgrade wizard to patch the game back to a version FOSE supports. Your
     <message>
       <source>Modlist</source>
       <translation>Modlist</translation>
-    </message>
-    <message>
-      <source>Pack {0}</source>
-      <translation>{0} パック</translation>
-    </message>
-    <message>
-      <source>Unpack {0}</source>
-      <translation>{0} を解凍する</translation>
     </message>
     <message>
       <source>Reset Mod Files changes for {0}</source>
@@ -12260,6 +12496,10 @@ Run the Downgrade wizard to patch the game back to a version FOSE supports. Your
       <translation>mod.io</translation>
     </message>
     <message>
+      <source>Mod providers</source>
+      <translation>Mod providers</translation>
+    </message>
+    <message>
       <source>None</source>
       <translation>なし</translation>
     </message>
@@ -12282,14 +12522,6 @@ Run the Downgrade wizard to patch the game back to a version FOSE supports. Your
     <message>
       <source>{0} enabled of {1} mods</source>
       <translation>{0} {1}のMODを有効化</translation>
-    </message>
-    <message>
-      <source>P:{0} / Non-ESL:{1}</source>
-      <translation>P:{0}/非ESL:{1}</translation>
-    </message>
-    <message>
-      <source>{0} plugins ({1} ESL, {2} non-ESL)</source>
-      <translation>{0} プラグイン（{1} ESL、{2} 非ESL）</translation>
     </message>
     <message>
       <source>Removed {0} stale plugin(s)</source>
@@ -12772,6 +13004,77 @@ The profile and shared download archives will be kept.</source>
     <message>
       <source>Could not start the AppImage update. Check that its folder is writable, or download the update from the releases page.</source>
       <translation>AppImage の更新を開始できませんでした。フォルダが書き込み可能であることを確認するか、リリースページからアップデートをダウンロードしてください。</translation>
+    </message>
+  </context>
+  <context>
+    <name>ManagerPluginOverlay</name>
+    <message>
+      <source>Run only plugins you trust. Plugin scripts have the same file access as Amethyst.</source>
+      <translation>信頼できるプラグインのみを実行します。プラグインスクリプトはアメジストと同じファイルアクセスを持ちます。</translation>
+    </message>
+    <message>
+      <source>Ready to run.</source>
+      <translation>実行する準備ができました。</translation>
+    </message>
+    <message>
+      <source>Show requested API operation</source>
+      <translation>要求されたAPI操作を表示</translation>
+    </message>
+    <message>
+      <source>Run</source>
+      <translation>実行</translation>
+    </message>
+    <message>
+      <source>Apply</source>
+      <translation>適用</translation>
+    </message>
+    <message>
+      <source>Cancel changes</source>
+      <translation>変更をキャンセル</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>閉じる</translation>
+    </message>
+    <message>
+      <source>Could not save plugin settings: {0}</source>
+      <translation>プラグインの設定を保存できませんでした: {0}</translation>
+    </message>
+    <message>
+      <source>Stop</source>
+      <translation>停止</translation>
+    </message>
+    <message>
+      <source>Running…</source>
+      <translation type="unfinished">Running…</translation>
+    </message>
+    <message>
+      <source>Review changes</source>
+      <translation>変更を確認</translation>
+    </message>
+    <message>
+      <source>Applying changes…</source>
+      <translation type="unfinished">Applying changes…</translation>
+    </message>
+    <message>
+      <source>Cancelling changes…</source>
+      <translation type="unfinished">Cancelling changes…</translation>
+    </message>
+    <message>
+      <source>Plugin failed. See the log below.</source>
+      <translation>プラグインに失敗しました。以下のログを参照してください。</translation>
+    </message>
+    <message>
+      <source>Stopped. Any completed changes remain applied.</source>
+      <translation>停止しました。完了した変更はすべて適用されます。</translation>
+    </message>
+    <message>
+      <source>Plugin finished.</source>
+      <translation>プラグインが終了しました。</translation>
+    </message>
+    <message>
+      <source>Stopping. Waiting for accepted manager operations to finish…</source>
+      <translation type="unfinished">Stopping. Waiting for accepted manager operations to finish…</translation>
     </message>
   </context>
   <context>
@@ -13836,6 +14139,10 @@ This cannot be undone.</source>
       <source>Updated</source>
       <translation>更新日時</translation>
     </message>
+    <message>
+      <source>Read-only entry managed by a plugin.</source>
+      <translation>プラグインによって管理される読み取り専用エントリ。</translation>
+    </message>
   </context>
   <context>
     <name>ModListView</name>
@@ -14000,6 +14307,10 @@ Done をクリックして閉じます.</translation>
     <message>
       <source>Update available on Thunderstore</source>
       <translation>Thunderstoreで利用可能な更新</translation>
+    </message>
+    <message>
+      <source>Update available from mod provider</source>
+      <translation>Modプロバイダからアップデートが利用可能です</translation>
     </message>
     <message>
       <source>Endorsed</source>
@@ -15974,8 +16285,8 @@ Daily: {1}</source>
       <translation>Nexusリンク転送</translation>
     </message>
     <message>
-      <source>Choose which mod manager receives this game's Nexus links. The choice is remembered. Removing it restores Amethyst's normal handling.</source>
-      <translation>このゲームのNexusリンクを受け取るModマネージャーを選択してください。選択は記憶されます。削除するとアメジストの通常の処理が復元されます。</translation>
+      <source>Choose which mod manager receives this game's Nexus links. The choice is remembered. Amethyst uses the matching configured game, or the current game for links from other domains.</source>
+      <translation>このゲームのNexusリンクを受け取るModマネージャーを選択してください。選択は記憶されています。 アメジストは、一致設定されたゲーム、または他のドメインからのリンクのために現在のゲームを使用します。</translation>
     </message>
     <message>
       <source>Nexus game domain</source>
@@ -16913,6 +17224,25 @@ Re-scan to verify.</source>
     </message>
   </context>
   <context>
+    <name>PluginCommands</name>
+    <message>
+      <source>The active game or profile changed. Run the command again.</source>
+      <translation>アクティブなゲームまたはプロファイルが変更されました。もう一度コマンドを実行してください。</translation>
+    </message>
+    <message>
+      <source>The plugin changed. Run the command again.</source>
+      <translation>プラグインが変更されました。もう一度コマンドを実行してください。</translation>
+    </message>
+    <message>
+      <source>This command does not match the current selection.</source>
+      <translation>このコマンドは現在の選択範囲と一致しません。</translation>
+    </message>
+    <message>
+      <source>A selected item is no longer available.</source>
+      <translation>選択されたアイテムは利用できません。</translation>
+    </message>
+  </context>
+  <context>
     <name>PluginCycleView</name>
     <message>
       <source>Plugins in cycle</source>
@@ -17129,6 +17459,25 @@ Re-scan to verify.</source>
     </message>
   </context>
   <context>
+    <name>PluginMenuController</name>
+    <message>
+      <source>Plugins</source>
+      <translation>プラグイン</translation>
+    </message>
+    <message>
+      <source>Preview with {0}</source>
+      <translation>{0} でプレビュー</translation>
+    </message>
+    <message>
+      <source>The active game or profile changed. Reopen the menu.</source>
+      <translation>アクティブなゲームまたはプロファイルが変更されました。メニューを再度開きます。</translation>
+    </message>
+    <message>
+      <source>The plugin changed. Reopen the menu.</source>
+      <translation>プラグインが変更されました。メニューを再度開きます。</translation>
+    </message>
+  </context>
+  <context>
     <name>PluginModel</name>
     <message>
       <source>Plugin Name</source>
@@ -17145,6 +17494,223 @@ Re-scan to verify.</source>
     <message>
       <source>Index</source>
       <translation>目次</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginNotifications</name>
+    <message>
+      <source>Open report</source>
+      <translation>レポートを開く</translation>
+    </message>
+    <message>
+      <source>{0}: {1} new or updated diagnostics</source>
+      <translation>{0}: {1} 新しい診断または更新された診断</translation>
+    </message>
+    <message>
+      <source>Select the notification's game and profile before using this action.</source>
+      <translation>このアクションを使用する前に通知のゲームとプロファイルを選択します。</translation>
+    </message>
+    <message>
+      <source>This plugin changed or is no longer available.</source>
+      <translation>このプラグインは変更されたか、使用できなくなりました。</translation>
+    </message>
+    <message>
+      <source>An affected item is no longer available. Refresh the diagnostic.</source>
+      <translation>影響を受ける項目は利用できません。診断を更新してください。</translation>
+    </message>
+    <message>
+      <source>The action no longer matches these items.</source>
+      <translation>アクションはこれらのアイテムと一致しません。</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginPanelControls</name>
+    <message>
+      <source>Sort Plugins</source>
+      <translation>プラグインの並べ替え</translation>
+    </message>
+    <message>
+      <source>Refresh Plugins</source>
+      <translation>プラグインを更新</translation>
+    </message>
+    <message>
+      <source>Sync</source>
+      <translation>同期</translation>
+    </message>
+    <message>
+      <source>Groups</source>
+      <translation>グループ</translation>
+    </message>
+    <message>
+      <source>Plugin Rules</source>
+      <translation>プラグインルール</translation>
+    </message>
+    <message>
+      <source>LOOT</source>
+      <translation>LOOT</translation>
+    </message>
+    <message>
+      <source>Show LOOT diagnostics</source>
+      <translation>LOOT診断を表示</translation>
+    </message>
+    <message>
+      <source>Match plugin load order to modlist priority</source>
+      <translation>プラグインの読み込み順をModlistの優先順位に合わせる</translation>
+    </message>
+    <message>
+      <source>Search plugins…</source>
+      <translation type="unfinished">Search plugins…</translation>
+    </message>
+    <message>
+      <source>Pack BSA</source>
+      <translation>パックBSA</translation>
+    </message>
+    <message>
+      <source>Unpack BSA</source>
+      <translation>BSAを解凍する</translation>
+    </message>
+    <message>
+      <source>⊞ Expand all</source>
+      <translation>&lt;unk> すべて展開する</translation>
+    </message>
+    <message>
+      <source>Open</source>
+      <translation>開く</translation>
+    </message>
+    <message>
+      <source>Reset</source>
+      <translation>Reset</translation>
+    </message>
+    <message>
+      <source>Undo this mod's Mod Files changes (Top Level, Root, Disable). Mod files themselves are not touched.</source>
+      <translation>このModファイルの変更を元に戻す (Topレベル、Root、Disable) Modファイル自体は変更されません。</translation>
+    </message>
+    <message>
+      <source>Search files… (try !.dds)</source>
+      <translation type="unfinished">Search files… (try !.dds)</translation>
+    </message>
+    <message>
+      <source>Blacklist</source>
+      <translation>ブラック リスト</translation>
+    </message>
+    <message>
+      <source>Routing Rules</source>
+      <translation>ルーティングルール</translation>
+    </message>
+    <message>
+      <source>⊟ Collapse all</source>
+      <translation>&lt;unk> すべてを折りたたむ</translation>
+    </message>
+    <message>
+      <source>↻ Refresh</source>
+      <translation>&lt;unk> 更新</translation>
+    </message>
+    <message>
+      <source>Open folder</source>
+      <translation>フォルダを開く</translation>
+    </message>
+    <message>
+      <source>Export</source>
+      <translation>エクスポート</translation>
+    </message>
+    <message>
+      <source>Import</source>
+      <translation>インポート</translation>
+    </message>
+    <message>
+      <source>Search saves… (try !.ess)</source>
+      <translation type="unfinished">Search saves… (try !.ess)</translation>
+    </message>
+    <message>
+      <source>Install Selected</source>
+      <translation>選択したものをインストール</translation>
+    </message>
+    <message>
+      <source>Move Selected</source>
+      <translation>選択したものを移動</translation>
+    </message>
+    <message>
+      <source>Hide Selected</source>
+      <translation>選択したものを隠す</translation>
+    </message>
+    <message>
+      <source>Remove Selected</source>
+      <translation>選択項目を削除</translation>
+    </message>
+    <message>
+      <source>Locations</source>
+      <translation>場所</translation>
+    </message>
+    <message>
+      <source>Search downloads…</source>
+      <translation type="unfinished">Search downloads…</translation>
+    </message>
+    <message>
+      <source>Unhide Selected</source>
+      <translation>選択したものを再表示する</translation>
+    </message>
+    <message>
+      <source>{0} ({1})</source>
+      <translation>{0} ({1})</translation>
+    </message>
+    <message>
+      <source>Find in files:</source>
+      <translation>ファイルを検索:</translation>
+    </message>
+    <message>
+      <source>Text to search for…</source>
+      <translation type="unfinished">Text to search for…</translation>
+    </message>
+    <message>
+      <source>Search</source>
+      <translation>検索</translation>
+    </message>
+    <message>
+      <source>Search Content</source>
+      <translation>内容を検索</translation>
+    </message>
+    <message>
+      <source>Content: "{0}"</source>
+      <translation>内容: "{0}"</translation>
+    </message>
+    <message>
+      <source>Clear Content</source>
+      <translation>コンテンツをクリア</translation>
+    </message>
+    <message>
+      <source>Pack {0}</source>
+      <translation>パック {0}</translation>
+    </message>
+    <message>
+      <source>Unpack {0}</source>
+      <translation>{0}を解凍する</translation>
+    </message>
+    <message>
+      <source>File location</source>
+      <translation>ファイルの場所</translation>
+    </message>
+    <message>
+      <source>P:{0} / Non-ESL:{1}</source>
+      <translation>P:{0} / Non-ESL:{1}</translation>
+    </message>
+    <message>
+      <source>{0} plugins ({1} ESL, {2} non-ESL)</source>
+      <translation>{0} plugins ({1} ESL, {2} non-ESL)</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginRepositoriesOverlay</name>
+    <message>
+      <source>Plugin repositories</source>
+      <translation>プラグインリポジトリ</translation>
+    </message>
+    <message>
+      <source>Choose a folder containing plugin subfolders, or a single plugin's folder. Blank branch uses the default branch; blank folder uses the repository root.</source>
+      <translation>プラグインのサブフォルダを含むフォルダ、または単一のプラグインのフォルダを選択します。ブランクブランチはデフォルトのブランチを使用します。ブランクフォルダはリポジトリのルートを使用します。</translation>
+    </message>
+    <message>
+      <source>Repository removed. Installed plugins are kept.</source>
+      <translation>リポジトリが削除されました。インストールされているプラグインは保持されます。</translation>
     </message>
   </context>
   <context>
@@ -17183,6 +17749,371 @@ Drag a plugin from the left pane to add a rule.</source>
     </message>
   </context>
   <context>
+    <name>PluginSettingsOverlay</name>
+    <message>
+      <source>{0} settings</source>
+      <translation>{0} の設定</translation>
+    </message>
+    <message>
+      <source>Icon changes take effect after restarting Amethyst.</source>
+      <translation>アメジストを再起動するとアイコンの変更が有効になります。</translation>
+    </message>
+    <message>
+      <source>Settings are used on the plugin's next run or refresh.</source>
+      <translation>設定はプラグインの次回の実行または更新で使用されます。</translation>
+    </message>
+    <message>
+      <source>Restore defaults</source>
+      <translation>既定に戻す</translation>
+    </message>
+    <message>
+      <source>Cancel</source>
+      <translation>キャンセル</translation>
+    </message>
+    <message>
+      <source>Save</source>
+      <translation>保存</translation>
+    </message>
+    <message>
+      <source>Plugin settings could not be read: {0}</source>
+      <translation>プラグインの設定を読み取れませんでした: {0}</translation>
+    </message>
+    <message>
+      <source>Reset damaged settings</source>
+      <translation>破損した設定をリセット</translation>
+    </message>
+    <message>
+      <source>Could not save plugin settings: {0}</source>
+      <translation>プラグインの設定を保存できませんでした: {0}</translation>
+    </message>
+    <message>
+      <source>Could not reset plugin settings: {0}</source>
+      <translation>プラグインの設定をリセットできませんでした: {0}</translation>
+    </message>
+    <message>
+      <source>Settings reset. Original settings saved to {0}.</source>
+      <translation>設定をリセットします。元の設定は {0}に保存されました。</translation>
+    </message>
+    <message>
+      <source>Settings reset.</source>
+      <translation>設定をリセット</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginStoreView</name>
+    <message>
+      <source>Plugin store</source>
+      <translation>プラグインストア</translation>
+    </message>
+    <message>
+      <source>Plugins run Python with the same file access as Amethyst. Install only plugins you trust.</source>
+      <translation>Amethystと同じファイルアクセスでPythonを実行します。信頼できるプラグインのみをインストールしてください。</translation>
+    </message>
+    <message>
+      <source>Search plugins</source>
+      <translation>プラグインを検索</translation>
+    </message>
+    <message>
+      <source>Refresh</source>
+      <translation>更新</translation>
+    </message>
+    <message>
+      <source>Repositories…</source>
+      <translation>リポジトリ…</translation>
+    </message>
+    <message>
+      <source>Details</source>
+      <translation>詳細</translation>
+    </message>
+    <message>
+      <source>README</source>
+      <translation>README</translation>
+    </message>
+    <message>
+      <source>Download</source>
+      <translation>ダウンロード</translation>
+    </message>
+    <message>
+      <source>Remove</source>
+      <translation>削除</translation>
+    </message>
+    <message>
+      <source>Disable</source>
+      <translation>無効</translation>
+    </message>
+    <message>
+      <source>Settings…</source>
+      <translation type="unfinished">Settings…</translation>
+    </message>
+    <message>
+      <source>Cancel pending change</source>
+      <translation>保留中の変更をキャンセル</translation>
+    </message>
+    <message>
+      <source>Restart manager</source>
+      <translation>マネージャーを再起動</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>閉じる</translation>
+    </message>
+    <message>
+      <source>Enabled</source>
+      <translation>有効</translation>
+    </message>
+    <message>
+      <source>Disabled</source>
+      <translation>無効</translation>
+    </message>
+    <message>
+      <source>Pending change</source>
+      <translation>保留中の変更</translation>
+    </message>
+    <message>
+      <source>Installed locally · source unknown</source>
+      <translation>ローカルでインストールされている· ソースが不明</translation>
+    </message>
+    <message>
+      <source>Version {0}</source>
+      <translation>バージョン {0}</translation>
+    </message>
+    <message>
+      <source>Version unknown</source>
+      <translation>バージョン不明</translation>
+    </message>
+    <message>
+      <source>Not installed</source>
+      <translation>インストールされていません</translation>
+    </message>
+    <message>
+      <source>{0} change(s) waiting for restart. Changes apply on the next manager launch.</source>
+      <translation>{0} 変更は再起動を待っています。変更は次回のマネージャー起動時に適用されます。</translation>
+    </message>
+    <message>
+      <source>Plugin changes take effect after restarting Amethyst.</source>
+      <translation>プラグインの変更はアメジストを再起動した後に有効になります。</translation>
+    </message>
+    <message>
+      <source>No plugins found.</source>
+      <translation>プラグインが見つかりません。</translation>
+    </message>
+    <message>
+      <source>Installed locally · version unknown</source>
+      <translation>ローカルでインストールされている· バージョン不明</translation>
+    </message>
+    <message>
+      <source>Author: {0}</source>
+      <translation>作成者: {0}</translation>
+    </message>
+    <message>
+      <source>Unknown</source>
+      <translation>不明</translation>
+    </message>
+    <message>
+      <source>Available version: {0}</source>
+      <translation>利用可能なバージョン: {0}</translation>
+    </message>
+    <message>
+      <source>Not in the current catalogue</source>
+      <translation>現在のカタログにありません</translation>
+    </message>
+    <message>
+      <source>Installed version: {0}</source>
+      <translation>インストールされているバージョン: {0}</translation>
+    </message>
+    <message>
+      <source>Minimum manager version: {0}</source>
+      <translation>最小管理者バージョン: {0}</translation>
+    </message>
+    <message>
+      <source>Not specified</source>
+      <translation>指定されていない</translation>
+    </message>
+    <message>
+      <source>Repository: {0}</source>
+      <translation>リポジトリ: {0}</translation>
+    </message>
+    <message>
+      <source>Branch: {0}</source>
+      <translation>ブランチ: {0}</translation>
+    </message>
+    <message>
+      <source>Default branch</source>
+      <translation>デフォルトブランチ</translation>
+    </message>
+    <message>
+      <source>Folder: {0}</source>
+      <translation>フォルダ: {0}</translation>
+    </message>
+    <message>
+      <source>State: {0}</source>
+      <translation>状態： {0}</translation>
+    </message>
+    <message>
+      <source>Installed from: {0} [{1}:{2}]</source>
+      <translation>インストール元: {0} [{1}:{2}]</translation>
+    </message>
+    <message>
+      <source>default</source>
+      <translation>デフォルト</translation>
+    </message>
+    <message>
+      <source>Installed source: Unknown</source>
+      <translation>インストールされたソース: 不明</translation>
+    </message>
+    <message>
+      <source>Update</source>
+      <translation>更新</translation>
+    </message>
+    <message>
+      <source>Replace from this repository…</source>
+      <translation type="unfinished">Replace from this repository…</translation>
+    </message>
+    <message>
+      <source>Replace with store version</source>
+      <translation>ストアのバージョンに置き換える</translation>
+    </message>
+    <message>
+      <source>The installed plugin is up to date or newer.</source>
+      <translation>インストールされているプラグインは最新かそれ以上です。</translation>
+    </message>
+    <message>
+      <source>Duplicate installed plugin id. Resolve the duplicate folders first.</source>
+      <translation>インストールされているプラグインIDを複製します。重複フォルダを解決してください。</translation>
+    </message>
+    <message>
+      <source>Removal</source>
+      <translation>削除</translation>
+    </message>
+    <message>
+      <source>Enable</source>
+      <translation>有効にする</translation>
+    </message>
+    <message>
+      <source>Install version {0}</source>
+      <translation>インストールバージョン {0}</translation>
+    </message>
+    <message>
+      <source>Pending: {0}</source>
+      <translation>保留中: {0}</translation>
+    </message>
+    <message>
+      <source>Pending repository: {0}</source>
+      <translation>保留中のリポジトリ: {0}</translation>
+    </message>
+    <message>
+      <source>Plugin dependencies: {0}</source>
+      <translation>プラグインの依存関係: {0}</translation>
+    </message>
+    <message>
+      <source>Plugin conflicts: {0}</source>
+      <translation>プラグインの競合: {0}</translation>
+    </message>
+    <message>
+      <source>Loading README…</source>
+      <translation type="unfinished">Loading README…</translation>
+    </message>
+    <message>
+      <source>Could not load README: {0}</source>
+      <translation>READMEを読み込めませんでした: {0}</translation>
+    </message>
+    <message>
+      <source>Change saved. Restart Amethyst to apply it.</source>
+      <translation>変更を保存しました。適用するにはアメジストを再起動してください。</translation>
+    </message>
+    <message>
+      <source>Loading plugin catalogue…</source>
+      <translation type="unfinished">Loading plugin catalogue…</translation>
+    </message>
+    <message>
+      <source>Catalogue loaded.</source>
+      <translation>カタログを読み込みました。</translation>
+    </message>
+    <message>
+      <source>Replace</source>
+      <translation>置換</translation>
+    </message>
+    <message>
+      <source>Delete saved data</source>
+      <translation>保存したデータを削除</translation>
+    </message>
+    <message>
+      <source>Downloading and validating plugin…</source>
+      <translation type="unfinished">Downloading and validating plugin…</translation>
+    </message>
+    <message>
+      <source>Replace plugin from this repository?</source>
+      <translation>このリポジトリからプラグインを置き換えますか？</translation>
+    </message>
+    <message>
+      <source>Replace {0} with version {1} from {2} after restart? Saved settings and data will be preserved, and the old folder backed up.</source>
+      <translation>再起動後、 {0} を {1} のバージョン {2} に置き換えますか？保存された設定とデータが保存され、古いフォルダがバックアップされます。</translation>
+    </message>
+    <message>
+      <source>Remove plugin?</source>
+      <translation>プラグインを削除しますか</translation>
+    </message>
+    <message>
+      <source>Remove {0} after restart? Saved data is kept for reinstalling unless you choose to delete it. Deletion also removes this plugin's store backups.</source>
+      <translation>再起動後に {0} を削除しますか？削除するとプラグインのストアバックアップも削除されます。</translation>
+    </message>
+    <message>
+      <source>Queuing plugin removal…</source>
+      <translation type="unfinished">Queuing plugin removal…</translation>
+    </message>
+    <message>
+      <source>Cancelling pending change…</source>
+      <translation type="unfinished">Cancelling pending change…</translation>
+    </message>
+    <message>
+      <source>Pending change cancelled.</source>
+      <translation>保留中の変更がキャンセルされました。</translation>
+    </message>
+    <message>
+      <source>Queuing plugin enablement change…</source>
+      <translation type="unfinished">Queuing plugin enablement change…</translation>
+    </message>
+    <message>
+      <source>Settings saved. Restart Amethyst to apply icon changes.</source>
+      <translation>設定が保存されました。アイコンの変更を適用するには、アメジストを再起動してください。</translation>
+    </message>
+    <message>
+      <source>Settings saved.</source>
+      <translation>設定を保存しました</translation>
+    </message>
+    <message>
+      <source>Wait for current manager operations to finish before restarting.</source>
+      <translation>現在のマネージャー操作が再起動する前に終了するのを待ちます。</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginUIController</name>
+    <message>
+      <source>More plugin controls</source>
+      <translation>その他のプラグインコントロール</translation>
+    </message>
+    <message>
+      <source>Commands…</source>
+      <translation>コマンド…</translation>
+    </message>
+    <message>
+      <source>Some interface elements could not be loaded…</source>
+      <translation type="unfinished">Some interface elements could not be loaded…</translation>
+    </message>
+    <message>
+      <source>Plugin interface</source>
+      <translation>プラグインインターフェイス</translation>
+    </message>
+    <message>
+      <source>Some plugin services could not be loaded…</source>
+      <translation type="unfinished">Some plugin services could not be loaded…</translation>
+    </message>
+    <message>
+      <source>Plugin services</source>
+      <translation>プラグインサービス</translation>
+    </message>
+  </context>
+  <context>
     <name>PluginView</name>
     <message>
       <source>Show / Hide columns</source>
@@ -17195,6 +18126,10 @@ Drag a plugin from the left pane to add a rule.</source>
     <message>
       <source>Clear all filters</source>
       <translation>すべてのフィルターをクリア</translation>
+    </message>
+    <message>
+      <source>Open as tab</source>
+      <translation>タブとして開く</translation>
     </message>
   </context>
   <context>
@@ -17331,8 +18266,8 @@ Drag a plugin from the left pane to add a rule.</source>
       <translation>プレフィックスの管理</translation>
     </message>
     <message>
-      <source>Wizard tools each run in their own Wine prefix (created next to the tool's exe or in the app config folder). Deleting one only reclaims disk space - it is recreated automatically the next time the tool runs.</source>
-      <translation>ウィザードツールは、それぞれ独自の Wine プレフィックスで実行します(ツールの exe または app config フォルダーの横に作成)。 ディスク容量だけを解放する - ツールが実行する次回は自動的に再作成されます.</translation>
+      <source>Wizard tools each run in their own Wine prefix (created in Applications, next to the tool's exe or in the app config folder). Deleting one only reclaims disk space - it is recreated automatically the next time the tool runs.</source>
+      <translation>ウィザードツールは、それぞれ独自の Wine prefix (アプリケーションで作成され、ツールの exe またはアプリケーションの config フォルダーの横に作成されます)。 ディスク領域を1つだけ削除する - 次回ツールを実行すると自動的に再作成されます。</translation>
     </message>
     <message>
       <source>Scanning for prefixes…</source>
@@ -17576,6 +18511,83 @@ Its listed mods are copied into the profile's own mods folder (hardlinked where 
     </message>
   </context>
   <context>
+    <name>ProfileSavesTransfer</name>
+    <message>
+      <source>Could not resolve save folders.</source>
+      <translation>保存フォルダを解決できませんでした。</translation>
+    </message>
+    <message>
+      <source>No save folders found for this game.</source>
+      <translation>このゲームのセーブフォルダが見つかりません。</translation>
+    </message>
+    <message>
+      <source> [profile saves]</source>
+      <translation> [profile saves]</translation>
+    </message>
+    <message>
+      <source>Choose save folder to import into</source>
+      <translation>インポートする保存フォルダを選択</translation>
+    </message>
+    <message>
+      <source>Choose save folder to export</source>
+      <translation>エクスポートする保存フォルダを選択してください</translation>
+    </message>
+    <message>
+      <source>Select</source>
+      <translation>選択</translation>
+    </message>
+    <message>
+      <source>The current contents are moved aside to a "{0}" folder first, so nothing is lost.</source>
+      <translation>現在の内容は最初に "{0}" フォルダに移動されるため、何も失われません。</translation>
+    </message>
+    <message>
+      <source>The current {0} files are moved aside to a "{1}" folder first, so nothing is lost.</source>
+      <translation>現在の {0} ファイルは最初に「{1}」フォルダに移動されるため、何も失われません。</translation>
+    </message>
+    <message>
+      <source>Import bundled saves?</source>
+      <translation>バンドルされた保存をインポートしますか？</translation>
+    </message>
+    <message>
+      <source>This profile includes a saves archive.
+
+Extract it into
+{0}
+
+{1}</source>
+      <translation>このプロファイルには保存アーカイブが含まれています。
+
+
+{0}
+
+{1}</translation>
+    </message>
+    <message>
+      <source>Import</source>
+      <translation>インポート</translation>
+    </message>
+    <message>
+      <source>Skip</source>
+      <translation>スキップ</translation>
+    </message>
+    <message>
+      <source>Extracting saves…</source>
+      <translation type="unfinished">Extracting saves…</translation>
+    </message>
+    <message>
+      <source>Imported {0} save file(s) ({1}).</source>
+      <translation>インポートされた {0} セーブファイル（{1}）</translation>
+    </message>
+    <message>
+      <source>Save import failed: {0}</source>
+      <translation>保存に失敗: {0}</translation>
+    </message>
+    <message>
+      <source>Save import failed.</source>
+      <translation>保存に失敗しました。</translation>
+    </message>
+  </context>
+  <context>
     <name>ProfileSettingsView</name>
     <message>
       <source>Profile Settings</source>
@@ -17708,10 +18720,6 @@ This removes the entire collection profile, including its personal mods and appe
       <translation>各バージョンは独自のプレフィックスを取得します。依存関係は、次のステップで自動的にインストールされます.</translation>
     </message>
     <message>
-      <source>{0} runs in its own Wine prefix, stored next to its exe and separate from the game's prefix, so you can pick any Proton version without affecting the game.</source>
-      <translation>{0} は、独自の Wine 接頭辞で実行し、ゲームの接頭辞から分離するので、ゲームに影響を与えることなく Proton バージョンを選ぶことができます.</translation>
-    </message>
-    <message>
       <source>Prefer discrete GPU (hybrid systems)</source>
       <translation>プリファーディスクリートGPU(ハイブリッドシステム)</translation>
     </message>
@@ -17738,6 +18746,10 @@ This removes the entire collection profile, including its personal mods and appe
     <message>
       <source>The saved game prefix is unavailable. Choose another prefix setting.</source>
       <translation>保存されたゲームプレフィックスは利用できません。 別のプレフィックス設定を選択します.</translation>
+    </message>
+    <message>
+      <source>{0} runs in its own Wine prefix, separate from the game's prefix, so you can pick any Proton version without affecting the game.</source>
+      <translation>{0} は、ゲームのプレフィックスとは別に、独自のワインプレフィックスで実行されるため、ゲームに影響を与えることなく、Protonのバージョンを選択できます。</translation>
     </message>
     <message>
       <source>Use 64-bit version</source>
@@ -17890,6 +18902,57 @@ has issues - it is recreated automatically on the next step.</source>
     <message>
       <source>Could not delete prefix: {0}</source>
       <translation>プレフィックス「{0}」を削除できませんでした。</translation>
+    </message>
+  </context>
+  <context>
+    <name>ProviderOverlay</name>
+    <message>
+      <source>Loading provider details…</source>
+      <translation type="unfinished">Loading provider details…</translation>
+    </message>
+    <message>
+      <source>Install selected version</source>
+      <translation>選択したバージョンをインストール</translation>
+    </message>
+    <message>
+      <source>Download and install</source>
+      <translation>ダウンロードしてインストール</translation>
+    </message>
+    <message>
+      <source>Apply selected action</source>
+      <translation>選択したアクションを適用</translation>
+    </message>
+    <message>
+      <source>Open website</source>
+      <translation>ウェブサイトを開く</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>閉じる</translation>
+    </message>
+    <message>
+      <source>Update listed mods</source>
+      <translation>リストされた Mod を更新</translation>
+    </message>
+    <message>
+      <source>Review the proposed provider updates below.</source>
+      <translation>以下で提案されたプロバイダの更新を確認してください。</translation>
+    </message>
+    <message>
+      <source>Choose a version or repository action. Installation replaces the selected mod.</source>
+      <translation>バージョンまたはリポジトリのアクションを選択します。インストールは選択した Mod を置き換えます。</translation>
+    </message>
+    <message>
+      <source>Review the downloads and dependencies below, then choose Download and install.</source>
+      <translation>以下のダウンロードと依存関係を確認し、format@@0を選択してインストールします。</translation>
+    </message>
+    <message>
+      <source>Operation completed.</source>
+      <translation>操作が完了しました。</translation>
+    </message>
+    <message>
+      <source>Waiting for the active operation to finish…</source>
+      <translation type="unfinished">Waiting for the active operation to finish…</translation>
     </message>
   </context>
   <context>
@@ -18098,6 +19161,10 @@ If the game is still broken, verify the game files via Steam.</source>
       <translation>スキップ(名前変更/削除された上流): {0}</translation>
     </message>
     <message>
+      <source>Shader packs: {0}/{1}</source>
+      <translation>シェーダーパック： {0}/{1}</translation>
+    </message>
+    <message>
       <source>Trimmed shaders to {0} preset effect(s).</source>
       <translation>{0} プリセット効果(s) へのトリミングシェーダー.</translation>
     </message>
@@ -18289,14 +19356,6 @@ Protonのプレフィックス：{2}</translation>
       <translation>再試行</translation>
     </message>
     <message>
-      <source>This game has no Bethesda registry name; nothing to do.</source>
-      <translation>このゲームには、ベテスダのレジストリ名はありません。 何もしないでください.</translation>
-    </message>
-    <message>
-      <source>Game path or Proton prefix not available.</source>
-      <translation>ゲームパスまたはプロトンプレフィックスは使用できません.</translation>
-    </message>
-    <message>
       <source>Prefix: {0}</source>
       <translation>プレフィックス: {0}</translation>
     </message>
@@ -18437,6 +19496,72 @@ Choose Keep if this is an optional/alternative variant rather than a replacement
     <message>
       <source>Remove</source>
       <translation>削除</translation>
+    </message>
+  </context>
+  <context>
+    <name>ReportOverlay</name>
+    <message>
+      <source>Close</source>
+      <translation>閉じる</translation>
+    </message>
+  </context>
+  <context>
+    <name>RepositoriesOverlay</name>
+    <message>
+      <source>Default branch</source>
+      <translation>デフォルトブランチ</translation>
+    </message>
+    <message>
+      <source>Repository root</source>
+      <translation>リポジトリルート</translation>
+    </message>
+    <message>
+      <source>Repository URL</source>
+      <translation>リポジトリURL</translation>
+    </message>
+    <message>
+      <source>Branch</source>
+      <translation>ブランチ</translation>
+    </message>
+    <message>
+      <source>Folder</source>
+      <translation>フォルダ</translation>
+    </message>
+    <message>
+      <source>Enable this repository</source>
+      <translation>このリポジトリを有効にする</translation>
+    </message>
+    <message>
+      <source>New</source>
+      <translation>新規作成</translation>
+    </message>
+    <message>
+      <source>Save</source>
+      <translation>保存</translation>
+    </message>
+    <message>
+      <source>Remove</source>
+      <translation>削除</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>閉じる</translation>
+    </message>
+    <message>
+      <source>Enabled</source>
+      <translation>有効</translation>
+    </message>
+    <message>
+      <source>Disabled</source>
+      <translation>無効</translation>
+    </message>
+    <message>
+      <source>Built-in</source>
+      <translation>ビルトイン</translation>
+    </message>
+    <message>
+      <source>Repository saved.</source>
+      <translation>リポジトリを保存しました。</translation>
     </message>
   </context>
   <context>
@@ -19631,6 +20756,17 @@ Please restart the wizard and install Script Merger first.</source>
     </message>
   </context>
   <context>
+    <name>SettingField</name>
+    <message>
+      <source>Browse…</source>
+      <translation type="unfinished">Browse…</translation>
+    </message>
+    <message>
+      <source>Select path</source>
+      <translation>パスを選択</translation>
+    </message>
+  </context>
+  <context>
     <name>SettingsView</name>
     <message>
       <source>Settings</source>
@@ -20713,6 +21849,10 @@ flatpak リモート追加 --user amethyst https://chrisdkn.github.io/Amethyst-M
       <translation>なし</translation>
     </message>
     <message>
+      <source>Unassigned</source>
+      <translation>未割り当て</translation>
+    </message>
+    <message>
       <source>Reset {0} to {1}</source>
       <translation>{0} を {1}にリセット</translation>
     </message>
@@ -20743,86 +21883,6 @@ flatpak リモート追加 --user amethyst https://chrisdkn.github.io/Amethyst-M
     <message>
       <source>Shortcuts reset to defaults.</source>
       <translation>ショートカットは既定にリセットされました。</translation>
-    </message>
-    <message>
-      <source>Rename selected mod or separator</source>
-      <translation>選択したModまたは区切り文字の名前を変更</translation>
-    </message>
-    <message>
-      <source>Refresh mod list</source>
-      <translation>Modリストを更新</translation>
-    </message>
-    <message>
-      <source>Deploy mods</source>
-      <translation>MODをデプロイ</translation>
-    </message>
-    <message>
-      <source>Install a mod</source>
-      <translation>Install a mod</translation>
-    </message>
-    <message>
-      <source>Create an empty mod</source>
-      <translation>空のModを作成</translation>
-    </message>
-    <message>
-      <source>Restore game files</source>
-      <translation>ゲームファイルの復元</translation>
-    </message>
-    <message>
-      <source>Open Settings</source>
-      <translation>設定を開く</translation>
-    </message>
-    <message>
-      <source>Focus search</source>
-      <translation>検索にフォーカス</translation>
-    </message>
-    <message>
-      <source>Select all in the active group</source>
-      <translation>アクティブなグループ内のすべてを選択</translation>
-    </message>
-    <message>
-      <source>Move selection up</source>
-      <translation>選択範囲を上に移動</translation>
-    </message>
-    <message>
-      <source>Move selection down</source>
-      <translation>選択範囲を下に移動</translation>
-    </message>
-    <message>
-      <source>Remove selected mods</source>
-      <translation>選択したMODを削除</translation>
-    </message>
-    <message>
-      <source>Enable or disable selection</source>
-      <translation>選択を有効または無効にする</translation>
-    </message>
-    <message>
-      <source>Scroll active list to the top</source>
-      <translation>アクティブなリストを一番上までスクロール</translation>
-    </message>
-    <message>
-      <source>Scroll active list to the bottom</source>
-      <translation>アクティブなリストを一番下までスクロール</translation>
-    </message>
-    <message>
-      <source>Expand or collapse all separators</source>
-      <translation>すべての区切り文字を展開または折り畳みます</translation>
-    </message>
-    <message>
-      <source>Show or hide active filters</source>
-      <translation>有効なフィルタを表示または非表示</translation>
-    </message>
-    <message>
-      <source>Open a mod's source page</source>
-      <translation>Modのソースページを開く</translation>
-    </message>
-    <message>
-      <source>Browser back</source>
-      <translation>ブラウザーバック</translation>
-    </message>
-    <message>
-      <source>Browser forward</source>
-      <translation>ブラウザ転送</translation>
     </message>
   </context>
   <context>
@@ -21413,28 +22473,12 @@ Continue with {0}?</source>
       <translation>ローンチ・シンセシス</translation>
     </message>
     <message>
-      <source>Game path is not configured; aborting.</source>
-      <translation>ゲームパスは設定されていません.</translation>
-    </message>
-    <message>
-      <source>Game path not configured.</source>
-      <translation>設定されていないゲームパス.</translation>
-    </message>
-    <message>
       <source>No Proton selected; aborting.</source>
       <translation>選択したプロトンはありません.</translation>
     </message>
     <message>
-      <source>Synthesis dir: {0}</source>
-      <translation>統合の dir: {0}</translation>
-    </message>
-    <message>
       <source>Proton: {0}</source>
       <translation>プロトン: {0}</translation>
-    </message>
-    <message>
-      <source>Game path: {0}</source>
-      <translation>ゲームパス: {0}</translation>
     </message>
     <message>
       <source>Prefix setup raised: {0}</source>
@@ -24540,10 +25584,6 @@ Prefix: {1}</source>
       <translation>ゲームを更新 (YeetPatch)</translation>
     </message>
     <message>
-      <source>Install Steam Workshop Mod</source>
-      <translation>Steam Workshop Modをインストール</translation>
-    </message>
-    <message>
       <source>mod.io API Key</source>
       <translation>mod.io API キー</translation>
     </message>
@@ -24790,10 +25830,6 @@ Prefix: {1}</source>
     <message>
       <source>Download YeetPatch and update Voices of the Void in a terminal.</source>
       <translation>YeetPatch をダウンロードして端末で Void の声を更新します。</translation>
-    </message>
-    <message>
-      <source>Download a Steam Workshop item and install it into this profile.</source>
-      <translation>Steam ワークショップアイテムをダウンロードし、このプロフィールにインストールしてください。</translation>
     </message>
     <message>
       <source>Enter a mod.io key to enable update checks for manually-installed mod.io mods.</source>
@@ -25302,149 +26338,6 @@ Reopen this wizard.</source>
     </message>
   </context>
   <context>
-    <name>WorkshopView</name>
-    <message>
-      <source>Install Steam Workshop Mod</source>
-      <translation>Steam Workshop Modをインストール</translation>
-    </message>
-    <message>
-      <source>Download an individual public Workshop mod into this profile. Required Workshop items must be installed separately.</source>
-      <translation>個々の公開ワークショップモジュールをこのプロフィールにダウンロードします。必要なワークショップアイテムは個別にインストールしてください。</translation>
-    </message>
-    <message>
-      <source>Item ID or Steam Workshop URL</source>
-      <translation>アイテムIDまたはSteamワークショップURL</translation>
-    </message>
-    <message>
-      <source>Workshop item</source>
-      <translation>ワークショップアイテム</translation>
-    </message>
-    <message>
-      <source>{0} · App ID {1}</source>
-      <translation>{0} · App ID {1}</translation>
-    </message>
-    <message>
-      <source>Install into</source>
-      <translation>インストール先</translation>
-    </message>
-    <message>
-      <source>QR code (Steam mobile app)</source>
-      <translation>QRコード（チームモバイルアプリ）</translation>
-    </message>
-    <message>
-      <source>Steam account and password</source>
-      <translation>Steamアカウントとパスワード</translation>
-    </message>
-    <message>
-      <source>Saved account</source>
-      <translation>保存されたアカウント</translation>
-    </message>
-    <message>
-      <source>Anonymous (where supported)</source>
-      <translation>匿名（サポートされている場合）</translation>
-    </message>
-    <message>
-      <source>Sign in</source>
-      <translation>サインイン</translation>
-    </message>
-    <message>
-      <source>Steam account name, not display name</source>
-      <translation>Steamアカウント名は表示されません。</translation>
-    </message>
-    <message>
-      <source>Account name</source>
-      <translation>アカウント名</translation>
-    </message>
-    <message>
-      <source>Remember this account</source>
-      <translation>このアカウントを記憶する</translation>
-    </message>
-    <message>
-      <source>Keep the Steam session on this device. Enter the account name to use it for later downloads.</source>
-      <translation>Steamセッションをこのデバイスに保存します。アカウント名を入力して後でダウンロードできます。</translation>
-    </message>
-    <message>
-      <source>Forget saved account</source>
-      <translation>保存されたアカウントを削除する</translation>
-    </message>
-    <message>
-      <source>Open Workshop page</source>
-      <translation>ワークショップページを開く</translation>
-    </message>
-    <message>
-      <source>Continue sign-in</source>
-      <translation>サインインを続ける</translation>
-    </message>
-    <message>
-      <source>Install downloaded files</source>
-      <translation>ダウンロードしたファイルをインストール</translation>
-    </message>
-    <message>
-      <source>Cancel download</source>
-      <translation>ダウンロードをキャンセル</translation>
-    </message>
-    <message>
-      <source>Download and install</source>
-      <translation>ダウンロードしてインストール</translation>
-    </message>
-    <message>
-      <source>Cancel the download before closing.</source>
-      <translation>閉じる前にダウンロードをキャンセルします</translation>
-    </message>
-    <message>
-      <source>Enter your Steam account name.</source>
-      <translation>Steamアカウント名を入力してください。</translation>
-    </message>
-    <message>
-      <source>The mod installer is unavailable.</source>
-      <translation>Modインストーラは利用できません。</translation>
-    </message>
-    <message>
-      <source>Looking up Workshop item…</source>
-      <translation>ワークショップのアイテムを探し上げる..</translation>
-    </message>
-    <message>
-      <source>Signed in. Downloading Workshop files…</source>
-      <translation>サインイン ワークショップファイルをダウンロード..</translation>
-    </message>
-    <message>
-      <source>Steam account password</source>
-      <translation>Steamアカウントのパスワード</translation>
-    </message>
-    <message>
-      <source>Steam Guard code from your email or authenticator</source>
-      <translation>あなたの電子メールまたは認証システムからSteamガードコード</translation>
-    </message>
-    <message>
-      <source>Download cancelled. Nothing was installed.</source>
-      <translation>ダウンロードはキャンセルされました。何もインストールされませんでした。</translation>
-    </message>
-    <message>
-      <source>Installed: {0}</source>
-      <translation>インストール済み: {0}</translation>
-    </message>
-    <message>
-      <source>Complete the mod installer tab to finish installation.</source>
-      <translation>MODインストーラのタブを完了してインストールを完了します。</translation>
-    </message>
-    <message>
-      <source>Installation did not complete. The download is kept so you can try again.</source>
-      <translation>インストールが完了しませんでした。ダウンロードは保持されているため、もう一度お試しください。</translation>
-    </message>
-    <message>
-      <source>Cancelling download…</source>
-      <translation>ダウンロードをキャンセル..</translation>
-    </message>
-    <message>
-      <source>Installing the downloaded mod…</source>
-      <translation>ダウンロードしたMODをインストール..</translation>
-    </message>
-    <message>
-      <source>Saved Steam account removed from Amethyst.</source>
-      <translation>保存されたSteamアカウントはアメジストから削除されました。</translation>
-    </message>
-  </context>
-  <context>
     <name>WryeBashView</name>
     <message>
       <source>Run Wrye Bash - {0}</source>
@@ -25491,14 +26384,6 @@ Wrye Bashを再インストールするには、ウィザードを再起動し�
     <message>
       <source>Wrye Bash is preparing or running.</source>
       <translation>Wray Bashは準備または実行中です。</translation>
-    </message>
-    <message>
-      <source>Could not resolve the Proton version for the game's own prefix - launch the game once, or pick a different prefix option.</source>
-      <translation>ゲーム独自のプレフィックスのProtonバージョンを解決できません。一度ゲームを起動するか、異なるプレフィックスオプションを選択します.</translation>
-    </message>
-    <message>
-      <source>Could not find Proton '{0}' - check that it is installed in Steam, Heroic or ProtonPlus.</source>
-      <translation>Proton '{0}'が見つかりません - Steam、Heric、ProtonPlusにインストールされていることを確認してください.</translation>
     </message>
     <message>
       <source>Wrye Bash is running.
@@ -25620,12 +26505,6 @@ or use Browse to select it manually.</source>
       <translation>{0}を抽出する..</translation>
     </message>
     <message>
-      <source>{0} not found after extraction.
-Check that the archive contains {0}.</source>
-      <translation>抽出後に{0}が見つかりません。
-アーカイブに{0}が含まれていることを確認してください.</translation>
-    </message>
-    <message>
       <source>Extracted {0} file(s).</source>
       <translation>{0} ファイルを抽出しました.</translation>
     </message>
@@ -25684,14 +26563,6 @@ Please restart the wizard and install {1} first.</source>
       <translation>QAC すべて</translation>
     </message>
     <message>
-      <source>Could not resolve the Proton version for the game's own prefix - launch the game once, or pick a different prefix option.</source>
-      <translation>ゲーム独自のプレフィックスのProtonバージョンを解決できません。一度ゲームを起動するか、異なるプレフィックスオプションを選択します.</translation>
-    </message>
-    <message>
-      <source>Could not find Proton '{0}' - check that it is installed in Steam, Heroic or ProtonPlus.</source>
-      <translation>Proton '{0}'が見つかりません - Steam、Heric、ProtonPlusにインストールされていることを確認してください.</translation>
-    </message>
-    <message>
       <source>{0} is running - close it to continue.</source>
       <translation>{0} は実行中です.</translation>
     </message>
@@ -25748,14 +26619,6 @@ When you close it, your changes are restored automatically.</source>
     <message>
       <source>Launching {0}…</source>
       <translation>{0}の起動中…</translation>
-    </message>
-    <message>
-      <source>Game path not configured.</source>
-      <translation>設定されていないゲームパス.</translation>
-    </message>
-    <message>
-      <source>{0} finished.</source>
-      <translation>{0} が完成しました.</translation>
     </message>
     <message>
       <source>Launch error: {0}</source>
@@ -26006,8 +26869,19 @@ Follow the prompts in the terminal window. YeetPatch requires curl, jq, xxhsum, 
       <translation>ここをクリックし、キーボードキー、マウス3、またはサイドボタンを押します。エスケープキャンセル; 左右クリックは予約されています。</translation>
     </message>
     <message>
+      <source>Unassigned</source>
+      <translation>未割り当て</translation>
+    </message>
+    <message>
       <source>Press key</source>
       <translation>キーを押す</translation>
+    </message>
+  </context>
+  <context>
+    <name>_DownloadMenuButton</name>
+    <message>
+      <source>Downloads</source>
+      <translation>ダウンロード</translation>
     </message>
   </context>
   <context>
@@ -26143,6 +27017,13 @@ Follow the prompts in the terminal window. YeetPatch requires curl, jq, xxhsum, 
     <message>
       <source>Apply</source>
       <translation>お問い合わせ</translation>
+    </message>
+  </context>
+  <context>
+    <name>_Popover</name>
+    <message>
+      <source>Close</source>
+      <translation>閉じる</translation>
     </message>
   </context>
   <context>
@@ -26316,6 +27197,14 @@ Publishing makes this revision the one users install. It cannot be un-published,
       <translation>Thunderstoreからパッケージをダウンロード</translation>
     </message>
     <message>
+      <source>Mod provider</source>
+      <translation>Mod provider</translation>
+    </message>
+    <message>
+      <source>Download the pinned archive using its installed plugin</source>
+      <translation>インストールされたプラグインを使用してピン留めされたアーカイブをダウンロード</translation>
+    </message>
+    <message>
       <source>Browse page</source>
       <translation>サイトマップ</translation>
     </message>
@@ -26402,6 +27291,13 @@ Publishing makes this revision the one users install. It cannot be un-published,
     </message>
   </context>
   <context>
+    <name>app</name>
+    <message>
+      <source>Applying plugin changes…</source>
+      <translation type="unfinished">Applying plugin changes…</translation>
+    </message>
+  </context>
+  <context>
     <name>parent_view</name>
     <message>
       <source>Enable this rule</source>
@@ -26422,6 +27318,13 @@ Publishing makes this revision the one users install. It cannot be un-published,
     <message>
       <source>Remove this rule</source>
       <translation>このルールを削除する</translation>
+    </message>
+  </context>
+  <context>
+    <name>self.host</name>
+    <message>
+      <source>Filters</source>
+      <translation>フィルタ</translation>
     </message>
   </context>
   <context>
@@ -26452,6 +27355,50 @@ Publishing makes this revision the one users install. It cannot be un-published,
     <message>
       <source>Remove this variable</source>
       <translation>この変数を削除</translation>
+    </message>
+    <message>
+      <source>Plugin filters and saved views</source>
+      <translation>プラグインフィルタと保存されたビュー</translation>
+    </message>
+    <message>
+      <source>Plugin filters</source>
+      <translation>プラグインフィルタ</translation>
+    </message>
+    <message>
+      <source>Include matches</source>
+      <translation>一致するものを含める</translation>
+    </message>
+    <message>
+      <source>Exclude matches</source>
+      <translation>一致するものを除外</translation>
+    </message>
+    <message>
+      <source>At most 64 saved views are supported.</source>
+      <translation>最大 64 件の保存されたビューに対応しています。</translation>
+    </message>
+    <message>
+      <source>Saved views</source>
+      <translation>保存されたビュー</translation>
+    </message>
+    <message>
+      <source>Apply</source>
+      <translation>適用</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation>削除</translation>
+    </message>
+    <message>
+      <source>Save view</source>
+      <translation>ビューを保存</translation>
+    </message>
+    <message>
+      <source>View name:</source>
+      <translation>表示名:</translation>
+    </message>
+    <message>
+      <source>Save current view…</source>
+      <translation type="unfinished">Save current view…</translation>
     </message>
   </context>
   <context>

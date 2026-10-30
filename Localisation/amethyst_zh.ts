@@ -242,6 +242,22 @@ Choose Roads or Paths Only, click Generate, then close it when finished.</source
       <translation>按名称搜索……</translation>
     </message>
     <message>
+      <source>Repositories…</source>
+      <translation type="unfinished">Repositories…</translation>
+    </message>
+    <message>
+      <source>Syncing game handlers…</source>
+      <translation>同步游戏处理程序…</translation>
+    </message>
+    <message>
+      <source>Handler sync finished with {0} error(s). {1}</source>
+      <translation>处理程序同步完成 {0} 错误。 {1}</translation>
+    </message>
+    <message>
+      <source>Game handlers are up to date.</source>
+      <translation>游戏处理程序是最新的。</translation>
+    </message>
+    <message>
       <source>Installed</source>
       <translation>已安装</translation>
     </message>
@@ -3024,6 +3040,52 @@ md5缓存被保存. 档案将视需要重新下载。 缓存的应用程序工�
     </message>
   </context>
   <context>
+    <name>ColumnModel</name>
+    <message>
+      <source>Yes</source>
+      <translation>否</translation>
+    </message>
+    <message>
+      <source>No</source>
+      <translation>否</translation>
+    </message>
+  </context>
+  <context>
+    <name>CommandPalette</name>
+    <message>
+      <source>Plugin commands</source>
+      <translation>插件命令</translation>
+    </message>
+    <message>
+      <source>Search commands…</source>
+      <translation>搜索命令…</translation>
+    </message>
+    <message>
+      <source>Command</source>
+      <translation>命令</translation>
+    </message>
+    <message>
+      <source>Shortcut</source>
+      <translation>快捷方式</translation>
+    </message>
+    <message>
+      <source>Toolbar</source>
+      <translation>工具栏</translation>
+    </message>
+    <message>
+      <source>Assign shortcuts in Settings → Shortcuts. Select Toolbar to pin a command.</source>
+      <translation>在“设置 -> 快捷键”中分配快捷键。选择工具栏以置顶一个命令。</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+    <message>
+      <source>Run</source>
+      <translation>运行</translation>
+    </message>
+  </context>
+  <context>
     <name>ConfigureGameView</name>
     <message>
       <source>{0} Game - {1}</source>
@@ -3510,6 +3572,14 @@ The default profile's settings are not affected.</source>
       <translation>设置</translation>
     </message>
     <message>
+      <source>A previous deployment needs restoring before you can change locations. You can restore it here before adding the game.</source>
+      <translation>先前的部署需要还原才能更改位置。您可以在添加游戏前将其还原到这里。</translation>
+    </message>
+    <message>
+      <source>Restore previous deployment</source>
+      <translation>恢复先前的部署</translation>
+    </message>
+    <message>
       <source>Configured</source>
       <translation>已配置</translation>
     </message>
@@ -3560,6 +3630,14 @@ The default profile's settings are not affected.</source>
     <message>
       <source>Mod staging</source>
       <translation>Mod staging</translation>
+    </message>
+    <message>
+      <source>Previous deployment's staging folder. Restore before changing it.</source>
+      <translation>先前部署的暂存文件夹。在更改前还原。</translation>
+    </message>
+    <message>
+      <source>Found via launcher plugin.</source>
+      <translation>通过启动器插件找到。</translation>
     </message>
     <message>
       <source>Game executable not found on any drive.</source>
@@ -3698,6 +3776,34 @@ Flatpak在下一次发射时应用了新的文件系统访问. 现在重新开�
       <translation>移动模式显示文件</translation>
     </message>
     <message>
+      <source>Restore the previous deployment of {0} using its saved locations?
+
+Your unsaved location changes will be kept in this form. After Restore succeeds, save to finish adding or reconfiguring the game.</source>
+      <translation type="unfinished">Restore the previous deployment of {0} using its saved locations?
+
+Your unsaved location changes will be kept in this form. After Restore succeeds, save to finish adding or reconfiguring the game.</translation>
+    </message>
+    <message>
+      <source>Restoring previous deployment…</source>
+      <translation>正在恢复以前的部署…</translation>
+    </message>
+    <message>
+      <source>Unexpected restore failure.</source>
+      <translation>意外的还原失败。</translation>
+    </message>
+    <message>
+      <source>Previous deployment restored. Save to finish configuring the game.</source>
+      <translation>之前的部署已恢复。保存以完成游戏配置。</translation>
+    </message>
+    <message>
+      <source>The staging folder can now be changed.</source>
+      <translation>暂存文件夹现在可以更改。</translation>
+    </message>
+    <message>
+      <source>Restore failed: {0}</source>
+      <translation>还原失败: {0}</translation>
+    </message>
+    <message>
       <source>Yes</source>
       <translation>对</translation>
     </message>
@@ -3724,16 +3830,24 @@ This cannot be undone.</source>
       <translation>正在删除实例……</translation>
     </message>
     <message>
-      <source>Scan {0} and remove leftover deployed mod files (hardlinks/symlinks/copies) that weren't restored?
+      <source>Clean {0}, including its mod data and root folders?
 
-Vanilla game files are kept. This cannot be undone.</source>
-      <translation>扫描 {0} 并去除未恢复的已部署的剩余 Mod文件(硬链接/符号/复制) ?
+Remove recorded mod files and links to staged mods, restore vanilla backups, and remove case aliases. Unrecorded copies are kept. This cannot be undone.</source>
+      <translation>清除 {0}，包括其模组数据和根文件夹？
 
-香草游戏文件保存. 这一点是无法消除的.</translation>
+移除已录制的模组文件和与分阶段模组的链接，还原原原版备份，并移除案例别名。 未录制的副本已保存。此操作无法撤消。</translation>
+    </message>
+    <message>
+      <source>Game folder cleanup complete.</source>
+      <translation>游戏文件夹清理完成。</translation>
     </message>
     <message>
       <source>Clean Game Folder - {0}</source>
       <translation>清洁游戏文件夹 - {0}</translation>
+    </message>
+    <message>
+      <source>Cannot clean the game folder while a VFS deployment exists. Use Restore first. If game files are already missing, recover them from the VFS view before restoring.</source>
+      <translation>在 VFS 部署存在时无法清理游戏文件夹。请先使用还原。 如果游戏文件已经丢失，在恢复前从 VFS 视图中恢复它们。</translation>
     </message>
     <message>
       <source>Cleaning game folder…</source>
@@ -3742,10 +3856,6 @@ Vanilla game files are kept. This cannot be undone.</source>
     <message>
       <source>Clean failed: {0}</source>
       <translation>清理失败：{0}</translation>
-    </message>
-    <message>
-      <source>Clean complete - {0} deployed file(s) removed.</source>
-      <translation>清洁完整 - {0} 已部署文件已删除 .</translation>
     </message>
   </context>
   <context>
@@ -5366,6 +5476,10 @@ When it completes, the app switches to the new profile - then come back here and
   <context>
     <name>DetachableTabWidget</name>
     <message>
+      <source>Detach</source>
+      <translation>Detach</translation>
+    </message>
+    <message>
       <source>Pin to Modlist Panel</source>
       <translation>固定到“Modlist”面板</translation>
     </message>
@@ -5378,8 +5492,20 @@ When it completes, the app switches to the new profile - then come back here and
       <translation>固定为全屏</translation>
     </message>
     <message>
-      <source>Drop to redock</source>
-      <translation>脱离并重新对接</translation>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+    <message>
+      <source>Close Others</source>
+      <translation>关闭其他</translation>
+    </message>
+    <message>
+      <source>Close All to the Right</source>
+      <translation>关闭所有右侧</translation>
+    </message>
+    <message>
+      <source>Close Tab</source>
+      <translation>关闭标签</translation>
     </message>
   </context>
   <context>
@@ -5799,10 +5925,6 @@ Download the archive manually (do NOT use the Mod Manager download button), then
       <translation>正在下载 {0}…</translation>
     </message>
     <message>
-      <source>{0} not found after extraction.</source>
-      <translation>{0}在取出后未发现.</translation>
-    </message>
-    <message>
       <source>Downloaded and extracted {0}.</source>
       <translation>已下载并提取出{0}.</translation>
     </message>
@@ -5855,28 +5977,12 @@ or use Browse to select it manually.</source>
       <translation>正在提取 {0}..</translation>
     </message>
     <message>
-      <source>{0} not found after extraction.
-Check that the archive contains {0}.</source>
-      <translation>{0}在取出后未发现.
-请检查access-date=中的日期值 (帮助) 档案中包含{0}.</translation>
-    </message>
-    <message>
       <source>Extracted {0} file(s).</source>
       <translation>已提取出 {0} 文件 .</translation>
     </message>
     <message>
       <source>Step 4: Deploy Modlist</source>
       <translation>第 4 步：部署 Modlist</translation>
-    </message>
-    <message>
-      <source>Before deploying, please delete any output from a previous
-{0} run (the '{1}' mod in your mod list).
-
-Once you have done this, click Deploy.</source>
-      <translation>部署前，请删除之前运行
-{0}时生成的任何输出（即模组列表中的“{1}”模组）。
-
-完成此操作后，请点击“部署”。</translation>
     </message>
     <message>
       <source>Skip</source>
@@ -5933,14 +6039,6 @@ Please restart the wizard and install {1} first.</source>
       <translation>正在启动 {0}…</translation>
     </message>
     <message>
-      <source>xLODGen does not support {0}.</source>
-      <translation>xLODGen 不支持 {0}。</translation>
-    </message>
-    <message>
-      <source>Game path not configured.</source>
-      <translation>未配置游戏路径 .</translation>
-    </message>
-    <message>
       <source>{0} finished.</source>
       <translation>{0}完成了.</translation>
     </message>
@@ -5949,22 +6047,8 @@ Please restart the wizard and install {1} first.</source>
       <translation>发射错误: {0}</translation>
     </message>
     <message>
-      <source>{0} is running.
-Close it when you are done, then click Done.</source>
-      <translation>{0} 正在运行。
-完成后请将其关闭，然后点击“完成”。</translation>
-    </message>
-    <message>
       <source>Fetching latest release from GitHub…</source>
       <translation>正在从 GitHub 获取最新版本……</translation>
-    </message>
-    <message>
-      <source>Could not resolve the Proton version for the game's own prefix - launch the game once, or pick a different prefix option.</source>
-      <translation>无法解决游戏自身前缀的质子版本——一次推出游戏,或者选择不同的前缀选项.</translation>
-    </message>
-    <message>
-      <source>Could not find Proton '{0}' - check that it is installed in Steam, Heroic or ProtonPlus.</source>
-      <translation>找不到质子 '{0}' - 检查它是否安装在Steam, Heroic 或质子Plus上.</translation>
     </message>
     <message>
       <source>Searching Downloads folder…</source>
@@ -6806,10 +6890,6 @@ Changes take effect on the next launch. If a variable ever stops the app from st
       <translation>辩相相相传入正文. 以下按钮插入文件参数的 Linux 路径 .</translation>
     </message>
     <message>
-      <source>Game default uses the game's prefix. A specific Proton version uses an isolated prefix next to the exe, or a shared prefix when selected below. For Bethesda games the game path (registry), plugins.txt and My Games INIs are set up in the prefix automatically at launch.</source>
-      <translation>游戏默认使用游戏前缀。特定的质子版本使用一个孤立的前缀，或者在下面选择时使用共享前缀。 对于Bethesda 游戏，游戏路径(注册)、插件.txt 和 My Games INI 是在启动前缀自动设置的。</translation>
-    </message>
-    <message>
       <source>Use shared prefix</source>
       <translation>使用共享前缀</translation>
     </message>
@@ -6868,6 +6948,10 @@ Proton prefix: click 'Install Java into prefix' once, then it runs automatically
       <translation>如何运行这个. jar:
 主机:与您系统的java(无质子)运行. 在启动选项中设置 Java 命令, 例如“ java - jar % command% ” (% command% is the bar path) 。
 质子前缀:点击"Install Java into prefix"一次,然后自动运行为"java.exe -jar &lt;jar&gt;"——任何您在"发射选项"/"发射参数"中添加的都作为外加旗. 'Game默认'使用游戏的前缀. 有了特定的质子版本,在罐子旁边选择一个孤立的前缀或向导工具使用的共享前缀.</translation>
+    </message>
+    <message>
+      <source>Game default uses the game's prefix. A specific Proton version uses an isolated prefix for the tool, or a shared prefix when selected below. For Bethesda games the game path (registry), plugins.txt and My Games INIs are set up in the prefix automatically at launch.</source>
+      <translation>游戏默认使用游戏前缀。特定的质子版本在工具上使用一个孤立的前缀，或在下面选择时使用共享前缀。 对于Bethesda 游戏，游戏路径(注册)、插件.txt 和 My Games INI 是在启动前缀自动设置的。</translation>
     </message>
     <message>
       <source>Game loaders always run in the game's own prefix with the game's Proton version: they launch the game itself, which needs the game's Steam app ID and its INIs, saves and mod DLLs. Change the game's Proton version in the game settings instead.</source>
@@ -6981,6 +7065,10 @@ Proton prefix: click 'Install Java into prefix' once, then it runs automatically
       <translation>霹雳店</translation>
     </message>
     <message>
+      <source>Mod provider</source>
+      <translation>Mod provider</translation>
+    </message>
+    <message>
       <source>Direct</source>
       <translation>直接</translation>
     </message>
@@ -7039,6 +7127,14 @@ Proton prefix: click 'Install Java into prefix' once, then it runs automatically
     <message>
       <source>Export…</source>
       <translation>导出…</translation>
+    </message>
+    <message>
+      <source>Include saves</source>
+      <translation>包括保存</translation>
+    </message>
+    <message>
+      <source>Include a Saves tab export in the profile archive. Importing the profile will offer to restore these saves.</source>
+      <translation>在配置文件中包含一个保存标签导出。导入配置文件将提供恢复这些保存的功能。</translation>
     </message>
     <message>
       <source>Mod Name</source>
@@ -7131,6 +7227,10 @@ Proton prefix: click 'Install Java into prefix' once, then it runs automatically
     <message>
       <source>This mod was not installed from Thunderstore.</source>
       <translation>这个mod不是从雷克斯托尔安装的.</translation>
+    </message>
+    <message>
+      <source>This mod has no portable provider source.</source>
+      <translation>此模组没有便携源.</translation>
     </message>
     <message>
       <source>Could not load versions from Thunderstore.</source>
@@ -7227,6 +7327,10 @@ That is fine for your own backup. Do not share or upload the file in this state 
     <message>
       <source>Building file-edit patches…</source>
       <translation>构建文件编辑补丁..</translation>
+    </message>
+    <message>
+      <source>Packing saves: {0}</source>
+      <translation>正在打包保存: {0}</translation>
     </message>
     <message>
       <source>Packing mod: {0}</source>
@@ -7400,6 +7504,10 @@ Click Done to clean up the extracted files and close.</source>
     <message>
       <source>Clear all filters</source>
       <translation>清除所有过滤器</translation>
+    </message>
+    <message>
+      <source>Open as tab</source>
+      <translation>以标签形式打开</translation>
     </message>
   </context>
   <context>
@@ -7944,6 +8052,64 @@ SHA-1: {1} (英语).
     <message>
       <source>✘  {0} Not Present</source>
       <translation>{0} 未出现</translation>
+    </message>
+  </context>
+  <context>
+    <name>GameRepositoriesOverlay</name>
+    <message>
+      <source>Custom game repositories</source>
+      <translation>自定义游戏仓库</translation>
+    </message>
+    <message>
+      <source>Choose a folder containing custom game handler JSON files. Blank branch uses the default branch; blank folder uses the repository root. Close to sync changes. Use Game sources to choose between handlers with the same game ID. Disabling or removing a repository keeps downloaded games.</source>
+      <translation>选择一个包含自定义游戏处理程序JSON文件的文件夹。Blank 分支使用默认分支；空白文件夹使用资源库root。 关闭同步更改。使用游戏源在具有相同游戏ID的处理程序之间进行选择。禁用或删除仓库保存已下载的游戏。</translation>
+    </message>
+    <message>
+      <source>Repository removed. Downloaded games are kept.</source>
+      <translation>仓库已删除。已下载的游戏将被保存。</translation>
+    </message>
+    <message>
+      <source>Game sources…</source>
+      <translation>游戏来源…</translation>
+    </message>
+  </context>
+  <context>
+    <name>GameSourcesOverlay</name>
+    <message>
+      <source>Game handler sources</source>
+      <translation>游戏处理器源</translation>
+    </message>
+    <message>
+      <source>Choose one handler source for each game ID. The game's existing name is kept so saved paths and profiles continue to work. Other downloaded versions are kept. Disabled or removed repositories keep their last downloaded version.</source>
+      <translation>为每个游戏 ID 选择一个处理程序源。游戏的现有名称被保存，所以路径和配置文件继续工作。 已保存其他已下载的版本。禁用或已移除的版本库保留其上次下载的版本。</translation>
+    </message>
+    <message>
+      <source>Use selected source</source>
+      <translation>使用选定的源</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+    <message>
+      <source>{0} sources</source>
+      <translation>{0} 来源</translation>
+    </message>
+    <message>
+      <source>No downloaded handlers. Close the repositories window to sync first.</source>
+      <translation>没有下载的处理程序。关闭仓库窗口先同步。</translation>
+    </message>
+    <message>
+      <source>Local definition</source>
+      <translation>本地定义</translation>
+    </message>
+    <message>
+      <source>Retained download; updates disabled</source>
+      <translation>保留下载；已禁用更新</translation>
+    </message>
+    <message>
+      <source>Handler source selected.</source>
+      <translation>已选择处理源.</translation>
     </message>
   </context>
   <context>
@@ -8529,6 +8695,132 @@ Managed directory: {2}</source>
     <message>
       <source>Copied ✓</source>
       <translation>复制</translation>
+    </message>
+  </context>
+  <context>
+    <name>LootReportOverlay</name>
+    <message>
+      <source>LOOT diagnostics</source>
+      <translation>LOOT 检测</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+  </context>
+  <context>
+    <name>LootReportView</name>
+    <message>
+      <source>LOOT has not run for this profile yet. Use Sort Plugins or Refresh to generate a report.</source>
+      <translation>LOOT 尚未为此配置文件运行。使用排序插件或刷新生成报告。</translation>
+    </message>
+    <message>
+      <source>Last LOOT run: {0}</source>
+      <translation>上次运行的日志: {0}</translation>
+    </message>
+    <message>
+      <source>{0} plugin(s) with metadata</source>
+      <translation>带元数据的 {0} 插件</translation>
+    </message>
+    <message>
+      <source>Error</source>
+      <translation>错误</translation>
+    </message>
+    <message>
+      <source>Warning</source>
+      <translation>警告</translation>
+    </message>
+    <message>
+      <source>Note</source>
+      <translation>说明</translation>
+    </message>
+    <message>
+      <source>General</source>
+      <translation>A. 概况</translation>
+    </message>
+    <message>
+      <source>The masterlist reported no general messages.</source>
+      <translation>masterlist没有报告一般信息。</translation>
+    </message>
+    <message>
+      <source>The masterlist has no metadata for the loaded plugins.</source>
+      <translation>主列表没有加载插件的元数据。</translation>
+    </message>
+    <message>
+      <source>Errors</source>
+      <translation>错误</translation>
+    </message>
+    <message>
+      <source>Warnings</source>
+      <translation>警告</translation>
+    </message>
+    <message>
+      <source>Dirty plugins</source>
+      <translation>脏插件</translation>
+    </message>
+    <message>
+      <source>Notes</source>
+      <translation>注</translation>
+    </message>
+    <message>
+      <source>Messages</source>
+      <translation>留言</translation>
+    </message>
+    <message>
+      <source>Requirements</source>
+      <translation>B. 所需经费</translation>
+    </message>
+    <message>
+      <source>Incompatibilities</source>
+      <translation>不兼容</translation>
+    </message>
+    <message>
+      <source>Locations</source>
+      <translation>地点</translation>
+    </message>
+    <message>
+      <source>Dirty edits</source>
+      <translation>脏编辑</translation>
+    </message>
+    <message>
+      <source>Verified clean</source>
+      <translation>已验证的清理</translation>
+    </message>
+    <message>
+      <source>Bash Tags</source>
+      <translation>低音标签</translation>
+    </message>
+    <message>
+      <source>{0} ITM</source>
+      <translation>{0} ITM</translation>
+    </message>
+    <message>
+      <source>{0} UDR</source>
+      <translation>{0} UDR</translation>
+    </message>
+    <message>
+      <source>{0} deleted navmesh</source>
+      <translation>{0} 删除了导航网格</translation>
+    </message>
+    <message>
+      <source>CRC {0}</source>
+      <translation>CRC {0}</translation>
+    </message>
+    <message>
+      <source>clean with</source>
+      <translation>清理与</translation>
+    </message>
+    <message>
+      <source>Current</source>
+      <translation>当前的</translation>
+    </message>
+    <message>
+      <source>Suggested (add)</source>
+      <translation>建议(添加)</translation>
+    </message>
+    <message>
+      <source>Suggested (remove)</source>
+      <translation>推荐(删除)</translation>
     </message>
   </context>
   <context>
@@ -9538,70 +9830,6 @@ NTFS 和 exFAT 驱动器在 Linux 上有很弱的写保证: 不干净的卸载, 
       <translation>同步</translation>
     </message>
     <message>
-      <source>Match plugin load order to modlist priority</source>
-      <translation>匹配插件加载顺序到 modlist 优先级</translation>
-    </message>
-    <message>
-      <source>Groups</source>
-      <translation>组</translation>
-    </message>
-    <message>
-      <source>Plugin Rules</source>
-      <translation>插件规则</translation>
-    </message>
-    <message>
-      <source>Search plugins…</source>
-      <translation>搜索插件……</translation>
-    </message>
-    <message>
-      <source>Pack BSA</source>
-      <translation>BSA小队</translation>
-    </message>
-    <message>
-      <source>Unpack BSA</source>
-      <translation>解压 BSA</translation>
-    </message>
-    <message>
-      <source>⊞ Expand all</source>
-      <translation>⊞ 展开全部</translation>
-    </message>
-    <message>
-      <source>⊟ Collapse all</source>
-      <translation>⊟ 折叠全部</translation>
-    </message>
-    <message>
-      <source>Install Selected</source>
-      <translation>安装所选项目</translation>
-    </message>
-    <message>
-      <source>Move Selected</source>
-      <translation>移动所选内容</translation>
-    </message>
-    <message>
-      <source>Hide Selected</source>
-      <translation>隐藏选中的</translation>
-    </message>
-    <message>
-      <source>Unhide Selected</source>
-      <translation>取消隐藏选中项</translation>
-    </message>
-    <message>
-      <source>Remove Selected</source>
-      <translation>取消选中</translation>
-    </message>
-    <message>
-      <source>Locations</source>
-      <translation>地点</translation>
-    </message>
-    <message>
-      <source>Search downloads…</source>
-      <translation>搜索下载……</translation>
-    </message>
-    <message>
-      <source>{0} ({1})</source>
-      <translation>{0} ({1})</translation>
-    </message>
-    <message>
       <source>Removed {0} archive(s)</source>
       <translation>已删除 {0} 存档</translation>
     </message>
@@ -9624,30 +9852,6 @@ NTFS 和 exFAT 驱动器在 Linux 上有很弱的写保证: 不干净的卸载, 
     <message>
       <source>Moved {0} archive(s)</source>
       <translation>已移动 {0} 存档</translation>
-    </message>
-    <message>
-      <source>Find in files:</source>
-      <translation>在文件中查找：</translation>
-    </message>
-    <message>
-      <source>Text to search for…</source>
-      <translation>要搜索的文本……</translation>
-    </message>
-    <message>
-      <source>Search</source>
-      <translation>搜索</translation>
-    </message>
-    <message>
-      <source>Search Content</source>
-      <translation>搜索内容</translation>
-    </message>
-    <message>
-      <source>Content: "{0}"</source>
-      <translation>内容：“{0}”</translation>
-    </message>
-    <message>
-      <source>Clear Content</source>
-      <translation>清除内容</translation>
     </message>
     <message>
       <source>Add game…</source>
@@ -9910,28 +10114,8 @@ NTFS 和 exFAT 驱动器在 Linux 上有很弱的写保证: 不干净的卸载, 
       <translation>重置</translation>
     </message>
     <message>
-      <source>Undo this mod's Mod Files changes (Top Level, Root, Disable). Mod files themselves are not touched.</source>
-      <translation>撤消此模式的 Mod 文件更改( Top Level, Root, Deputy) 。 Mod文件本身没有被触摸.</translation>
-    </message>
-    <message>
-      <source>Search files… (try !.dds)</source>
-      <translation>搜索文件... (尝试!.dds)</translation>
-    </message>
-    <message>
-      <source>Open folder</source>
-      <translation>打开文件夹</translation>
-    </message>
-    <message>
-      <source>Export</source>
-      <translation>导出</translation>
-    </message>
-    <message>
       <source>Import</source>
       <translation>导入</translation>
-    </message>
-    <message>
-      <source>Search saves… (try !.ess)</source>
-      <translation>搜索保存... (尝试!ess)</translation>
     </message>
     <message>
       <source>Remove archives</source>
@@ -10178,14 +10362,6 @@ The collection may not work correctly. You can still install it.</source>
       <translation>别再来了</translation>
     </message>
     <message>
-      <source>Refresh Plugins</source>
-      <translation>刷新插件</translation>
-    </message>
-    <message>
-      <source>↻ Refresh</source>
-      <translation>↻ 刷新</translation>
-    </message>
-    <message>
       <source>Permanently delete {0} archive(s) from disk?</source>
       <translation>永久从磁盘上删除 {0} 归档 ?</translation>
     </message>
@@ -10196,10 +10372,6 @@ The collection may not work correctly. You can still install it.</source>
     <message>
       <source>Updating handler…</source>
       <translation>更新处理器..</translation>
-    </message>
-    <message>
-      <source>Handler not found on the Resources branch.</source>
-      <translation>在资源分支中找不到 Handler .</translation>
     </message>
     <message>
       <source>Handler is already up to date.</source>
@@ -11464,6 +11636,18 @@ Run Quick Update on all of them now?</source>
       <translation>({0}) (韩语)</translation>
     </message>
     <message>
+      <source>Handler not found in an enabled game repository.</source>
+      <translation>在已启用的游戏仓库中找不到处理程序。</translation>
+    </message>
+    <message>
+      <source>Select a configured game before opening a provider install link.</source>
+      <translation>在打开供应商安装链接之前选择一个配置的游戏。</translation>
+    </message>
+    <message>
+      <source>The install link requires exactly one enabled provider for the selected game.</source>
+      <translation>安装链接需要为选中的游戏启用唯一的提供商。</translation>
+    </message>
+    <message>
       <source>Received a malformed MODL link.</source>
       <translation>收到一个格式错误的 MODL 链接。</translation>
     </message>
@@ -11784,6 +11968,14 @@ Run Quick Update on all of them now?</source>
       <translation>mod.io更新检查被禁用,直到它的API路径被添加到mod.io API密钥工具中.</translation>
     </message>
     <message>
+      <source>Mod providers: {0} updates</source>
+      <translation>Mod providers: {0} updates</translation>
+    </message>
+    <message>
+      <source>{0} provider checks failed; see log</source>
+      <translation>{0} 提供商检查失败；查看日志</translation>
+    </message>
+    <message>
       <source>Rolled back {0} of {1} mod(s).</source>
       <translation>回滚 {0} 的 {1} 模式 (s)。</translation>
     </message>
@@ -12028,6 +12220,10 @@ Press Deploy to apply your mods, then start the game from Steam, Heroic, Lutris,
       <translation>正在等待个人资料更新…</translation>
     </message>
     <message>
+      <source>Finish the plugin store operation before closing Amethyst.</source>
+      <translation>在关闭 Amethystys 之前完成插件存储操作。</translation>
+    </message>
+    <message>
       <source>Wait for Wabbajack list removal to finish before closing Amethyst.</source>
       <translation>等待 Wabbajack 列表在关闭Amethysts 之前完成。</translation>
     </message>
@@ -12044,6 +12240,14 @@ Press Deploy to apply your mods, then start the game from Steam, Heroic, Lutris,
       <translation>正在提取/ 安装</translation>
     </message>
     <message>
+      <source>Deploy failed: {0}</source>
+      <translation>部署失败: {0}</translation>
+    </message>
+    <message>
+      <source>Deployment failed</source>
+      <translation>部署失败</translation>
+    </message>
+    <message>
       <source>Restore the game before changing the preferred OpenMW package.</source>
       <translation>在更改首选的 OpenMW 套件之前恢复游戏.</translation>
     </message>
@@ -12054,6 +12258,46 @@ Press Deploy to apply your mods, then start the game from Steam, Heroic, Lutris,
     <message>
       <source>Installing .NET Framework 4.8</source>
       <translation>Installing .NET Framework 4.8</translation>
+    </message>
+    <message>
+      <source>No plugins available</source>
+      <translation>没有可用的插件</translation>
+    </message>
+    <message>
+      <source>{0} (theme pack)</source>
+      <translation>{0} (主题包)</translation>
+    </message>
+    <message>
+      <source>{0} (icon pack)</source>
+      <translation>{0} (图标包)</translation>
+    </message>
+    <message>
+      <source>Some plugins could not be loaded…</source>
+      <translation type="unfinished">Some plugins could not be loaded…</translation>
+    </message>
+    <message>
+      <source>Browse plugins…</source>
+      <translation>浏览插件…</translation>
+    </message>
+    <message>
+      <source>Open Plugins Folder…</source>
+      <translation>打开插件文件夹…</translation>
+    </message>
+    <message>
+      <source>Plugin store</source>
+      <translation>插件商店</translation>
+    </message>
+    <message>
+      <source>Wait for the current manager operation to finish.</source>
+      <translation>等待当前管理器操作完成。</translation>
+    </message>
+    <message>
+      <source>Wait for the mod list to finish refreshing.</source>
+      <translation>等待模块列表完成刷新。</translation>
+    </message>
+    <message>
+      <source>Could not open plugin: {0}</source>
+      <translation>无法打开插件: {0}</translation>
     </message>
     <message>
       <source>Wizard Settings…</source>
@@ -12148,14 +12392,6 @@ Run the Downgrade wizard to patch the game back to a version FOSE supports. Your
     <message>
       <source>Modlist</source>
       <translation>模块列表</translation>
-    </message>
-    <message>
-      <source>Pack {0}</source>
-      <translation>{0} 包</translation>
-    </message>
-    <message>
-      <source>Unpack {0}</source>
-      <translation>解压{0}</translation>
     </message>
     <message>
       <source>Reset Mod Files changes for {0}</source>
@@ -12258,6 +12494,10 @@ Run the Downgrade wizard to patch the game back to a version FOSE supports. Your
       <translation>mod.io</translation>
     </message>
     <message>
+      <source>Mod providers</source>
+      <translation>Mod providers</translation>
+    </message>
+    <message>
       <source>None</source>
       <translation>无</translation>
     </message>
@@ -12280,14 +12520,6 @@ Run the Downgrade wizard to patch the game back to a version FOSE supports. Your
     <message>
       <source>{0} enabled of {1} mods</source>
       <translation>{0} 已启用{1}模组</translation>
-    </message>
-    <message>
-      <source>P:{0} / Non-ESL:{1}</source>
-      <translation>P:{0} / 非ESL:{1}</translation>
-    </message>
-    <message>
-      <source>{0} plugins ({1} ESL, {2} non-ESL)</source>
-      <translation>{0} 插件（{1} ESL，{2} 非ESL）</translation>
     </message>
     <message>
       <source>Removed {0} stale plugin(s)</source>
@@ -12770,6 +13002,77 @@ The profile and shared download archives will be kept.</source>
     <message>
       <source>Could not start the AppImage update. Check that its folder is writable, or download the update from the releases page.</source>
       <translation>无法启动 AppImage 更新。请检查其文件夹是否可写，或从发布页面下载更新。</translation>
+    </message>
+  </context>
+  <context>
+    <name>ManagerPluginOverlay</name>
+    <message>
+      <source>Run only plugins you trust. Plugin scripts have the same file access as Amethyst.</source>
+      <translation>只运行您信任的插件。插件脚本具有与 Amethysts 相同的文件访问权限。</translation>
+    </message>
+    <message>
+      <source>Ready to run.</source>
+      <translation>准备运行。</translation>
+    </message>
+    <message>
+      <source>Show requested API operation</source>
+      <translation>显示请求的 API 操作</translation>
+    </message>
+    <message>
+      <source>Run</source>
+      <translation>运行</translation>
+    </message>
+    <message>
+      <source>Apply</source>
+      <translation>应用</translation>
+    </message>
+    <message>
+      <source>Cancel changes</source>
+      <translation>取消更改</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+    <message>
+      <source>Could not save plugin settings: {0}</source>
+      <translation>无法保存插件设置： {0}</translation>
+    </message>
+    <message>
+      <source>Stop</source>
+      <translation>停止</translation>
+    </message>
+    <message>
+      <source>Running…</source>
+      <translation>正在运行…</translation>
+    </message>
+    <message>
+      <source>Review changes</source>
+      <translation>审核更改</translation>
+    </message>
+    <message>
+      <source>Applying changes…</source>
+      <translation>正在应用更改…</translation>
+    </message>
+    <message>
+      <source>Cancelling changes…</source>
+      <translation>正在取消更改…</translation>
+    </message>
+    <message>
+      <source>Plugin failed. See the log below.</source>
+      <translation>插件失败。请查看下面的日志。</translation>
+    </message>
+    <message>
+      <source>Stopped. Any completed changes remain applied.</source>
+      <translation>已停止。所有已完成的更改仍然适用。</translation>
+    </message>
+    <message>
+      <source>Plugin finished.</source>
+      <translation>插件已完成。</translation>
+    </message>
+    <message>
+      <source>Stopping. Waiting for accepted manager operations to finish…</source>
+      <translation>停止。等待接受的管理员操作完成…</translation>
     </message>
   </context>
   <context>
@@ -13834,6 +14137,10 @@ This cannot be undone.</source>
       <source>Updated</source>
       <translation>已更新</translation>
     </message>
+    <message>
+      <source>Read-only entry managed by a plugin.</source>
+      <translation>由插件管理的只读条目。</translation>
+    </message>
   </context>
   <context>
     <name>ModListView</name>
@@ -13998,6 +14305,10 @@ Click Done to close.</source>
     <message>
       <source>Update available on Thunderstore</source>
       <translation>可在雷克斯托尔获取更新</translation>
+    </message>
+    <message>
+      <source>Update available from mod provider</source>
+      <translation>来自模组提供商的更新</translation>
     </message>
     <message>
       <source>Endorsed</source>
@@ -15972,8 +16283,8 @@ Daily: {1}</source>
       <translation>Nexus 链接转发器</translation>
     </message>
     <message>
-      <source>Choose which mod manager receives this game's Nexus links. The choice is remembered. Removing it restores Amethyst's normal handling.</source>
-      <translation>选择哪个模组管理员接收这个游戏的 Nexus 链接。这个选择被记住。删除它将恢复Amethstys 的正常处理。</translation>
+      <source>Choose which mod manager receives this game's Nexus links. The choice is remembered. Amethyst uses the matching configured game, or the current game for links from other domains.</source>
+      <translation>选择哪个模组管理员接收这个游戏的 Nexus 链接。请记住这个选择。 Amethyst 使用匹配的游戏，或者当前游戏使用来自其他域的链接。</translation>
     </message>
     <message>
       <source>Nexus game domain</source>
@@ -16911,6 +17222,25 @@ Re-scan to verify.</source>
     </message>
   </context>
   <context>
+    <name>PluginCommands</name>
+    <message>
+      <source>The active game or profile changed. Run the command again.</source>
+      <translation>当前游戏或配置文件已更改。再次运行命令。</translation>
+    </message>
+    <message>
+      <source>The plugin changed. Run the command again.</source>
+      <translation>插件已更改。再次运行命令。</translation>
+    </message>
+    <message>
+      <source>This command does not match the current selection.</source>
+      <translation>此命令与当前选择不匹配。</translation>
+    </message>
+    <message>
+      <source>A selected item is no longer available.</source>
+      <translation>选中的项目不再可用。</translation>
+    </message>
+  </context>
+  <context>
     <name>PluginCycleView</name>
     <message>
       <source>Plugins in cycle</source>
@@ -17127,6 +17457,25 @@ Re-scan to verify.</source>
     </message>
   </context>
   <context>
+    <name>PluginMenuController</name>
+    <message>
+      <source>Plugins</source>
+      <translation>插件</translation>
+    </message>
+    <message>
+      <source>Preview with {0}</source>
+      <translation>使用 {0} 预览</translation>
+    </message>
+    <message>
+      <source>The active game or profile changed. Reopen the menu.</source>
+      <translation>当前游戏或配置文件已更改。重新打开菜单。</translation>
+    </message>
+    <message>
+      <source>The plugin changed. Reopen the menu.</source>
+      <translation>插件已更改。重新打开菜单。</translation>
+    </message>
+  </context>
+  <context>
     <name>PluginModel</name>
     <message>
       <source>Plugin Name</source>
@@ -17143,6 +17492,223 @@ Re-scan to verify.</source>
     <message>
       <source>Index</source>
       <translation>目录</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginNotifications</name>
+    <message>
+      <source>Open report</source>
+      <translation>打开报告</translation>
+    </message>
+    <message>
+      <source>{0}: {1} new or updated diagnostics</source>
+      <translation>{0}: {1} 新的或更新的诊断信息</translation>
+    </message>
+    <message>
+      <source>Select the notification's game and profile before using this action.</source>
+      <translation>在使用此操作之前选择通知的游戏和配置文件。</translation>
+    </message>
+    <message>
+      <source>This plugin changed or is no longer available.</source>
+      <translation>此插件已更改或不可用。</translation>
+    </message>
+    <message>
+      <source>An affected item is no longer available. Refresh the diagnostic.</source>
+      <translation>受影响的物品不再可用。请刷新诊断信息。</translation>
+    </message>
+    <message>
+      <source>The action no longer matches these items.</source>
+      <translation>该动作不再匹配这些项目。</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginPanelControls</name>
+    <message>
+      <source>Sort Plugins</source>
+      <translation>排序插件</translation>
+    </message>
+    <message>
+      <source>Refresh Plugins</source>
+      <translation>刷新插件</translation>
+    </message>
+    <message>
+      <source>Sync</source>
+      <translation>同步</translation>
+    </message>
+    <message>
+      <source>Groups</source>
+      <translation>群組</translation>
+    </message>
+    <message>
+      <source>Plugin Rules</source>
+      <translation>插件规则</translation>
+    </message>
+    <message>
+      <source>LOOT</source>
+      <translation>LOOT</translation>
+    </message>
+    <message>
+      <source>Show LOOT diagnostics</source>
+      <translation>显示LOOT检测</translation>
+    </message>
+    <message>
+      <source>Match plugin load order to modlist priority</source>
+      <translation>匹配插件加载顺序到 modlist 优先级</translation>
+    </message>
+    <message>
+      <source>Search plugins…</source>
+      <translation>搜索插件…</translation>
+    </message>
+    <message>
+      <source>Pack BSA</source>
+      <translation>包 BSA</translation>
+    </message>
+    <message>
+      <source>Unpack BSA</source>
+      <translation>解包 BSA</translation>
+    </message>
+    <message>
+      <source>⊞ Expand all</source>
+      <translation>缩放所有</translation>
+    </message>
+    <message>
+      <source>Open</source>
+      <translation>打开</translation>
+    </message>
+    <message>
+      <source>Reset</source>
+      <translation>Reset</translation>
+    </message>
+    <message>
+      <source>Undo this mod's Mod Files changes (Top Level, Root, Disable). Mod files themselves are not touched.</source>
+      <translation>撤消这个模组的模组文件更改(Top Level, Root, Disable)。模组文件本身不会被触碰。</translation>
+    </message>
+    <message>
+      <source>Search files… (try !.dds)</source>
+      <translation>搜索文件… (尝试 !.dds)</translation>
+    </message>
+    <message>
+      <source>Blacklist</source>
+      <translation>黑名单</translation>
+    </message>
+    <message>
+      <source>Routing Rules</source>
+      <translation>路由规则</translation>
+    </message>
+    <message>
+      <source>⊟ Collapse all</source>
+      <translation>收起所有</translation>
+    </message>
+    <message>
+      <source>↻ Refresh</source>
+      <translation>正在刷新</translation>
+    </message>
+    <message>
+      <source>Open folder</source>
+      <translation>打开文件夹</translation>
+    </message>
+    <message>
+      <source>Export</source>
+      <translation>导出</translation>
+    </message>
+    <message>
+      <source>Import</source>
+      <translation>导入</translation>
+    </message>
+    <message>
+      <source>Search saves… (try !.ess)</source>
+      <translation>搜索保存… (试试 !.ess)</translation>
+    </message>
+    <message>
+      <source>Install Selected</source>
+      <translation>安装选中的</translation>
+    </message>
+    <message>
+      <source>Move Selected</source>
+      <translation>移动选中的</translation>
+    </message>
+    <message>
+      <source>Hide Selected</source>
+      <translation>隐藏选中的</translation>
+    </message>
+    <message>
+      <source>Remove Selected</source>
+      <translation>移除选中项</translation>
+    </message>
+    <message>
+      <source>Locations</source>
+      <translation>地点</translation>
+    </message>
+    <message>
+      <source>Search downloads…</source>
+      <translation>搜索下载…</translation>
+    </message>
+    <message>
+      <source>Unhide Selected</source>
+      <translation>取消隐藏选中项</translation>
+    </message>
+    <message>
+      <source>{0} ({1})</source>
+      <translation>{0} ({1})</translation>
+    </message>
+    <message>
+      <source>Find in files:</source>
+      <translation>在文件中查找：</translation>
+    </message>
+    <message>
+      <source>Text to search for…</source>
+      <translation>要搜索的… 文本</translation>
+    </message>
+    <message>
+      <source>Search</source>
+      <translation>搜索</translation>
+    </message>
+    <message>
+      <source>Search Content</source>
+      <translation>搜索内容</translation>
+    </message>
+    <message>
+      <source>Content: "{0}"</source>
+      <translation>内容: "{0}"</translation>
+    </message>
+    <message>
+      <source>Clear Content</source>
+      <translation>清除内容</translation>
+    </message>
+    <message>
+      <source>Pack {0}</source>
+      <translation>包 {0}</translation>
+    </message>
+    <message>
+      <source>Unpack {0}</source>
+      <translation>解包 {0}</translation>
+    </message>
+    <message>
+      <source>File location</source>
+      <translation>文件位置</translation>
+    </message>
+    <message>
+      <source>P:{0} / Non-ESL:{1}</source>
+      <translation>P:{0} / Non-ESL:{1}</translation>
+    </message>
+    <message>
+      <source>{0} plugins ({1} ESL, {2} non-ESL)</source>
+      <translation>{0} plugins ({1} ESL, {2} non-ESL)</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginRepositoriesOverlay</name>
+    <message>
+      <source>Plugin repositories</source>
+      <translation>插件仓库</translation>
+    </message>
+    <message>
+      <source>Choose a folder containing plugin subfolders, or a single plugin's folder. Blank branch uses the default branch; blank folder uses the repository root.</source>
+      <translation>选择一个包含插件子文件夹或单个插件文件夹的文件夹。Blank分支使用默认分支；空白文件夹使用资源库root。</translation>
+    </message>
+    <message>
+      <source>Repository removed. Installed plugins are kept.</source>
+      <translation>仓库已删除。保存已安装的插件。</translation>
     </message>
   </context>
   <context>
@@ -17181,6 +17747,371 @@ Drag a plugin from the left pane to add a rule.</source>
     </message>
   </context>
   <context>
+    <name>PluginSettingsOverlay</name>
+    <message>
+      <source>{0} settings</source>
+      <translation>{0} 设置</translation>
+    </message>
+    <message>
+      <source>Icon changes take effect after restarting Amethyst.</source>
+      <translation>图标更改在重启Amethystyt后生效。</translation>
+    </message>
+    <message>
+      <source>Settings are used on the plugin's next run or refresh.</source>
+      <translation>插件下次运行或刷新时使用设置。</translation>
+    </message>
+    <message>
+      <source>Restore defaults</source>
+      <translation>恢复默认值</translation>
+    </message>
+    <message>
+      <source>Cancel</source>
+      <translation>取消</translation>
+    </message>
+    <message>
+      <source>Save</source>
+      <translation>保存</translation>
+    </message>
+    <message>
+      <source>Plugin settings could not be read: {0}</source>
+      <translation>插件设置无法读取： {0}</translation>
+    </message>
+    <message>
+      <source>Reset damaged settings</source>
+      <translation>重置损坏的设置</translation>
+    </message>
+    <message>
+      <source>Could not save plugin settings: {0}</source>
+      <translation>无法保存插件设置： {0}</translation>
+    </message>
+    <message>
+      <source>Could not reset plugin settings: {0}</source>
+      <translation>无法重置插件设置： {0}</translation>
+    </message>
+    <message>
+      <source>Settings reset. Original settings saved to {0}.</source>
+      <translation>设置重置。原始设置保存到 {0}。</translation>
+    </message>
+    <message>
+      <source>Settings reset.</source>
+      <translation>设置重置。</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginStoreView</name>
+    <message>
+      <source>Plugin store</source>
+      <translation>插件商店</translation>
+    </message>
+    <message>
+      <source>Plugins run Python with the same file access as Amethyst. Install only plugins you trust.</source>
+      <translation>插件运行Python文件访问权限与 Amethstys 相同。只安装您信任的插件。</translation>
+    </message>
+    <message>
+      <source>Search plugins</source>
+      <translation>搜索插件</translation>
+    </message>
+    <message>
+      <source>Refresh</source>
+      <translation>刷新</translation>
+    </message>
+    <message>
+      <source>Repositories…</source>
+      <translation type="unfinished">Repositories…</translation>
+    </message>
+    <message>
+      <source>Details</source>
+      <translation>详细信息</translation>
+    </message>
+    <message>
+      <source>README</source>
+      <translation>重试</translation>
+    </message>
+    <message>
+      <source>Download</source>
+      <translation>下载</translation>
+    </message>
+    <message>
+      <source>Remove</source>
+      <translation>删除</translation>
+    </message>
+    <message>
+      <source>Disable</source>
+      <translation>禁用</translation>
+    </message>
+    <message>
+      <source>Settings…</source>
+      <translation>设置…</translation>
+    </message>
+    <message>
+      <source>Cancel pending change</source>
+      <translation>取消待定的更改</translation>
+    </message>
+    <message>
+      <source>Restart manager</source>
+      <translation>重新启动管理器</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+    <message>
+      <source>Enabled</source>
+      <translation>已启用</translation>
+    </message>
+    <message>
+      <source>Disabled</source>
+      <translation>已禁用</translation>
+    </message>
+    <message>
+      <source>Pending change</source>
+      <translation>待修改</translation>
+    </message>
+    <message>
+      <source>Installed locally · source unknown</source>
+      <translation>本地安装 · 源未知</translation>
+    </message>
+    <message>
+      <source>Version {0}</source>
+      <translation>{0} 版本</translation>
+    </message>
+    <message>
+      <source>Version unknown</source>
+      <translation>版本未知</translation>
+    </message>
+    <message>
+      <source>Not installed</source>
+      <translation>未安装</translation>
+    </message>
+    <message>
+      <source>{0} change(s) waiting for restart. Changes apply on the next manager launch.</source>
+      <translation>{0} 更改等待重启。下次管理员启动时会有更改。</translation>
+    </message>
+    <message>
+      <source>Plugin changes take effect after restarting Amethyst.</source>
+      <translation>插件更改在重启Amethystyt后生效。</translation>
+    </message>
+    <message>
+      <source>No plugins found.</source>
+      <translation>找不到插件。</translation>
+    </message>
+    <message>
+      <source>Installed locally · version unknown</source>
+      <translation>本地安装 · 版本未知</translation>
+    </message>
+    <message>
+      <source>Author: {0}</source>
+      <translation>作者: {0}</translation>
+    </message>
+    <message>
+      <source>Unknown</source>
+      <translation>未知的</translation>
+    </message>
+    <message>
+      <source>Available version: {0}</source>
+      <translation>可用版本: {0}</translation>
+    </message>
+    <message>
+      <source>Not in the current catalogue</source>
+      <translation>不在当前目录中</translation>
+    </message>
+    <message>
+      <source>Installed version: {0}</source>
+      <translation>已安装的版本： {0}</translation>
+    </message>
+    <message>
+      <source>Minimum manager version: {0}</source>
+      <translation>最小管理员版本: {0}</translation>
+    </message>
+    <message>
+      <source>Not specified</source>
+      <translation>未指定</translation>
+    </message>
+    <message>
+      <source>Repository: {0}</source>
+      <translation>仓库: {0}</translation>
+    </message>
+    <message>
+      <source>Branch: {0}</source>
+      <translation>分支: {0}</translation>
+    </message>
+    <message>
+      <source>Default branch</source>
+      <translation>默认分支</translation>
+    </message>
+    <message>
+      <source>Folder: {0}</source>
+      <translation>文件夹: {0}</translation>
+    </message>
+    <message>
+      <source>State: {0}</source>
+      <translation>状态: {0}</translation>
+    </message>
+    <message>
+      <source>Installed from: {0} [{1}:{2}]</source>
+      <translation>安装自: {0} [{1}:{2}]</translation>
+    </message>
+    <message>
+      <source>default</source>
+      <translation>默认</translation>
+    </message>
+    <message>
+      <source>Installed source: Unknown</source>
+      <translation>已安装源：未知</translation>
+    </message>
+    <message>
+      <source>Update</source>
+      <translation>更新</translation>
+    </message>
+    <message>
+      <source>Replace from this repository…</source>
+      <translation type="unfinished">Replace from this repository…</translation>
+    </message>
+    <message>
+      <source>Replace with store version</source>
+      <translation>用商店版本替换</translation>
+    </message>
+    <message>
+      <source>The installed plugin is up to date or newer.</source>
+      <translation>已安装的插件已更新或更新。</translation>
+    </message>
+    <message>
+      <source>Duplicate installed plugin id. Resolve the duplicate folders first.</source>
+      <translation>复制已安装的插件ID。请先解决重复的文件夹。</translation>
+    </message>
+    <message>
+      <source>Removal</source>
+      <translation>移除</translation>
+    </message>
+    <message>
+      <source>Enable</source>
+      <translation>启用</translation>
+    </message>
+    <message>
+      <source>Install version {0}</source>
+      <translation>安装版本 {0}</translation>
+    </message>
+    <message>
+      <source>Pending: {0}</source>
+      <translation>待订: {0}</translation>
+    </message>
+    <message>
+      <source>Pending repository: {0}</source>
+      <translation>待定仓库: {0}</translation>
+    </message>
+    <message>
+      <source>Plugin dependencies: {0}</source>
+      <translation>插件依赖关系: {0}</translation>
+    </message>
+    <message>
+      <source>Plugin conflicts: {0}</source>
+      <translation>插件冲突: {0}</translation>
+    </message>
+    <message>
+      <source>Loading README…</source>
+      <translation type="unfinished">Loading README…</translation>
+    </message>
+    <message>
+      <source>Could not load README: {0}</source>
+      <translation>无法加载README: {0}</translation>
+    </message>
+    <message>
+      <source>Change saved. Restart Amethyst to apply it.</source>
+      <translation>更改已保存，重启Amethyst 以应用它。</translation>
+    </message>
+    <message>
+      <source>Loading plugin catalogue…</source>
+      <translation>加载插件目录…</translation>
+    </message>
+    <message>
+      <source>Catalogue loaded.</source>
+      <translation>已加载目录。</translation>
+    </message>
+    <message>
+      <source>Replace</source>
+      <translation>替换</translation>
+    </message>
+    <message>
+      <source>Delete saved data</source>
+      <translation>删除保存的数据</translation>
+    </message>
+    <message>
+      <source>Downloading and validating plugin…</source>
+      <translation>正在下载和验证插件…</translation>
+    </message>
+    <message>
+      <source>Replace plugin from this repository?</source>
+      <translation>替换此仓库中的插件？</translation>
+    </message>
+    <message>
+      <source>Replace {0} with version {1} from {2} after restart? Saved settings and data will be preserved, and the old folder backed up.</source>
+      <translation>重启后从 {2} 将 {0} 替换为 {1} 版本？保存的设置和数据将被保存，并备份旧文件夹。</translation>
+    </message>
+    <message>
+      <source>Remove plugin?</source>
+      <translation>删除插件？</translation>
+    </message>
+    <message>
+      <source>Remove {0} after restart? Saved data is kept for reinstalling unless you choose to delete it. Deletion also removes this plugin's store backups.</source>
+      <translation>重启后删除 {0} ？保存数据以重新安装，除非您选择删除它。删除还会删除此插件的商店备份。</translation>
+    </message>
+    <message>
+      <source>Queuing plugin removal…</source>
+      <translation>正在队列移除插件…</translation>
+    </message>
+    <message>
+      <source>Cancelling pending change…</source>
+      <translation>正在取消待定的更改…</translation>
+    </message>
+    <message>
+      <source>Pending change cancelled.</source>
+      <translation>等待更改已取消。</translation>
+    </message>
+    <message>
+      <source>Queuing plugin enablement change…</source>
+      <translation>排队插件启用更改…</translation>
+    </message>
+    <message>
+      <source>Settings saved. Restart Amethyst to apply icon changes.</source>
+      <translation>设置已保存，重启Amethyst以应用图标更改。</translation>
+    </message>
+    <message>
+      <source>Settings saved.</source>
+      <translation>设置已保存。</translation>
+    </message>
+    <message>
+      <source>Wait for current manager operations to finish before restarting.</source>
+      <translation>等待当前管理员操作在重启前完成。</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginUIController</name>
+    <message>
+      <source>More plugin controls</source>
+      <translation>更多插件控制</translation>
+    </message>
+    <message>
+      <source>Commands…</source>
+      <translation type="unfinished">Commands…</translation>
+    </message>
+    <message>
+      <source>Some interface elements could not be loaded…</source>
+      <translation>无法加载某些接口元素…</translation>
+    </message>
+    <message>
+      <source>Plugin interface</source>
+      <translation>插件界面</translation>
+    </message>
+    <message>
+      <source>Some plugin services could not be loaded…</source>
+      <translation>某些插件服务无法加载…</translation>
+    </message>
+    <message>
+      <source>Plugin services</source>
+      <translation>插件服务</translation>
+    </message>
+  </context>
+  <context>
     <name>PluginView</name>
     <message>
       <source>Show / Hide columns</source>
@@ -17193,6 +18124,10 @@ Drag a plugin from the left pane to add a rule.</source>
     <message>
       <source>Clear all filters</source>
       <translation>清除所有过滤器</translation>
+    </message>
+    <message>
+      <source>Open as tab</source>
+      <translation>以标签形式打开</translation>
     </message>
   </context>
   <context>
@@ -17329,8 +18264,8 @@ Drag a plugin from the left pane to add a rule.</source>
       <translation>管理前缀</translation>
     </message>
     <message>
-      <source>Wizard tools each run in their own Wine prefix (created next to the tool's exe or in the app config folder). Deleting one only reclaims disk space - it is recreated automatically the next time the tool runs.</source>
-      <translation>向导工具各自运行在自己的Wine前缀中(创建在工具的exe旁边或应用配置文件夹中). 删除一个只回收磁盘空间 - 在工具运行的下次自动重现 .</translation>
+      <source>Wizard tools each run in their own Wine prefix (created in Applications, next to the tool's exe or in the app config folder). Deleting one only reclaims disk space - it is recreated automatically the next time the tool runs.</source>
+      <translation>向导工具每个运行在他们自己的 Wine 前缀(在应用程序中，在工具的exe或应用程序配置文件夹旁边创建)。 只删除一个重复磁盘空间 - 它是在下次工具运行时自动重新创建的。</translation>
     </message>
     <message>
       <source>Scanning for prefixes…</source>
@@ -17574,6 +18509,83 @@ Its listed mods are copied into the profile's own mods folder (hardlinked where 
     </message>
   </context>
   <context>
+    <name>ProfileSavesTransfer</name>
+    <message>
+      <source>Could not resolve save folders.</source>
+      <translation>无法解析保存文件夹。</translation>
+    </message>
+    <message>
+      <source>No save folders found for this game.</source>
+      <translation>没有找到此游戏的保存文件夹。</translation>
+    </message>
+    <message>
+      <source> [profile saves]</source>
+      <translation> [配置文件保存]</translation>
+    </message>
+    <message>
+      <source>Choose save folder to import into</source>
+      <translation>选择要导入到的保存文件夹</translation>
+    </message>
+    <message>
+      <source>Choose save folder to export</source>
+      <translation>选择要导出的保存文件夹</translation>
+    </message>
+    <message>
+      <source>Select</source>
+      <translation>选择</translation>
+    </message>
+    <message>
+      <source>The current contents are moved aside to a "{0}" folder first, so nothing is lost.</source>
+      <translation>当前内容首先被移动到一个“{0}”文件夹，所以没有丢失任何内容。</translation>
+    </message>
+    <message>
+      <source>The current {0} files are moved aside to a "{1}" folder first, so nothing is lost.</source>
+      <translation>先把当前的 {0} 文件移到一个 "{1}"文件夹，所以没有丢失任何文件。</translation>
+    </message>
+    <message>
+      <source>Import bundled saves?</source>
+      <translation>导入捆绑的保存吗？</translation>
+    </message>
+    <message>
+      <source>This profile includes a saves archive.
+
+Extract it into
+{0}
+
+{1}</source>
+      <translation type="unfinished">This profile includes a saves archive.
+
+Extract it into
+{0}
+
+{1}</translation>
+    </message>
+    <message>
+      <source>Import</source>
+      <translation>导入</translation>
+    </message>
+    <message>
+      <source>Skip</source>
+      <translation>跳过</translation>
+    </message>
+    <message>
+      <source>Extracting saves…</source>
+      <translation type="unfinished">Extracting saves…</translation>
+    </message>
+    <message>
+      <source>Imported {0} save file(s) ({1}).</source>
+      <translation>导入了 {0} 保存文件 (s) ({1})。</translation>
+    </message>
+    <message>
+      <source>Save import failed: {0}</source>
+      <translation>保存导入失败: {0}</translation>
+    </message>
+    <message>
+      <source>Save import failed.</source>
+      <translation>保存导入失败。</translation>
+    </message>
+  </context>
+  <context>
     <name>ProfileSettingsView</name>
     <message>
       <source>Profile Settings</source>
@@ -17706,10 +18718,6 @@ This removes the entire collection profile, including its personal mods and appe
       <translation>每个版本都获得自己的前缀;在下个步骤上自动将依赖性安装到其中.</translation>
     </message>
     <message>
-      <source>{0} runs in its own Wine prefix, stored next to its exe and separate from the game's prefix, so you can pick any Proton version without affecting the game.</source>
-      <translation>{0}以自有的"酒"前缀运行,存储在其前缀旁边并独立于游戏前缀,因此可以选择任何质子版本而不影响游戏.</translation>
-    </message>
-    <message>
       <source>Prefer discrete GPU (hybrid systems)</source>
       <translation>偏好离散GPU(hybrid systems)</translation>
     </message>
@@ -17736,6 +18744,10 @@ This removes the entire collection profile, including its personal mods and appe
     <message>
       <source>The saved game prefix is unavailable. Choose another prefix setting.</source>
       <translation>保存的游戏前缀无法使用 。 选择另一个前缀设置 .</translation>
+    </message>
+    <message>
+      <source>{0} runs in its own Wine prefix, separate from the game's prefix, so you can pick any Proton version without affecting the game.</source>
+      <translation>{0} 以自己的Wine 前缀运行，与游戏前缀分开，因此您可以选择任何质子版本而不影响游戏。</translation>
     </message>
     <message>
       <source>Use 64-bit version</source>
@@ -17888,6 +18900,57 @@ has issues - it is recreated automatically on the next step.</source>
     <message>
       <source>Could not delete prefix: {0}</source>
       <translation>无法删除前缀：{0}</translation>
+    </message>
+  </context>
+  <context>
+    <name>ProviderOverlay</name>
+    <message>
+      <source>Loading provider details…</source>
+      <translation>正在加载提供商详情…</translation>
+    </message>
+    <message>
+      <source>Install selected version</source>
+      <translation>安装所选版本</translation>
+    </message>
+    <message>
+      <source>Download and install</source>
+      <translation>下载并安装</translation>
+    </message>
+    <message>
+      <source>Apply selected action</source>
+      <translation>应用选定的动作</translation>
+    </message>
+    <message>
+      <source>Open website</source>
+      <translation>打开网站</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+    <message>
+      <source>Update listed mods</source>
+      <translation>更新列出的模组</translation>
+    </message>
+    <message>
+      <source>Review the proposed provider updates below.</source>
+      <translation>审查下面的拟议提供者更新。</translation>
+    </message>
+    <message>
+      <source>Choose a version or repository action. Installation replaces the selected mod.</source>
+      <translation>选择一个版本或仓库操作。安装将取代所选的模组。</translation>
+    </message>
+    <message>
+      <source>Review the downloads and dependencies below, then choose Download and install.</source>
+      <translation>查看下面的下载和依赖关系，然后选择下载并安装。</translation>
+    </message>
+    <message>
+      <source>Operation completed.</source>
+      <translation>操作已完成。</translation>
+    </message>
+    <message>
+      <source>Waiting for the active operation to finish…</source>
+      <translation>等待活动操作完成…</translation>
     </message>
   </context>
   <context>
@@ -18096,6 +19159,10 @@ If the game is still broken, verify the game files via Steam.</source>
       <translation>跳过( 改名/ 上移): {0}</translation>
     </message>
     <message>
+      <source>Shader packs: {0}/{1}</source>
+      <translation>Shader 包: {0}/{1}</translation>
+    </message>
+    <message>
       <source>Trimmed shaders to {0} preset effect(s).</source>
       <translation>{0}预设效果的三角荫道.</translation>
     </message>
@@ -18287,14 +19354,6 @@ Proton 前缀：{2}</translation>
       <translation>重试</translation>
     </message>
     <message>
-      <source>This game has no Bethesda registry name; nothing to do.</source>
-      <translation>本游戏没有贝塞斯达注册名;无事可做.</translation>
-    </message>
-    <message>
-      <source>Game path or Proton prefix not available.</source>
-      <translation>游戏路径或质子前缀不可用 .</translation>
-    </message>
-    <message>
       <source>Prefix: {0}</source>
       <translation>前缀: {0}</translation>
     </message>
@@ -18435,6 +19494,72 @@ Choose Keep if this is an optional/alternative variant rather than a replacement
     <message>
       <source>Remove</source>
       <translation>删除</translation>
+    </message>
+  </context>
+  <context>
+    <name>ReportOverlay</name>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+  </context>
+  <context>
+    <name>RepositoriesOverlay</name>
+    <message>
+      <source>Default branch</source>
+      <translation>默认分支</translation>
+    </message>
+    <message>
+      <source>Repository root</source>
+      <translation>仓库根目录</translation>
+    </message>
+    <message>
+      <source>Repository URL</source>
+      <translation>存储库 URL</translation>
+    </message>
+    <message>
+      <source>Branch</source>
+      <translation>分支</translation>
+    </message>
+    <message>
+      <source>Folder</source>
+      <translation>文件夹</translation>
+    </message>
+    <message>
+      <source>Enable this repository</source>
+      <translation>启用此仓库</translation>
+    </message>
+    <message>
+      <source>New</source>
+      <translation>新的</translation>
+    </message>
+    <message>
+      <source>Save</source>
+      <translation>保存</translation>
+    </message>
+    <message>
+      <source>Remove</source>
+      <translation>删除</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+    <message>
+      <source>Enabled</source>
+      <translation>已启用</translation>
+    </message>
+    <message>
+      <source>Disabled</source>
+      <translation>已禁用</translation>
+    </message>
+    <message>
+      <source>Built-in</source>
+      <translation>内置</translation>
+    </message>
+    <message>
+      <source>Repository saved.</source>
+      <translation>仓库已保存。</translation>
     </message>
   </context>
   <context>
@@ -19629,6 +20754,17 @@ Please restart the wizard and install Script Merger first.</source>
     </message>
   </context>
   <context>
+    <name>SettingField</name>
+    <message>
+      <source>Browse…</source>
+      <translation>浏览…</translation>
+    </message>
+    <message>
+      <source>Select path</source>
+      <translation>选择路径</translation>
+    </message>
+  </context>
+  <context>
     <name>SettingsView</name>
     <message>
       <source>Settings</source>
@@ -20711,6 +21847,10 @@ flatpak 远程添加-user amethyst https://chrisdkn.github.io/ Amethyst-Mod-Mana
       <translation>无</translation>
     </message>
     <message>
+      <source>Unassigned</source>
+      <translation>未分配</translation>
+    </message>
+    <message>
       <source>Reset {0} to {1}</source>
       <translation>重置 {0} 为 {1}</translation>
     </message>
@@ -20741,86 +21881,6 @@ flatpak 远程添加-user amethyst https://chrisdkn.github.io/ Amethyst-Mod-Mana
     <message>
       <source>Shortcuts reset to defaults.</source>
       <translation>快捷键重置为默认值。</translation>
-    </message>
-    <message>
-      <source>Rename selected mod or separator</source>
-      <translation>重命名选中的模组或分隔符</translation>
-    </message>
-    <message>
-      <source>Refresh mod list</source>
-      <translation>刷新模组列表</translation>
-    </message>
-    <message>
-      <source>Deploy mods</source>
-      <translation>部署模组</translation>
-    </message>
-    <message>
-      <source>Install a mod</source>
-      <translation>Install a mod</translation>
-    </message>
-    <message>
-      <source>Create an empty mod</source>
-      <translation>创建一个空模组</translation>
-    </message>
-    <message>
-      <source>Restore game files</source>
-      <translation>恢复游戏文件</translation>
-    </message>
-    <message>
-      <source>Open Settings</source>
-      <translation>打开设置</translation>
-    </message>
-    <message>
-      <source>Focus search</source>
-      <translation>聚焦搜索</translation>
-    </message>
-    <message>
-      <source>Select all in the active group</source>
-      <translation>在活动组中选择所有</translation>
-    </message>
-    <message>
-      <source>Move selection up</source>
-      <translation>向上移动选择</translation>
-    </message>
-    <message>
-      <source>Move selection down</source>
-      <translation>向下移动选择</translation>
-    </message>
-    <message>
-      <source>Remove selected mods</source>
-      <translation>移除所选模组</translation>
-    </message>
-    <message>
-      <source>Enable or disable selection</source>
-      <translation>启用或禁用选择</translation>
-    </message>
-    <message>
-      <source>Scroll active list to the top</source>
-      <translation>滚动活动列表到顶部</translation>
-    </message>
-    <message>
-      <source>Scroll active list to the bottom</source>
-      <translation>滚动活动列表到底部</translation>
-    </message>
-    <message>
-      <source>Expand or collapse all separators</source>
-      <translation>展开或折叠所有分隔符</translation>
-    </message>
-    <message>
-      <source>Show or hide active filters</source>
-      <translation>是否显示活动过滤器</translation>
-    </message>
-    <message>
-      <source>Open a mod's source page</source>
-      <translation>打开模组的源页面</translation>
-    </message>
-    <message>
-      <source>Browser back</source>
-      <translation>浏览器返回</translation>
-    </message>
-    <message>
-      <source>Browser forward</source>
-      <translation>向前浏览器</translation>
     </message>
   </context>
   <context>
@@ -21411,28 +22471,12 @@ Continue with {0}?</source>
       <translation>发射合成</translation>
     </message>
     <message>
-      <source>Game path is not configured; aborting.</source>
-      <translation>游戏路径没有配置; 中止 .</translation>
-    </message>
-    <message>
-      <source>Game path not configured.</source>
-      <translation>未配置游戏路径 .</translation>
-    </message>
-    <message>
       <source>No Proton selected; aborting.</source>
       <translation>没有选择质子; 中止 .</translation>
     </message>
     <message>
-      <source>Synthesis dir: {0}</source>
-      <translation>合成目录: {0}</translation>
-    </message>
-    <message>
       <source>Proton: {0}</source>
       <translation>质子: {0}</translation>
-    </message>
-    <message>
-      <source>Game path: {0}</source>
-      <translation>游戏路径: {0}</translation>
     </message>
     <message>
       <source>Prefix setup raised: {0}</source>
@@ -24538,10 +25582,6 @@ Prefix: {1}</source>
       <translation>更新游戏 (YeetPatch)</translation>
     </message>
     <message>
-      <source>Install Steam Workshop Mod</source>
-      <translation>安装 Steam Workshop Mod</translation>
-    </message>
-    <message>
       <source>mod.io API Key</source>
       <translation>mod.io API 密钥</translation>
     </message>
@@ -24788,10 +25828,6 @@ Prefix: {1}</source>
     <message>
       <source>Download YeetPatch and update Voices of the Void in a terminal.</source>
       <translation>下载YeetPatch并在终端中更新 Voices</translation>
-    </message>
-    <message>
-      <source>Download a Steam Workshop item and install it into this profile.</source>
-      <translation>下载Steam 创意工坊物品并将其安装到此配置文件中。</translation>
     </message>
     <message>
       <source>Enter a mod.io key to enable update checks for manually-installed mod.io mods.</source>
@@ -25300,149 +26336,6 @@ Reopen this wizard.</source>
     </message>
   </context>
   <context>
-    <name>WorkshopView</name>
-    <message>
-      <source>Install Steam Workshop Mod</source>
-      <translation>安装 Steam Workshop Mod</translation>
-    </message>
-    <message>
-      <source>Download an individual public Workshop mod into this profile. Required Workshop items must be installed separately.</source>
-      <translation>将个别公共创意工坊模组下载到此配置文件。必须单独安装所需的创意工坊项目。</translation>
-    </message>
-    <message>
-      <source>Item ID or Steam Workshop URL</source>
-      <translation>项目 ID 或 Steam 创意工坊网址</translation>
-    </message>
-    <message>
-      <source>Workshop item</source>
-      <translation>工坊项目</translation>
-    </message>
-    <message>
-      <source>{0} · App ID {1}</source>
-      <translation>{0} · App ID {1}</translation>
-    </message>
-    <message>
-      <source>Install into</source>
-      <translation>安装到</translation>
-    </message>
-    <message>
-      <source>QR code (Steam mobile app)</source>
-      <translation>二维码 (Steam 移动应用程序)</translation>
-    </message>
-    <message>
-      <source>Steam account and password</source>
-      <translation>Steam账户和密码</translation>
-    </message>
-    <message>
-      <source>Saved account</source>
-      <translation>已保存的帐户</translation>
-    </message>
-    <message>
-      <source>Anonymous (where supported)</source>
-      <translation>匿名(支持)</translation>
-    </message>
-    <message>
-      <source>Sign in</source>
-      <translation>登录</translation>
-    </message>
-    <message>
-      <source>Steam account name, not display name</source>
-      <translation>Steam账户名称，不显示名称</translation>
-    </message>
-    <message>
-      <source>Account name</source>
-      <translation>帐户名称</translation>
-    </message>
-    <message>
-      <source>Remember this account</source>
-      <translation>记住这个帐户</translation>
-    </message>
-    <message>
-      <source>Keep the Steam session on this device. Enter the account name to use it for later downloads.</source>
-      <translation>在此设备上保持Steam会话。请输入帐户名称以便以后下载。</translation>
-    </message>
-    <message>
-      <source>Forget saved account</source>
-      <translation>忘记保存的帐户</translation>
-    </message>
-    <message>
-      <source>Open Workshop page</source>
-      <translation>打开创意工坊页面</translation>
-    </message>
-    <message>
-      <source>Continue sign-in</source>
-      <translation>继续登录</translation>
-    </message>
-    <message>
-      <source>Install downloaded files</source>
-      <translation>安装下载的文件</translation>
-    </message>
-    <message>
-      <source>Cancel download</source>
-      <translation>取消下载</translation>
-    </message>
-    <message>
-      <source>Download and install</source>
-      <translation>下载并安装</translation>
-    </message>
-    <message>
-      <source>Cancel the download before closing.</source>
-      <translation>关闭前取消下载。</translation>
-    </message>
-    <message>
-      <source>Enter your Steam account name.</source>
-      <translation>输入您的 Steam 账户名称。</translation>
-    </message>
-    <message>
-      <source>The mod installer is unavailable.</source>
-      <translation>Mod安装程序不可用。</translation>
-    </message>
-    <message>
-      <source>Looking up Workshop item…</source>
-      <translation>查找创意工坊项目…</translation>
-    </message>
-    <message>
-      <source>Signed in. Downloading Workshop files…</source>
-      <translation>已登录。正在下载创意工坊文件…</translation>
-    </message>
-    <message>
-      <source>Steam account password</source>
-      <translation>Steam账户密码</translation>
-    </message>
-    <message>
-      <source>Steam Guard code from your email or authenticator</source>
-      <translation>来自您的电子邮件或身份验证器的Steam护卫代码</translation>
-    </message>
-    <message>
-      <source>Download cancelled. Nothing was installed.</source>
-      <translation>下载已取消。没有安装。</translation>
-    </message>
-    <message>
-      <source>Installed: {0}</source>
-      <translation>已安装: {0}</translation>
-    </message>
-    <message>
-      <source>Complete the mod installer tab to finish installation.</source>
-      <translation>完成Mod安装器标签页以完成安装。</translation>
-    </message>
-    <message>
-      <source>Installation did not complete. The download is kept so you can try again.</source>
-      <translation>安装未完成。下载将保持，您可以再试一次。</translation>
-    </message>
-    <message>
-      <source>Cancelling download…</source>
-      <translation>正在取消下载..</translation>
-    </message>
-    <message>
-      <source>Installing the downloaded mod…</source>
-      <translation>正在安装下载的模组…</translation>
-    </message>
-    <message>
-      <source>Saved Steam account removed from Amethyst.</source>
-      <translation>已从 Amethysty 中删除Steam 账户。</translation>
-    </message>
-  </context>
-  <context>
     <name>WryeBashView</name>
     <message>
       <source>Run Wrye Bash - {0}</source>
@@ -25489,14 +26382,6 @@ Please restart the wizard to reinstall Wrye Bash.</source>
     <message>
       <source>Wrye Bash is preparing or running.</source>
       <translation>Wrye Bash 正在准备或运行。</translation>
-    </message>
-    <message>
-      <source>Could not resolve the Proton version for the game's own prefix - launch the game once, or pick a different prefix option.</source>
-      <translation>无法解决游戏自身前缀的质子版本——一次推出游戏,或者选择不同的前缀选项.</translation>
-    </message>
-    <message>
-      <source>Could not find Proton '{0}' - check that it is installed in Steam, Heroic or ProtonPlus.</source>
-      <translation>找不到质子 '{0}' - 检查它是否安装在Steam, Heroic 或质子Plus上.</translation>
     </message>
     <message>
       <source>Wrye Bash is running.
@@ -25618,12 +26503,6 @@ or use Browse to select it manually.</source>
       <translation>正在提取 {0}..</translation>
     </message>
     <message>
-      <source>{0} not found after extraction.
-Check that the archive contains {0}.</source>
-      <translation>{0}在取出后未发现.
-请检查access-date=中的日期值 (帮助) 档案中包含{0}.</translation>
-    </message>
-    <message>
       <source>Extracted {0} file(s).</source>
       <translation>已提取出 {0} 文件 .</translation>
     </message>
@@ -25682,14 +26561,6 @@ Please restart the wizard and install {1} first.</source>
       <translation>QAC 全数</translation>
     </message>
     <message>
-      <source>Could not resolve the Proton version for the game's own prefix - launch the game once, or pick a different prefix option.</source>
-      <translation>无法解决游戏自身前缀的质子版本——一次推出游戏,或者选择不同的前缀选项.</translation>
-    </message>
-    <message>
-      <source>Could not find Proton '{0}' - check that it is installed in Steam, Heroic or ProtonPlus.</source>
-      <translation>找不到质子 '{0}' - 检查它是否安装在Steam, Heroic 或质子Plus上.</translation>
-    </message>
-    <message>
       <source>{0} is running - close it to continue.</source>
       <translation>{0}正在运行 - 关闭继续.</translation>
     </message>
@@ -25746,14 +26617,6 @@ When you close it, your changes are restored automatically.</source>
     <message>
       <source>Launching {0}…</source>
       <translation>正在启动 {0}…</translation>
-    </message>
-    <message>
-      <source>Game path not configured.</source>
-      <translation>未配置游戏路径 .</translation>
-    </message>
-    <message>
-      <source>{0} finished.</source>
-      <translation>{0}完成了.</translation>
     </message>
     <message>
       <source>Launch error: {0}</source>
@@ -26004,8 +26867,19 @@ Follow the prompts in the terminal window. YeetPatch requires curl, jq, xxhsum, 
       <translation>单击此处，然后按键盘键、鼠标3键或侧键。逃逸取消；左键和右键保留。</translation>
     </message>
     <message>
+      <source>Unassigned</source>
+      <translation>未分配</translation>
+    </message>
+    <message>
       <source>Press key</source>
       <translation>按键</translation>
+    </message>
+  </context>
+  <context>
+    <name>_DownloadMenuButton</name>
+    <message>
+      <source>Downloads</source>
+      <translation>下载</translation>
     </message>
   </context>
   <context>
@@ -26141,6 +27015,13 @@ Follow the prompts in the terminal window. YeetPatch requires curl, jq, xxhsum, 
     <message>
       <source>Apply</source>
       <translation>应用</translation>
+    </message>
+  </context>
+  <context>
+    <name>_Popover</name>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
     </message>
   </context>
   <context>
@@ -26314,6 +27195,14 @@ Publishing makes this revision the one users install. It cannot be un-published,
       <translation>从雷神店下载软件包</translation>
     </message>
     <message>
+      <source>Mod provider</source>
+      <translation>Mod provider</translation>
+    </message>
+    <message>
+      <source>Download the pinned archive using its installed plugin</source>
+      <translation>使用已安装的插件下载固定归档文件</translation>
+    </message>
+    <message>
       <source>Browse page</source>
       <translation>浏览页面</translation>
     </message>
@@ -26400,6 +27289,13 @@ Publishing makes this revision the one users install. It cannot be un-published,
     </message>
   </context>
   <context>
+    <name>app</name>
+    <message>
+      <source>Applying plugin changes…</source>
+      <translation>正在应用插件更改…</translation>
+    </message>
+  </context>
+  <context>
     <name>parent_view</name>
     <message>
       <source>Enable this rule</source>
@@ -26420,6 +27316,13 @@ Publishing makes this revision the one users install. It cannot be un-published,
     <message>
       <source>Remove this rule</source>
       <translation>删除此规则</translation>
+    </message>
+  </context>
+  <context>
+    <name>self.host</name>
+    <message>
+      <source>Filters</source>
+      <translation>筛选器</translation>
     </message>
   </context>
   <context>
@@ -26450,6 +27353,50 @@ Publishing makes this revision the one users install. It cannot be un-published,
     <message>
       <source>Remove this variable</source>
       <translation>删除此变量</translation>
+    </message>
+    <message>
+      <source>Plugin filters and saved views</source>
+      <translation>插件过滤器和保存的视图</translation>
+    </message>
+    <message>
+      <source>Plugin filters</source>
+      <translation>插件过滤器</translation>
+    </message>
+    <message>
+      <source>Include matches</source>
+      <translation>包括匹配</translation>
+    </message>
+    <message>
+      <source>Exclude matches</source>
+      <translation>排除匹配</translation>
+    </message>
+    <message>
+      <source>At most 64 saved views are supported.</source>
+      <translation>最多支持64个已保存的视图。</translation>
+    </message>
+    <message>
+      <source>Saved views</source>
+      <translation>已保存的视图</translation>
+    </message>
+    <message>
+      <source>Apply</source>
+      <translation>应用</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation>删除</translation>
+    </message>
+    <message>
+      <source>Save view</source>
+      <translation>保存视图</translation>
+    </message>
+    <message>
+      <source>View name:</source>
+      <translation>查看名称：</translation>
+    </message>
+    <message>
+      <source>Save current view…</source>
+      <translation>保存当前视图…</translation>
     </message>
   </context>
   <context>

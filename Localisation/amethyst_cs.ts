@@ -242,6 +242,22 @@ Vyberte si cesty nebo pouze cesty, klepněte na tlačítko Generovat, poté zav�
       <translation>Vyhledat podle jména…</translation>
     </message>
     <message>
+      <source>Repositories…</source>
+      <translation>Repozitáře…</translation>
+    </message>
+    <message>
+      <source>Syncing game handlers…</source>
+      <translation>Synchronizace zpracovatelů her…</translation>
+    </message>
+    <message>
+      <source>Handler sync finished with {0} error(s). {1}</source>
+      <translation>Synchronizace zpracovatele dokončena s chybami {0} . {1}</translation>
+    </message>
+    <message>
+      <source>Game handlers are up to date.</source>
+      <translation>Zpracovatelé her jsou aktuální.</translation>
+    </message>
+    <message>
       <source>Installed</source>
       <translation>Nainstalováno</translation>
     </message>
@@ -3026,6 +3042,52 @@ Mezipaměť md5 je zachována. Archivy budou znovu staženy podle potřeby. Nás
     </message>
   </context>
   <context>
+    <name>ColumnModel</name>
+    <message>
+      <source>Yes</source>
+      <translation>Ano</translation>
+    </message>
+    <message>
+      <source>No</source>
+      <translation>Ne</translation>
+    </message>
+  </context>
+  <context>
+    <name>CommandPalette</name>
+    <message>
+      <source>Plugin commands</source>
+      <translation>Příkazy pluginu</translation>
+    </message>
+    <message>
+      <source>Search commands…</source>
+      <translation>Hledat příkazy…</translation>
+    </message>
+    <message>
+      <source>Command</source>
+      <translation>Příkaz</translation>
+    </message>
+    <message>
+      <source>Shortcut</source>
+      <translation>Zkratka</translation>
+    </message>
+    <message>
+      <source>Toolbar</source>
+      <translation>Panel nástrojů</translation>
+    </message>
+    <message>
+      <source>Assign shortcuts in Settings → Shortcuts. Select Toolbar to pin a command.</source>
+      <translation>Přiřadit zkratky v Nastavení → Zástupce. Vyberte panel nástrojů pro připnutí příkazu.</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>Zavřít</translation>
+    </message>
+    <message>
+      <source>Run</source>
+      <translation>Spustit</translation>
+    </message>
+  </context>
+  <context>
     <name>ConfigureGameView</name>
     <message>
       <source>{0} Game - {1}</source>
@@ -3512,6 +3574,14 @@ Nastavení výchozího profilu tím nebude ovlivněno.</translation>
       <translation>Nastavit</translation>
     </message>
     <message>
+      <source>A previous deployment needs restoring before you can change locations. You can restore it here before adding the game.</source>
+      <translation>Předchozí nasazení musí být obnoveno, než budete moci změnit umístění. Zde ho můžete obnovit před přidáním hry.</translation>
+    </message>
+    <message>
+      <source>Restore previous deployment</source>
+      <translation>Obnovit předchozí nasazení</translation>
+    </message>
+    <message>
       <source>Configured</source>
       <translation>Konfigurováno</translation>
     </message>
@@ -3562,6 +3632,14 @@ Nastavení výchozího profilu tím nebude ovlivněno.</translation>
     <message>
       <source>Mod staging</source>
       <translation>Mod staging</translation>
+    </message>
+    <message>
+      <source>Previous deployment's staging folder. Restore before changing it.</source>
+      <translation>Složka přípravného prostředí předchozí instalace. Před změnou ji obnovit.</translation>
+    </message>
+    <message>
+      <source>Found via launcher plugin.</source>
+      <translation>Nalezeno pomocí pluginu spouštěče.</translation>
     </message>
     <message>
       <source>Game executable not found on any drive.</source>
@@ -3700,6 +3778,34 @@ Flatpak používá nový přístup k souborovému systému při příštím spu�
       <translation>Name</translation>
     </message>
     <message>
+      <source>Restore the previous deployment of {0} using its saved locations?
+
+Your unsaved location changes will be kept in this form. After Restore succeeds, save to finish adding or reconfiguring the game.</source>
+      <translation>Obnovit předchozí nasazení {0} pomocí uložených umístění?
+
+Vaše neuložené změny polohy budou zachovány v tomto formuláři. Po úspěšném obnovení uložte do dokončení přidání nebo nového nastavení hry.</translation>
+    </message>
+    <message>
+      <source>Restoring previous deployment…</source>
+      <translation>Obnovení předchozího nasazení…</translation>
+    </message>
+    <message>
+      <source>Unexpected restore failure.</source>
+      <translation>Neočekávané obnovení selhalo.</translation>
+    </message>
+    <message>
+      <source>Previous deployment restored. Save to finish configuring the game.</source>
+      <translation>Předchozí nasazení obnoveno. Uložte pro dokončení konfigurace hry.</translation>
+    </message>
+    <message>
+      <source>The staging folder can now be changed.</source>
+      <translation>Složka s přípravou lze nyní změnit.</translation>
+    </message>
+    <message>
+      <source>Restore failed: {0}</source>
+      <translation>Obnovení se nezdařilo: {0}</translation>
+    </message>
+    <message>
       <source>Yes</source>
       <translation>Ano</translation>
     </message>
@@ -3726,16 +3832,24 @@ To se nedá odčinit.</translation>
       <translation>Odstraňování instance…</translation>
     </message>
     <message>
-      <source>Scan {0} and remove leftover deployed mod files (hardlinks/symlinks/copies) that weren't restored?
+      <source>Clean {0}, including its mod data and root folders?
 
-Vanilla game files are kept. This cannot be undone.</source>
-      <translation>Proskenovat {0} a odstranit zbytky vložené mod soubory (pevné odkazy / symodkazy / kopie), které nebyly obnoveny?
+Remove recorded mod files and links to staged mods, restore vanilla backups, and remove case aliases. Unrecorded copies are kept. This cannot be undone.</source>
+      <translation>Vyčistit {0}, včetně jeho dat o modech a kořenových složkách?
 
-Složky Vanilkové hry jsou uchovávány. To se nedá odčinit.</translation>
+Odstraňte nahrané soubory módů a odkazy na režimy ve stadiu, obnovte vanilla zálohy a odstraňte přezdívky případů. Nezaznamenané kopie jsou uchovávány. Tuto akci nelze vrátit zpět.</translation>
+    </message>
+    <message>
+      <source>Game folder cleanup complete.</source>
+      <translation>Vyčištění herní složky bylo dokončeno.</translation>
     </message>
     <message>
       <source>Clean Game Folder - {0}</source>
       <translation>Složka čisté hry - {0}</translation>
+    </message>
+    <message>
+      <source>Cannot clean the game folder while a VFS deployment exists. Use Restore first. If game files are already missing, recover them from the VFS view before restoring.</source>
+      <translation>Nelze vyčistit herní složku, pokud existuje využití VFS. Nejdříve použijte obnovení. Pokud herní soubory již chybí, obnovte je ze zobrazení VFS před obnovou.</translation>
     </message>
     <message>
       <source>Cleaning game folder…</source>
@@ -3744,10 +3858,6 @@ Složky Vanilkové hry jsou uchovávány. To se nedá odčinit.</translation>
     <message>
       <source>Clean failed: {0}</source>
       <translation>Čištění se nezdařilo: {0}</translation>
-    </message>
-    <message>
-      <source>Clean complete - {0} deployed file(s) removed.</source>
-      <translation>Čistý kompletní - {0} nasazený soubor (soubory) odstraněn.</translation>
     </message>
   </context>
   <context>
@@ -5368,6 +5478,10 @@ Po dokončení aplikace přepne na nový profil - pak se sem vraťte a stisknět
   <context>
     <name>DetachableTabWidget</name>
     <message>
+      <source>Detach</source>
+      <translation>Detach</translation>
+    </message>
+    <message>
       <source>Pin to Modlist Panel</source>
       <translation>Připnout na panel Modlist</translation>
     </message>
@@ -5380,8 +5494,20 @@ Po dokončení aplikace přepne na nový profil - pak se sem vraťte a stisknět
       <translation>Přepnout na celou obrazovku</translation>
     </message>
     <message>
-      <source>Drop to redock</source>
-      <translation>Přistát k opětovnému dokování</translation>
+      <source>Close</source>
+      <translation>Zavřít</translation>
+    </message>
+    <message>
+      <source>Close Others</source>
+      <translation>Zavřít ostatní</translation>
+    </message>
+    <message>
+      <source>Close All to the Right</source>
+      <translation>Zavřít vše vpravo</translation>
+    </message>
+    <message>
+      <source>Close Tab</source>
+      <translation>Zavřít kartu</translation>
     </message>
   </context>
   <context>
@@ -5801,10 +5927,6 @@ Archiv si stáhněte ručně (NEPOUŽÍVEJTE tlačítko pro stažení v Mod Mana
       <translation>Stahování souboru „{0}“…</translation>
     </message>
     <message>
-      <source>{0} not found after extraction.</source>
-      <translation>{0} nebyl nalezen po extrakci.</translation>
-    </message>
-    <message>
       <source>Downloaded and extracted {0}.</source>
       <translation>Stáhnout a extrahovat {0}.</translation>
     </message>
@@ -5857,28 +5979,12 @@ nebo použijte tlačítko „Procházet“ a vyberte jej ručně.</translation>
       <translation>Extrakce {0}..</translation>
     </message>
     <message>
-      <source>{0} not found after extraction.
-Check that the archive contains {0}.</source>
-      <translation>{0} nebyl nalezen po extrakci.
-Zkontrolujte, zda archiv obsahuje {0}.</translation>
-    </message>
-    <message>
       <source>Extracted {0} file(s).</source>
       <translation>Extrahovaný soubor (soubory) {0}.</translation>
     </message>
     <message>
       <source>Step 4: Deploy Modlist</source>
       <translation>Krok 4: Nasazení seznamu modulů</translation>
-    </message>
-    <message>
-      <source>Before deploying, please delete any output from a previous
-{0} run (the '{1}' mod in your mod list).
-
-Once you have done this, click Deploy.</source>
-      <translation>Před nasazením prosím smažte veškerý výstup z předchozího spuštění modifikace „
-{0}“ (modifikace „{1}“ ve vašem seznamu modifikací).
-
-Jakmile to provedete, klikněte na tlačítko „Deploy“.</translation>
     </message>
     <message>
       <source>Skip</source>
@@ -5935,14 +6041,6 @@ Spusťte prosím průvodce znovu a nejprve nainstalujte soubor {1}.</translation
       <translation>Spouštím stránku {0}…</translation>
     </message>
     <message>
-      <source>xLODGen does not support {0}.</source>
-      <translation>xLODGen nepodporuje {0}.</translation>
-    </message>
-    <message>
-      <source>Game path not configured.</source>
-      <translation>Cesta ke hře není nastavena.</translation>
-    </message>
-    <message>
       <source>{0} finished.</source>
       <translation>{0} skončil.</translation>
     </message>
@@ -5951,22 +6049,8 @@ Spusťte prosím průvodce znovu a nejprve nainstalujte soubor {1}.</translation
       <translation>Chyba spuštění: {0}</translation>
     </message>
     <message>
-      <source>{0} is running.
-Close it when you are done, then click Done.</source>
-      <translation>{0} je spuštěno.
-Až skončíte, zavřete jej a poté klikněte na tlačítko Hotovo.</translation>
-    </message>
-    <message>
       <source>Fetching latest release from GitHub…</source>
       <translation>Načítání nejnovější verze z GitHubu…</translation>
-    </message>
-    <message>
-      <source>Could not resolve the Proton version for the game's own prefix - launch the game once, or pick a different prefix option.</source>
-      <translation>Nelze vyřešit verzi Proton pro vlastní prefix hry - spustit hru jednou, nebo vybrat jinou volbu prefix.</translation>
-    </message>
-    <message>
-      <source>Could not find Proton '{0}' - check that it is installed in Steam, Heroic or ProtonPlus.</source>
-      <translation>Nelze najít Proton '{0}' - zkontrolujte, zda je nainstalován ve službě Steam, Heroic nebo ProtonPlus.</translation>
     </message>
     <message>
       <source>Searching Downloads folder…</source>
@@ -6808,10 +6892,6 @@ Změny nabývají účinku při dalším startu. Pokud proměnná někdy zastav�
       <translation>Argumenty přešly do scénáře. Tlačítka níže vložte Linux cesty pro argumenty souborů.</translation>
     </message>
     <message>
-      <source>Game default uses the game's prefix. A specific Proton version uses an isolated prefix next to the exe, or a shared prefix when selected below. For Bethesda games the game path (registry), plugins.txt and My Games INIs are set up in the prefix automatically at launch.</source>
-      <translation>Výchozí nastavení používá prefix hry. Konkrétní verze Protonu používá izolovanou prefix vedle exu nebo sdílenou prefix, pokud je vybrána níže. Pro hry Bethesda jsou herní cesta (registru), plugins.txt a Moje hry INI nastaveny v prefixu automaticky při spuštění.</translation>
-    </message>
-    <message>
       <source>Use shared prefix</source>
       <translation>Použít sdílenou prefix</translation>
     </message>
@@ -6870,6 +6950,10 @@ Proton prefix: click 'Install Java into prefix' once, then it runs automatically
       <translation>Jak spustit tento .jar:
 Host: běží s javou vašeho systému (žádný Proton). Nastavte příkaz Java v nastavení spuštění, např. 'java -jar %command%' (%command% je cesta).
 Předpona Protonu: jednou klikněte na 'Instalovat Java do prefixu', pak se spustí automaticky jako 'java. xe -jar &lt;jar&gt;' - cokoliv, co vložíte do Spustit / Spustit argumenty je připojeno jako další příznaky. 'Výchozí nastavení hry' používá prefix. S konkrétní verzí Protonu vyberte izolovaný prefix vedle jaru nebo sdílený prefix používaný nástroji průvodce.</translation>
+    </message>
+    <message>
+      <source>Game default uses the game's prefix. A specific Proton version uses an isolated prefix for the tool, or a shared prefix when selected below. For Bethesda games the game path (registry), plugins.txt and My Games INIs are set up in the prefix automatically at launch.</source>
+      <translation>Výchozí nastavení používá prefix hry. Specifická verze Protonu používá izolovanou prefix pro nástroj, nebo sdílenou prefix, pokud je vybrána níže. Pro hry Bethesda jsou herní cesta (registru), plugins.txt a Moje hry INI nastaveny v prefixu automaticky při spuštění.</translation>
     </message>
     <message>
       <source>Game loaders always run in the game's own prefix with the game's Proton version: they launch the game itself, which needs the game's Steam app ID and its INIs, saves and mod DLLs. Change the game's Proton version in the game settings instead.</source>
@@ -6983,6 +7067,10 @@ Předpona Protonu: jednou klikněte na 'Instalovat Java do prefixu', pak se spus
       <translation>Thunderstore</translation>
     </message>
     <message>
+      <source>Mod provider</source>
+      <translation>Mod provider</translation>
+    </message>
+    <message>
       <source>Direct</source>
       <translation>Přímé</translation>
     </message>
@@ -7041,6 +7129,14 @@ Předpona Protonu: jednou klikněte na 'Instalovat Java do prefixu', pak se spus
     <message>
       <source>Export…</source>
       <translation>Exportovat…</translation>
+    </message>
+    <message>
+      <source>Include saves</source>
+      <translation>Zahrnout úspory</translation>
+    </message>
+    <message>
+      <source>Include a Saves tab export in the profile archive. Importing the profile will offer to restore these saves.</source>
+      <translation>Zahrnout do archivu uloženého souboru. Importování profilu nabídne obnovení těchto uložení.</translation>
     </message>
     <message>
       <source>Mod Name</source>
@@ -7133,6 +7229,10 @@ Předpona Protonu: jednou klikněte na 'Instalovat Java do prefixu', pak se spus
     <message>
       <source>This mod was not installed from Thunderstore.</source>
       <translation>Tento mod nebyl nainstalován z Thunderstore.</translation>
+    </message>
+    <message>
+      <source>This mod has no portable provider source.</source>
+      <translation>Tento mod nemá žádný zdroj přenosného poskytovatele.</translation>
     </message>
     <message>
       <source>Could not load versions from Thunderstore.</source>
@@ -7229,6 +7329,10 @@ To je v pořádku pro vaši vlastní zálohu. Nesdílejte ani nenahrávejte soub
     <message>
       <source>Building file-edit patches…</source>
       <translation>Stavební fileeditační náplasti..</translation>
+    </message>
+    <message>
+      <source>Packing saves: {0}</source>
+      <translation>Uložené balení: {0}</translation>
     </message>
     <message>
       <source>Packing mod: {0}</source>
@@ -7402,6 +7506,10 @@ Klikněte na Hotovo pro vyčištění extrahovaných souborů a zavřít.</trans
     <message>
       <source>Clear all filters</source>
       <translation>Vyčistit všechny filtry</translation>
+    </message>
+    <message>
+      <source>Open as tab</source>
+      <translation>Otevřít jako kartu</translation>
     </message>
   </context>
   <context>
@@ -7946,6 +8054,64 @@ Může být již upravena. Ověřit herní soubory ve službě Steam / Heroic z�
     <message>
       <source>✘  {0} Not Present</source>
       <translation>Name</translation>
+    </message>
+  </context>
+  <context>
+    <name>GameRepositoriesOverlay</name>
+    <message>
+      <source>Custom game repositories</source>
+      <translation>Vlastní repozitáře her</translation>
+    </message>
+    <message>
+      <source>Choose a folder containing custom game handler JSON files. Blank branch uses the default branch; blank folder uses the repository root. Close to sync changes. Use Game sources to choose between handlers with the same game ID. Disabling or removing a repository keeps downloaded games.</source>
+      <translation>Vyberte složku obsahující vlastní JSON soubory JSON her. Prázdná větev používá výchozí větev; prázdná složka používá root repositáře. Zavřít pro synchronizaci změn. Použijte herní zdroje pro výběr mezi handlery se stejným ID hry. Zakázání nebo odebrání repozitáře udržuje stažené hry.</translation>
+    </message>
+    <message>
+      <source>Repository removed. Downloaded games are kept.</source>
+      <translation>Repozitář byl odstraněn. Stažené hry jsou zachovány.</translation>
+    </message>
+    <message>
+      <source>Game sources…</source>
+      <translation>Zdroje hry…</translation>
+    </message>
+  </context>
+  <context>
+    <name>GameSourcesOverlay</name>
+    <message>
+      <source>Game handler sources</source>
+      <translation>Zdroje pro zpracování her</translation>
+    </message>
+    <message>
+      <source>Choose one handler source for each game ID. The game's existing name is kept so saved paths and profiles continue to work. Other downloaded versions are kept. Disabled or removed repositories keep their last downloaded version.</source>
+      <translation>Vyberte jeden zdroj handleru pro každé ID hry. Stávající název hry je zachován a uložené cesty a profily budou i nadále fungovat. Ostatní stažené verze jsou zachovány. Zakázané nebo odstraněné repozitáře uchovávají jejich poslední staženou verzi.</translation>
+    </message>
+    <message>
+      <source>Use selected source</source>
+      <translation>Použít vybraný zdroj</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>Zavřít</translation>
+    </message>
+    <message>
+      <source>{0} sources</source>
+      <translation>{0} zdroje</translation>
+    </message>
+    <message>
+      <source>No downloaded handlers. Close the repositories window to sync first.</source>
+      <translation>Žádné stažené handler. Zavřete okno repozitářů pro synchronizaci jako první.</translation>
+    </message>
+    <message>
+      <source>Local definition</source>
+      <translation>Místní definice</translation>
+    </message>
+    <message>
+      <source>Retained download; updates disabled</source>
+      <translation>Uložené stahování; aktualizace jsou zakázány</translation>
+    </message>
+    <message>
+      <source>Handler source selected.</source>
+      <translation>Vybrán zdroj manipulátoru.</translation>
     </message>
   </context>
   <context>
@@ -8531,6 +8697,132 @@ Spravovaný adresář: {2}</translation>
     <message>
       <source>Copied ✓</source>
       <translation>Name</translation>
+    </message>
+  </context>
+  <context>
+    <name>LootReportOverlay</name>
+    <message>
+      <source>LOOT diagnostics</source>
+      <translation>LOOT diagnostika</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>Zavřít</translation>
+    </message>
+  </context>
+  <context>
+    <name>LootReportView</name>
+    <message>
+      <source>LOOT has not run for this profile yet. Use Sort Plugins or Refresh to generate a report.</source>
+      <translation>LOOT ještě neběží pro tento profil. Pro vygenerování reportu použijte plugin pro řazení nebo obnovte aktualizaci.</translation>
+    </message>
+    <message>
+      <source>Last LOOT run: {0}</source>
+      <translation>Poslední spuštění: {0}</translation>
+    </message>
+    <message>
+      <source>{0} plugin(s) with metadata</source>
+      <translation>{0} plugin(y) s metadaty</translation>
+    </message>
+    <message>
+      <source>Error</source>
+      <translation>Chyba</translation>
+    </message>
+    <message>
+      <source>Warning</source>
+      <translation>Varování</translation>
+    </message>
+    <message>
+      <source>Note</source>
+      <translation>Poznámka</translation>
+    </message>
+    <message>
+      <source>General</source>
+      <translation>Obecná ustanovení</translation>
+    </message>
+    <message>
+      <source>The masterlist reported no general messages.</source>
+      <translation>Mistrovský seznam nehlásil žádné obecné zprávy.</translation>
+    </message>
+    <message>
+      <source>The masterlist has no metadata for the loaded plugins.</source>
+      <translation>Seznam mistrů neobsahuje žádná metadata pro načtené pluginy.</translation>
+    </message>
+    <message>
+      <source>Errors</source>
+      <translation>Chyby</translation>
+    </message>
+    <message>
+      <source>Warnings</source>
+      <translation>Upozornění</translation>
+    </message>
+    <message>
+      <source>Dirty plugins</source>
+      <translation>Špinavé pluginy</translation>
+    </message>
+    <message>
+      <source>Notes</source>
+      <translation>Poznámky</translation>
+    </message>
+    <message>
+      <source>Messages</source>
+      <translation>Zprávy</translation>
+    </message>
+    <message>
+      <source>Requirements</source>
+      <translation>Požadavky</translation>
+    </message>
+    <message>
+      <source>Incompatibilities</source>
+      <translation>Neslučitelnost</translation>
+    </message>
+    <message>
+      <source>Locations</source>
+      <translation>Místa</translation>
+    </message>
+    <message>
+      <source>Dirty edits</source>
+      <translation>Špinavé úpravy</translation>
+    </message>
+    <message>
+      <source>Verified clean</source>
+      <translation>Ověřené čisté</translation>
+    </message>
+    <message>
+      <source>Bash Tags</source>
+      <translation>Bash tagy</translation>
+    </message>
+    <message>
+      <source>{0} ITM</source>
+      <translation>{0} ITM</translation>
+    </message>
+    <message>
+      <source>{0} UDR</source>
+      <translation>{0} UDR</translation>
+    </message>
+    <message>
+      <source>{0} deleted navmesh</source>
+      <translation>Navigační síť {0} smazána</translation>
+    </message>
+    <message>
+      <source>CRC {0}</source>
+      <translation>CRC {0}</translation>
+    </message>
+    <message>
+      <source>clean with</source>
+      <translation>čistit s</translation>
+    </message>
+    <message>
+      <source>Current</source>
+      <translation>Aktuální</translation>
+    </message>
+    <message>
+      <source>Suggested (add)</source>
+      <translation>Navrhované (přidat)</translation>
+    </message>
+    <message>
+      <source>Suggested (remove)</source>
+      <translation>Navrhované (odstranit)</translation>
     </message>
   </context>
   <context>
@@ -9540,70 +9832,6 @@ Pokud budete pokračovat, toto varování nebude znovu zobrazeno pro {1}, pokud 
       <translation>Synchronizovat</translation>
     </message>
     <message>
-      <source>Match plugin load order to modlist priority</source>
-      <translation>Pořadí načítání zásuvného modulu do priority modlistu</translation>
-    </message>
-    <message>
-      <source>Groups</source>
-      <translation>Skupiny</translation>
-    </message>
-    <message>
-      <source>Plugin Rules</source>
-      <translation>Pravidla pro pluginy</translation>
-    </message>
-    <message>
-      <source>Search plugins…</source>
-      <translation>Vyhledat pluginy…</translation>
-    </message>
-    <message>
-      <source>Pack BSA</source>
-      <translation>Skautský oddíl BSA</translation>
-    </message>
-    <message>
-      <source>Unpack BSA</source>
-      <translation>Rozbalit BSA</translation>
-    </message>
-    <message>
-      <source>⊞ Expand all</source>
-      <translation>⊞ Rozbalit vše</translation>
-    </message>
-    <message>
-      <source>⊟ Collapse all</source>
-      <translation>⊟ Sbalit vše</translation>
-    </message>
-    <message>
-      <source>Install Selected</source>
-      <translation>Nainstalovat vybrané</translation>
-    </message>
-    <message>
-      <source>Move Selected</source>
-      <translation>Přesunout výběr</translation>
-    </message>
-    <message>
-      <source>Hide Selected</source>
-      <translation>Skrýt vybrané</translation>
-    </message>
-    <message>
-      <source>Unhide Selected</source>
-      <translation>Odkrýt vybrané</translation>
-    </message>
-    <message>
-      <source>Remove Selected</source>
-      <translation>Odebrat vybrané</translation>
-    </message>
-    <message>
-      <source>Locations</source>
-      <translation>Místa</translation>
-    </message>
-    <message>
-      <source>Search downloads…</source>
-      <translation>Vyhledat soubory ke stažení…</translation>
-    </message>
-    <message>
-      <source>{0} ({1})</source>
-      <translation>{0} ({1})</translation>
-    </message>
-    <message>
       <source>Removed {0} archive(s)</source>
       <translation>Odstraněny archivy {0}</translation>
     </message>
@@ -9626,30 +9854,6 @@ Pokud budete pokračovat, toto varování nebude znovu zobrazeno pro {1}, pokud 
     <message>
       <source>Moved {0} archive(s)</source>
       <translation>Přesunuto{0} archiv(ů)</translation>
-    </message>
-    <message>
-      <source>Find in files:</source>
-      <translation>Hledat v souborech:</translation>
-    </message>
-    <message>
-      <source>Text to search for…</source>
-      <translation>Hledaný text…</translation>
-    </message>
-    <message>
-      <source>Search</source>
-      <translation>Hledat</translation>
-    </message>
-    <message>
-      <source>Search Content</source>
-      <translation>Vyhledat obsah</translation>
-    </message>
-    <message>
-      <source>Content: "{0}"</source>
-      <translation>Obsah: „{0}“</translation>
-    </message>
-    <message>
-      <source>Clear Content</source>
-      <translation>Vymazat obsah</translation>
     </message>
     <message>
       <source>Add game…</source>
@@ -9912,28 +10116,8 @@ Pokud budete pokračovat, toto varování nebude znovu zobrazeno pro {1}, pokud 
       <translation>Obnovit</translation>
     </message>
     <message>
-      <source>Undo this mod's Mod Files changes (Top Level, Root, Disable). Mod files themselves are not touched.</source>
-      <translation>Zrušte změny tohoto modu Mod Files (nejvyšší úroveň, Root, Disable). Samotný Mod soubor se nedotkne.</translation>
-    </message>
-    <message>
-      <source>Search files… (try !.dds)</source>
-      <translation>Vyhledávání souborů... (zkuste to</translation>
-    </message>
-    <message>
-      <source>Open folder</source>
-      <translation>Otevřít složku</translation>
-    </message>
-    <message>
-      <source>Export</source>
-      <translation>Vývoz</translation>
-    </message>
-    <message>
       <source>Import</source>
       <translation>Importovat</translation>
-    </message>
-    <message>
-      <source>Search saves… (try !.ess)</source>
-      <translation>Hledání šetří... (zkuste to! .ess)</translation>
     </message>
     <message>
       <source>Remove archives</source>
@@ -10180,14 +10364,6 @@ Kolekce nemusí fungovat správně. Stále ji můžete nainstalovat.</translatio
       <translation>Už se neukazuj</translation>
     </message>
     <message>
-      <source>Refresh Plugins</source>
-      <translation>Obnovit moduly</translation>
-    </message>
-    <message>
-      <source>↻ Refresh</source>
-      <translation>Refresh</translation>
-    </message>
-    <message>
       <source>Permanently delete {0} archive(s) from disk?</source>
       <translation>Trvale smazat archiv (archivy) {0} z disku?</translation>
     </message>
@@ -10198,10 +10374,6 @@ Kolekce nemusí fungovat správně. Stále ji můžete nainstalovat.</translatio
     <message>
       <source>Updating handler…</source>
       <translation>Aktualizace..</translation>
-    </message>
-    <message>
-      <source>Handler not found on the Resources branch.</source>
-      <translation>Handler nebyl nalezen na pobočce Resources.</translation>
     </message>
     <message>
       <source>Handler is already up to date.</source>
@@ -11466,6 +11638,18 @@ Spustit rychlou aktualizaci na všechny z nich teď?</translation>
       <translation>({0})</translation>
     </message>
     <message>
+      <source>Handler not found in an enabled game repository.</source>
+      <translation>Zpracovatel nebyl nalezen v povoleném repozitáři her.</translation>
+    </message>
+    <message>
+      <source>Select a configured game before opening a provider install link.</source>
+      <translation>Před otevřením poskytovatele instalačního odkazu vyberte nakonfigurovanou hru.</translation>
+    </message>
+    <message>
+      <source>The install link requires exactly one enabled provider for the selected game.</source>
+      <translation>Instalační odkaz vyžaduje přesně jednoho poskytovatele pro vybranou hru.</translation>
+    </message>
+    <message>
       <source>Received a malformed MODL link.</source>
       <translation>Obdržen poškozený MODL odkaz.</translation>
     </message>
@@ -11786,6 +11970,14 @@ Spustit rychlou aktualizaci na všechny z nich teď?</translation>
       <translation>mod.io kontrola aktualizace je zakázána, dokud není jeho API cesta přidána do nástroje mod.io API Key.</translation>
     </message>
     <message>
+      <source>Mod providers: {0} updates</source>
+      <translation>Mod providers: {0} updates</translation>
+    </message>
+    <message>
+      <source>{0} provider checks failed; see log</source>
+      <translation>Kontrola {0} poskytovatele se nezdařila; viz protokol</translation>
+    </message>
+    <message>
       <source>Rolled back {0} of {1} mod(s).</source>
       <translation>Vrácené zpět {0} z {1} modů.</translation>
     </message>
@@ -12030,6 +12222,10 @@ Stiskněte pro použití vašich modů, poté spusťte hru ze Steamu, Heroic, Lu
       <translation>Čekání na aktualizace profilu…</translation>
     </message>
     <message>
+      <source>Finish the plugin store operation before closing Amethyst.</source>
+      <translation>Dokončete operaci úložiště pluginů před uzavřením Amethystu.</translation>
+    </message>
+    <message>
       <source>Wait for Wabbajack list removal to finish before closing Amethyst.</source>
       <translation>Před uzavřením Amethystu počkejte na odstranění Wabbajack seznamu.</translation>
     </message>
@@ -12046,6 +12242,14 @@ Stiskněte pro použití vašich modů, poté spusťte hru ze Steamu, Heroic, Lu
       <translation>Extrakce / instalace</translation>
     </message>
     <message>
+      <source>Deploy failed: {0}</source>
+      <translation>Rozmístění se nezdařilo: {0}</translation>
+    </message>
+    <message>
+      <source>Deployment failed</source>
+      <translation>Nasazení selhalo</translation>
+    </message>
+    <message>
       <source>Restore the game before changing the preferred OpenMW package.</source>
       <translation>Obnovit hru před změnou preferovaného balíčku OpenMW.</translation>
     </message>
@@ -12056,6 +12260,46 @@ Stiskněte pro použití vašich modů, poté spusťte hru ze Steamu, Heroic, Lu
     <message>
       <source>Installing .NET Framework 4.8</source>
       <translation>Installing .NET Framework 4.8</translation>
+    </message>
+    <message>
+      <source>No plugins available</source>
+      <translation>Nejsou k dispozici žádné pluginy</translation>
+    </message>
+    <message>
+      <source>{0} (theme pack)</source>
+      <translation>{0} (balíček motivů)</translation>
+    </message>
+    <message>
+      <source>{0} (icon pack)</source>
+      <translation>{0} (balíček ikon)</translation>
+    </message>
+    <message>
+      <source>Some plugins could not be loaded…</source>
+      <translation>Některé pluginy nelze načíst…</translation>
+    </message>
+    <message>
+      <source>Browse plugins…</source>
+      <translation>Procházet pluginy…</translation>
+    </message>
+    <message>
+      <source>Open Plugins Folder…</source>
+      <translation>Otevřít složku pluginů…</translation>
+    </message>
+    <message>
+      <source>Plugin store</source>
+      <translation>Obchod s pluginy</translation>
+    </message>
+    <message>
+      <source>Wait for the current manager operation to finish.</source>
+      <translation>Počkejte na dokončení operace se správcem aktuálního systému.</translation>
+    </message>
+    <message>
+      <source>Wait for the mod list to finish refreshing.</source>
+      <translation>Počkejte na dokončení obnovování seznamu modifikací.</translation>
+    </message>
+    <message>
+      <source>Could not open plugin: {0}</source>
+      <translation>Plugin nelze otevřít: {0}</translation>
     </message>
     <message>
       <source>Wizard Settings…</source>
@@ -12150,14 +12394,6 @@ Spustit průvodce Downgrade pro opravu hry zpět na verzi FOSE podporu. Váš se
     <message>
       <source>Modlist</source>
       <translation>Seznam modifikací</translation>
-    </message>
-    <message>
-      <source>Pack {0}</source>
-      <translation>Balení{0}</translation>
-    </message>
-    <message>
-      <source>Unpack {0}</source>
-      <translation>Rozbalte soubor „{0}“</translation>
     </message>
     <message>
       <source>Reset Mod Files changes for {0}</source>
@@ -12260,6 +12496,10 @@ Spustit průvodce Downgrade pro opravu hry zpět na verzi FOSE podporu. Váš se
       <translation>mod.io</translation>
     </message>
     <message>
+      <source>Mod providers</source>
+      <translation>Mod providers</translation>
+    </message>
+    <message>
       <source>None</source>
       <translation>Nic</translation>
     </message>
@@ -12282,14 +12522,6 @@ Spustit průvodce Downgrade pro opravu hry zpět na verzi FOSE podporu. Váš se
     <message>
       <source>{0} enabled of {1} mods</source>
       <translation>{0} povoleno pro mody typu „{1}“</translation>
-    </message>
-    <message>
-      <source>P:{0} / Non-ESL:{1}</source>
-      <translation>P: {0} / Non-ESL: {1}</translation>
-    </message>
-    <message>
-      <source>{0} plugins ({1} ESL, {2} non-ESL)</source>
-      <translation>{0} pluginy ({1} ESL, {2} non-ESL)</translation>
     </message>
     <message>
       <source>Removed {0} stale plugin(s)</source>
@@ -12772,6 +13004,77 @@ Profil a sdílené archivy ke stažení budou zachovány.</translation>
     <message>
       <source>Could not start the AppImage update. Check that its folder is writable, or download the update from the releases page.</source>
       <translation>Aktualizace AppImage se nepodařilo spustit. Zkontrolujte, zda lze do ní zapisovat, nebo stáhněte aktualizaci ze stránky s releasemi.</translation>
+    </message>
+  </context>
+  <context>
+    <name>ManagerPluginOverlay</name>
+    <message>
+      <source>Run only plugins you trust. Plugin scripts have the same file access as Amethyst.</source>
+      <translation>Spustit pouze pluginy, kterým důvěřujete. Skripty pluginů mají stejný přístup k souborům jako Amethyst.</translation>
+    </message>
+    <message>
+      <source>Ready to run.</source>
+      <translation>Připraveno k spuštění.</translation>
+    </message>
+    <message>
+      <source>Show requested API operation</source>
+      <translation>Zobrazit požadovanou operaci API</translation>
+    </message>
+    <message>
+      <source>Run</source>
+      <translation>Spustit</translation>
+    </message>
+    <message>
+      <source>Apply</source>
+      <translation>Použít</translation>
+    </message>
+    <message>
+      <source>Cancel changes</source>
+      <translation>Zrušit změny</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>Zavřít</translation>
+    </message>
+    <message>
+      <source>Could not save plugin settings: {0}</source>
+      <translation>Nastavení pluginu nelze uložit: {0}</translation>
+    </message>
+    <message>
+      <source>Stop</source>
+      <translation>Zastavit</translation>
+    </message>
+    <message>
+      <source>Running…</source>
+      <translation>Běží…</translation>
+    </message>
+    <message>
+      <source>Review changes</source>
+      <translation>Zkontrolovat změny</translation>
+    </message>
+    <message>
+      <source>Applying changes…</source>
+      <translation>Aplikování změn…</translation>
+    </message>
+    <message>
+      <source>Cancelling changes…</source>
+      <translation>Zrušení změn…</translation>
+    </message>
+    <message>
+      <source>Plugin failed. See the log below.</source>
+      <translation>Plugin se nezdařil. Viz protokol níže.</translation>
+    </message>
+    <message>
+      <source>Stopped. Any completed changes remain applied.</source>
+      <translation>Zastaveno. Všechny dokončené změny zůstávají použity.</translation>
+    </message>
+    <message>
+      <source>Plugin finished.</source>
+      <translation>Plugin dokončen.</translation>
+    </message>
+    <message>
+      <source>Stopping. Waiting for accepted manager operations to finish…</source>
+      <translation>Zastavení. Čekání na přijaté operace správce…</translation>
     </message>
   </context>
   <context>
@@ -13836,6 +14139,10 @@ Tuto akci nelze vrátit zpět.</translation>
       <source>Updated</source>
       <translation>Aktualizováno</translation>
     </message>
+    <message>
+      <source>Read-only entry managed by a plugin.</source>
+      <translation>Načíst pouze položku spravovanou pluginem.</translation>
+    </message>
   </context>
   <context>
     <name>ModListView</name>
@@ -14000,6 +14307,10 @@ Klepněte na tlačítko Hotovo pro uzavření.</translation>
     <message>
       <source>Update available on Thunderstore</source>
       <translation>Aktualizace k dispozici na Thunderstore</translation>
+    </message>
+    <message>
+      <source>Update available from mod provider</source>
+      <translation>Aktualizace k dispozici od poskytovatele modů</translation>
     </message>
     <message>
       <source>Endorsed</source>
@@ -15974,8 +16285,8 @@ Denně: {1}</translation>
       <translation>Přesměrování Nexus odkazů</translation>
     </message>
     <message>
-      <source>Choose which mod manager receives this game's Nexus links. The choice is remembered. Removing it restores Amethyst's normal handling.</source>
-      <translation>Vyberte, který manažer módů obdrží odkazy na tuto hru. Volba je pamatována. Odstranění obnoví normální zpracování Amethystu.</translation>
+      <source>Choose which mod manager receives this game's Nexus links. The choice is remembered. Amethyst uses the matching configured game, or the current game for links from other domains.</source>
+      <translation>Vyberte, který manažer módů obdrží Nexus odkazy této hry. Volba je zapamatována. Amethyst používá odpovídající konfigurovanou hru nebo aktuální hru pro odkazy z jiných domén.</translation>
     </message>
     <message>
       <source>Nexus game domain</source>
@@ -16913,6 +17224,25 @@ Přeskenujte to.</translation>
     </message>
   </context>
   <context>
+    <name>PluginCommands</name>
+    <message>
+      <source>The active game or profile changed. Run the command again.</source>
+      <translation>Aktivní hra nebo profil změnil. Spusťte příkaz znovu.</translation>
+    </message>
+    <message>
+      <source>The plugin changed. Run the command again.</source>
+      <translation>Plugin změnil. Spusťte příkaz znovu.</translation>
+    </message>
+    <message>
+      <source>This command does not match the current selection.</source>
+      <translation>Tento příkaz neodpovídá aktuálnímu výběru.</translation>
+    </message>
+    <message>
+      <source>A selected item is no longer available.</source>
+      <translation>Vybraná položka již není k dispozici.</translation>
+    </message>
+  </context>
+  <context>
     <name>PluginCycleView</name>
     <message>
       <source>Plugins in cycle</source>
@@ -17129,6 +17459,25 @@ Přeskenujte to.</translation>
     </message>
   </context>
   <context>
+    <name>PluginMenuController</name>
+    <message>
+      <source>Plugins</source>
+      <translation>Pluginy</translation>
+    </message>
+    <message>
+      <source>Preview with {0}</source>
+      <translation>Náhled s {0}</translation>
+    </message>
+    <message>
+      <source>The active game or profile changed. Reopen the menu.</source>
+      <translation>Aktivní hra nebo profil byl změněn. Znovu otevřete menu.</translation>
+    </message>
+    <message>
+      <source>The plugin changed. Reopen the menu.</source>
+      <translation>Plugin změnil. Znovu otevřete menu.</translation>
+    </message>
+  </context>
+  <context>
     <name>PluginModel</name>
     <message>
       <source>Plugin Name</source>
@@ -17145,6 +17494,223 @@ Přeskenujte to.</translation>
     <message>
       <source>Index</source>
       <translation>Obsah</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginNotifications</name>
+    <message>
+      <source>Open report</source>
+      <translation>Otevřít report</translation>
+    </message>
+    <message>
+      <source>{0}: {1} new or updated diagnostics</source>
+      <translation>{0}: {1} nová nebo aktualizovaná diagnostika</translation>
+    </message>
+    <message>
+      <source>Select the notification's game and profile before using this action.</source>
+      <translation>Před použitím této akce vyberte hru a profil oznámení.</translation>
+    </message>
+    <message>
+      <source>This plugin changed or is no longer available.</source>
+      <translation>Tento modul byl změněn nebo již není dostupný.</translation>
+    </message>
+    <message>
+      <source>An affected item is no longer available. Refresh the diagnostic.</source>
+      <translation>Dotčená položka již není k dispozici. Obnovte diagnostiku.</translation>
+    </message>
+    <message>
+      <source>The action no longer matches these items.</source>
+      <translation>Akce již neodpovídá těmto položkám.</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginPanelControls</name>
+    <message>
+      <source>Sort Plugins</source>
+      <translation>Seřadit pluginy</translation>
+    </message>
+    <message>
+      <source>Refresh Plugins</source>
+      <translation>Aktualizovat pluginy</translation>
+    </message>
+    <message>
+      <source>Sync</source>
+      <translation>Synchronizovat</translation>
+    </message>
+    <message>
+      <source>Groups</source>
+      <translation>Skupiny</translation>
+    </message>
+    <message>
+      <source>Plugin Rules</source>
+      <translation>Pravidla pluginu</translation>
+    </message>
+    <message>
+      <source>LOOT</source>
+      <translation>LOOT</translation>
+    </message>
+    <message>
+      <source>Show LOOT diagnostics</source>
+      <translation>Zobrazit LOOT diagnostiku</translation>
+    </message>
+    <message>
+      <source>Match plugin load order to modlist priority</source>
+      <translation>Pořadí načítání zásuvného modulu do priority modlistu</translation>
+    </message>
+    <message>
+      <source>Search plugins…</source>
+      <translation>Hledat pluginy…</translation>
+    </message>
+    <message>
+      <source>Pack BSA</source>
+      <translation>Balíček BSA</translation>
+    </message>
+    <message>
+      <source>Unpack BSA</source>
+      <translation>Rozbalit BSA</translation>
+    </message>
+    <message>
+      <source>⊞ Expand all</source>
+      <translation>&lt;unk> Rozbalit vše</translation>
+    </message>
+    <message>
+      <source>Open</source>
+      <translation>Otevřít</translation>
+    </message>
+    <message>
+      <source>Reset</source>
+      <translation>Reset</translation>
+    </message>
+    <message>
+      <source>Undo this mod's Mod Files changes (Top Level, Root, Disable). Mod files themselves are not touched.</source>
+      <translation>Vrátit zpět změny souborů módu (Top Level, Root, Zakázat). Samotné soubory módu nejsou dotčeny.</translation>
+    </message>
+    <message>
+      <source>Search files… (try !.dds)</source>
+      <translation>Hledat soubory… (vyzkoušejte !.dds)</translation>
+    </message>
+    <message>
+      <source>Blacklist</source>
+      <translation>Černá listina</translation>
+    </message>
+    <message>
+      <source>Routing Rules</source>
+      <translation>Pravidla směrování</translation>
+    </message>
+    <message>
+      <source>⊟ Collapse all</source>
+      <translation>&lt;unk> Sbalit vše</translation>
+    </message>
+    <message>
+      <source>↻ Refresh</source>
+      <translation>&lt;unk> Obnovit</translation>
+    </message>
+    <message>
+      <source>Open folder</source>
+      <translation>Otevřít složku</translation>
+    </message>
+    <message>
+      <source>Export</source>
+      <translation>Exportovat</translation>
+    </message>
+    <message>
+      <source>Import</source>
+      <translation>Importovat</translation>
+    </message>
+    <message>
+      <source>Search saves… (try !.ess)</source>
+      <translation>Hledat uložené… (zkuste !.ess)</translation>
+    </message>
+    <message>
+      <source>Install Selected</source>
+      <translation>Instalovat vybrané</translation>
+    </message>
+    <message>
+      <source>Move Selected</source>
+      <translation>Přesunout vybrané</translation>
+    </message>
+    <message>
+      <source>Hide Selected</source>
+      <translation>Skrýt vybrané</translation>
+    </message>
+    <message>
+      <source>Remove Selected</source>
+      <translation>Odstranit vybrané</translation>
+    </message>
+    <message>
+      <source>Locations</source>
+      <translation>Místa</translation>
+    </message>
+    <message>
+      <source>Search downloads…</source>
+      <translation>Hledat stahování…</translation>
+    </message>
+    <message>
+      <source>Unhide Selected</source>
+      <translation>Odkrýt vybrané</translation>
+    </message>
+    <message>
+      <source>{0} ({1})</source>
+      <translation>{0} ({1})</translation>
+    </message>
+    <message>
+      <source>Find in files:</source>
+      <translation>Najít v souborech:</translation>
+    </message>
+    <message>
+      <source>Text to search for…</source>
+      <translation>Text, který chcete vyhledat…</translation>
+    </message>
+    <message>
+      <source>Search</source>
+      <translation>Hledat</translation>
+    </message>
+    <message>
+      <source>Search Content</source>
+      <translation>Hledat obsah</translation>
+    </message>
+    <message>
+      <source>Content: "{0}"</source>
+      <translation>Obsah: "{0}"</translation>
+    </message>
+    <message>
+      <source>Clear Content</source>
+      <translation>Vymazat obsah</translation>
+    </message>
+    <message>
+      <source>Pack {0}</source>
+      <translation>Zabalit {0}</translation>
+    </message>
+    <message>
+      <source>Unpack {0}</source>
+      <translation>Rozbalit {0}</translation>
+    </message>
+    <message>
+      <source>File location</source>
+      <translation>Umístění souboru</translation>
+    </message>
+    <message>
+      <source>P:{0} / Non-ESL:{1}</source>
+      <translation>P:{0} / Non-ESL:{1}</translation>
+    </message>
+    <message>
+      <source>{0} plugins ({1} ESL, {2} non-ESL)</source>
+      <translation>{0} plugins ({1} ESL, {2} non-ESL)</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginRepositoriesOverlay</name>
+    <message>
+      <source>Plugin repositories</source>
+      <translation>Repozitáře pluginů</translation>
+    </message>
+    <message>
+      <source>Choose a folder containing plugin subfolders, or a single plugin's folder. Blank branch uses the default branch; blank folder uses the repository root.</source>
+      <translation>Vyberte složku obsahující podsložky pluginu nebo složku jednoho pluginu. Prázdná větev používá výchozí větev; prázdná složka používá root repositáře.</translation>
+    </message>
+    <message>
+      <source>Repository removed. Installed plugins are kept.</source>
+      <translation>Repozitář byl odstraněn. Nainstalované pluginy jsou zachovány.</translation>
     </message>
   </context>
   <context>
@@ -17183,6 +17749,371 @@ Chcete-li přidat pravidlo, přetáhněte plugin z levého panelu.</translation>
     </message>
   </context>
   <context>
+    <name>PluginSettingsOverlay</name>
+    <message>
+      <source>{0} settings</source>
+      <translation>Nastavení {0}</translation>
+    </message>
+    <message>
+      <source>Icon changes take effect after restarting Amethyst.</source>
+      <translation>Změny ikon se projeví po restartu Amethystu.</translation>
+    </message>
+    <message>
+      <source>Settings are used on the plugin's next run or refresh.</source>
+      <translation>Nastavení se používají při dalším spuštění nebo obnovování pluginu.</translation>
+    </message>
+    <message>
+      <source>Restore defaults</source>
+      <translation>Obnovit výchozí hodnoty</translation>
+    </message>
+    <message>
+      <source>Cancel</source>
+      <translation>Zrušit</translation>
+    </message>
+    <message>
+      <source>Save</source>
+      <translation>Uložit</translation>
+    </message>
+    <message>
+      <source>Plugin settings could not be read: {0}</source>
+      <translation>Nastavení pluginu nelze přečíst: {0}</translation>
+    </message>
+    <message>
+      <source>Reset damaged settings</source>
+      <translation>Resetovat poškozená nastavení</translation>
+    </message>
+    <message>
+      <source>Could not save plugin settings: {0}</source>
+      <translation>Nastavení pluginu nelze uložit: {0}</translation>
+    </message>
+    <message>
+      <source>Could not reset plugin settings: {0}</source>
+      <translation>Nelze resetovat nastavení pluginu: {0}</translation>
+    </message>
+    <message>
+      <source>Settings reset. Original settings saved to {0}.</source>
+      <translation>Nastavení obnoveno. Původní nastavení bylo uloženo do {0}.</translation>
+    </message>
+    <message>
+      <source>Settings reset.</source>
+      <translation>Nastavení obnoveno.</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginStoreView</name>
+    <message>
+      <source>Plugin store</source>
+      <translation>Obchod s pluginy</translation>
+    </message>
+    <message>
+      <source>Plugins run Python with the same file access as Amethyst. Install only plugins you trust.</source>
+      <translation>Pluginy spustí Python se stejným přístupem k souborům jako Amethyst. Nainstalujte pouze pluginy, kterým důvěřujete.</translation>
+    </message>
+    <message>
+      <source>Search plugins</source>
+      <translation>Hledat pluginy</translation>
+    </message>
+    <message>
+      <source>Refresh</source>
+      <translation>Aktualizovat</translation>
+    </message>
+    <message>
+      <source>Repositories…</source>
+      <translation>Repozitáře…</translation>
+    </message>
+    <message>
+      <source>Details</source>
+      <translation>Detaily</translation>
+    </message>
+    <message>
+      <source>README</source>
+      <translation>ČTĚTE</translation>
+    </message>
+    <message>
+      <source>Download</source>
+      <translation>Stáhnout</translation>
+    </message>
+    <message>
+      <source>Remove</source>
+      <translation>Odebrat</translation>
+    </message>
+    <message>
+      <source>Disable</source>
+      <translation>Zakázat</translation>
+    </message>
+    <message>
+      <source>Settings…</source>
+      <translation>Nastavení…</translation>
+    </message>
+    <message>
+      <source>Cancel pending change</source>
+      <translation>Zrušit čekající změnu</translation>
+    </message>
+    <message>
+      <source>Restart manager</source>
+      <translation>Restartovat správce</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>Zavřít</translation>
+    </message>
+    <message>
+      <source>Enabled</source>
+      <translation>Povoleno</translation>
+    </message>
+    <message>
+      <source>Disabled</source>
+      <translation>Zakázáno</translation>
+    </message>
+    <message>
+      <source>Pending change</source>
+      <translation>Čekající změna</translation>
+    </message>
+    <message>
+      <source>Installed locally · source unknown</source>
+      <translation>Nainstalováno lokálně · zdroj neznámý</translation>
+    </message>
+    <message>
+      <source>Version {0}</source>
+      <translation>Verze {0}</translation>
+    </message>
+    <message>
+      <source>Version unknown</source>
+      <translation>Neznámá verze</translation>
+    </message>
+    <message>
+      <source>Not installed</source>
+      <translation>Není nainstalováno</translation>
+    </message>
+    <message>
+      <source>{0} change(s) waiting for restart. Changes apply on the next manager launch.</source>
+      <translation>{0} změny čekající na restart. Platí změny při příštím spuštění manažera.</translation>
+    </message>
+    <message>
+      <source>Plugin changes take effect after restarting Amethyst.</source>
+      <translation>Změny pluginu se projeví po restartu Amethystu.</translation>
+    </message>
+    <message>
+      <source>No plugins found.</source>
+      <translation>Nebyly nalezeny žádné pluginy.</translation>
+    </message>
+    <message>
+      <source>Installed locally · version unknown</source>
+      <translation>Neznámá lokálně nainstalovaná verze</translation>
+    </message>
+    <message>
+      <source>Author: {0}</source>
+      <translation>Autor: {0}</translation>
+    </message>
+    <message>
+      <source>Unknown</source>
+      <translation>Neznámý</translation>
+    </message>
+    <message>
+      <source>Available version: {0}</source>
+      <translation>Dostupná verze: {0}</translation>
+    </message>
+    <message>
+      <source>Not in the current catalogue</source>
+      <translation>Není v aktuálním katalogu</translation>
+    </message>
+    <message>
+      <source>Installed version: {0}</source>
+      <translation>Nainstalovaná verze: {0}</translation>
+    </message>
+    <message>
+      <source>Minimum manager version: {0}</source>
+      <translation>Minimální verze manažera: {0}</translation>
+    </message>
+    <message>
+      <source>Not specified</source>
+      <translation>Neuvedeno</translation>
+    </message>
+    <message>
+      <source>Repository: {0}</source>
+      <translation>Repozitář: {0}</translation>
+    </message>
+    <message>
+      <source>Branch: {0}</source>
+      <translation>Pobočka: {0}</translation>
+    </message>
+    <message>
+      <source>Default branch</source>
+      <translation>Výchozí větev</translation>
+    </message>
+    <message>
+      <source>Folder: {0}</source>
+      <translation>Složka: {0}</translation>
+    </message>
+    <message>
+      <source>State: {0}</source>
+      <translation>Stát: {0}</translation>
+    </message>
+    <message>
+      <source>Installed from: {0} [{1}:{2}]</source>
+      <translation>Nainstalováno z: {0} [{1}:{2}]</translation>
+    </message>
+    <message>
+      <source>default</source>
+      <translation>výchozí</translation>
+    </message>
+    <message>
+      <source>Installed source: Unknown</source>
+      <translation>Nainstalovaný zdroj: Neznámý</translation>
+    </message>
+    <message>
+      <source>Update</source>
+      <translation>Aktualizovat</translation>
+    </message>
+    <message>
+      <source>Replace from this repository…</source>
+      <translation>Nahradit z tohoto repozitáře…</translation>
+    </message>
+    <message>
+      <source>Replace with store version</source>
+      <translation>Nahradit verzí obchodu</translation>
+    </message>
+    <message>
+      <source>The installed plugin is up to date or newer.</source>
+      <translation>Nainstalovaný plugin je aktuální nebo novější.</translation>
+    </message>
+    <message>
+      <source>Duplicate installed plugin id. Resolve the duplicate folders first.</source>
+      <translation>Duplikovat ID nainstalovaného pluginu. Nejprve znovu vyřeďte duplicitní složky.</translation>
+    </message>
+    <message>
+      <source>Removal</source>
+      <translation>Odstranění</translation>
+    </message>
+    <message>
+      <source>Enable</source>
+      <translation>Povolit</translation>
+    </message>
+    <message>
+      <source>Install version {0}</source>
+      <translation>Instalovat verzi {0}</translation>
+    </message>
+    <message>
+      <source>Pending: {0}</source>
+      <translation type="unfinished">Pending: {0}</translation>
+    </message>
+    <message>
+      <source>Pending repository: {0}</source>
+      <translation>Čekající repozitář: {0}</translation>
+    </message>
+    <message>
+      <source>Plugin dependencies: {0}</source>
+      <translation>Závislosti pluginů: {0}</translation>
+    </message>
+    <message>
+      <source>Plugin conflicts: {0}</source>
+      <translation>Konflikty pluginů: {0}</translation>
+    </message>
+    <message>
+      <source>Loading README…</source>
+      <translation>Načítání README…</translation>
+    </message>
+    <message>
+      <source>Could not load README: {0}</source>
+      <translation>Nelze načíst README: {0}</translation>
+    </message>
+    <message>
+      <source>Change saved. Restart Amethyst to apply it.</source>
+      <translation>Změna uložena. Chcete-li ji použít, restartujte Ametyst.</translation>
+    </message>
+    <message>
+      <source>Loading plugin catalogue…</source>
+      <translation>Načítání katalogu pluginu…</translation>
+    </message>
+    <message>
+      <source>Catalogue loaded.</source>
+      <translation>Katalog načten.</translation>
+    </message>
+    <message>
+      <source>Replace</source>
+      <translation>Nahradit</translation>
+    </message>
+    <message>
+      <source>Delete saved data</source>
+      <translation>Odstranit uložená data</translation>
+    </message>
+    <message>
+      <source>Downloading and validating plugin…</source>
+      <translation>Stahování a ověření pluginu…</translation>
+    </message>
+    <message>
+      <source>Replace plugin from this repository?</source>
+      <translation>Nahradit plugin z tohoto repozitáře?</translation>
+    </message>
+    <message>
+      <source>Replace {0} with version {1} from {2} after restart? Saved settings and data will be preserved, and the old folder backed up.</source>
+      <translation>Nahradit {0} verzí {1} od {2} po restartu? Uložená nastavení a data budou zachována a stará složka bude zálohována.</translation>
+    </message>
+    <message>
+      <source>Remove plugin?</source>
+      <translation>Odstranit plugin?</translation>
+    </message>
+    <message>
+      <source>Remove {0} after restart? Saved data is kept for reinstalling unless you choose to delete it. Deletion also removes this plugin's store backups.</source>
+      <translation>Odstranit {0} po restartu? Uložená data jsou uložena pro přeinstalování, pokud se nerozhodnete ji odstranit. Smazání také odstraní zálohy tohoto pluginu e-shopu.</translation>
+    </message>
+    <message>
+      <source>Queuing plugin removal…</source>
+      <translation>Čekání na odstranění pluginu…</translation>
+    </message>
+    <message>
+      <source>Cancelling pending change…</source>
+      <translation>Ruší se čekající změna…</translation>
+    </message>
+    <message>
+      <source>Pending change cancelled.</source>
+      <translation>Čekající změna byla zrušena.</translation>
+    </message>
+    <message>
+      <source>Queuing plugin enablement change…</source>
+      <translation>Fronta pluginu povolena změna…</translation>
+    </message>
+    <message>
+      <source>Settings saved. Restart Amethyst to apply icon changes.</source>
+      <translation>Nastavení uloženo. Pro aplikaci změn ikon restartujte Amethyst.</translation>
+    </message>
+    <message>
+      <source>Settings saved.</source>
+      <translation>Nastavení uloženo.</translation>
+    </message>
+    <message>
+      <source>Wait for current manager operations to finish before restarting.</source>
+      <translation>Před restartováním počkejte na dokončení operací správce systému.</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginUIController</name>
+    <message>
+      <source>More plugin controls</source>
+      <translation>Další ovládání pluginu</translation>
+    </message>
+    <message>
+      <source>Commands…</source>
+      <translation>Příkazy…</translation>
+    </message>
+    <message>
+      <source>Some interface elements could not be loaded…</source>
+      <translation>Některé prvky rozhraní nelze načíst…</translation>
+    </message>
+    <message>
+      <source>Plugin interface</source>
+      <translation>Rozhraní pluginu</translation>
+    </message>
+    <message>
+      <source>Some plugin services could not be loaded…</source>
+      <translation>Některé služby pluginu nelze načíst…</translation>
+    </message>
+    <message>
+      <source>Plugin services</source>
+      <translation>Služby pluginů</translation>
+    </message>
+  </context>
+  <context>
     <name>PluginView</name>
     <message>
       <source>Show / Hide columns</source>
@@ -17195,6 +18126,10 @@ Chcete-li přidat pravidlo, přetáhněte plugin z levého panelu.</translation>
     <message>
       <source>Clear all filters</source>
       <translation>Vyčistit všechny filtry</translation>
+    </message>
+    <message>
+      <source>Open as tab</source>
+      <translation>Otevřít jako kartu</translation>
     </message>
   </context>
   <context>
@@ -17331,8 +18266,8 @@ Chcete-li přidat pravidlo, přetáhněte plugin z levého panelu.</translation>
       <translation>Správa předpon</translation>
     </message>
     <message>
-      <source>Wizard tools each run in their own Wine prefix (created next to the tool's exe or in the app config folder). Deleting one only reclaims disk space - it is recreated automatically the next time the tool runs.</source>
-      <translation>Průvodce nástroje každý spustit v jejich vlastní Předpis (vytvořené vedle nástroje exe nebo v konfigurační složce aplikace). Smazání pouze jednoho místa na disku - při dalším spuštění nástroje je automaticky obnoveno.</translation>
+      <source>Wizard tools each run in their own Wine prefix (created in Applications, next to the tool's exe or in the app config folder). Deleting one only reclaims disk space - it is recreated automatically the next time the tool runs.</source>
+      <translation>Nástroje průvodce budou spuštěny na vlastní prefixu Wine (vytvořeno v aplikacích, vedle exe nástroje nebo v konfigurační složce aplikace). Odstranění pouze jednoho místa na disku - při příštím spuštění nástroje se znovu vytvoří automaticky.</translation>
     </message>
     <message>
       <source>Scanning for prefixes…</source>
@@ -17576,6 +18511,83 @@ Jeho uvedené módy jsou zkopírovány do vlastní složky mods profilu (pokud m
     </message>
   </context>
   <context>
+    <name>ProfileSavesTransfer</name>
+    <message>
+      <source>Could not resolve save folders.</source>
+      <translation>Složky nelze vyřešit.</translation>
+    </message>
+    <message>
+      <source>No save folders found for this game.</source>
+      <translation>Pro tuto hru nebyly nalezeny žádné uložené složky.</translation>
+    </message>
+    <message>
+      <source> [profile saves]</source>
+      <translation> [úspory profilu]</translation>
+    </message>
+    <message>
+      <source>Choose save folder to import into</source>
+      <translation>Vyberte složku pro import do</translation>
+    </message>
+    <message>
+      <source>Choose save folder to export</source>
+      <translation>Vyberte složku pro export</translation>
+    </message>
+    <message>
+      <source>Select</source>
+      <translation>Vybrat</translation>
+    </message>
+    <message>
+      <source>The current contents are moved aside to a "{0}" folder first, so nothing is lost.</source>
+      <translation>Aktuální obsah je nejprve přesunut stranou do složky "{0}", takže nic není ztraceno.</translation>
+    </message>
+    <message>
+      <source>The current {0} files are moved aside to a "{1}" folder first, so nothing is lost.</source>
+      <translation>Aktuální soubory {0} jsou nejprve přesunuty do složky "{1}", takže nic není ztraceno.</translation>
+    </message>
+    <message>
+      <source>Import bundled saves?</source>
+      <translation>Importovat uložené soubory?</translation>
+    </message>
+    <message>
+      <source>This profile includes a saves archive.
+
+Extract it into
+{0}
+
+{1}</source>
+      <translation>Tento profil obsahuje uložený archiv.
+
+Rozbalte jej do
+{0}
+
+{1}</translation>
+    </message>
+    <message>
+      <source>Import</source>
+      <translation>Importovat</translation>
+    </message>
+    <message>
+      <source>Skip</source>
+      <translation>Přeskočit</translation>
+    </message>
+    <message>
+      <source>Extracting saves…</source>
+      <translation>Extrahuji uložené pozice…</translation>
+    </message>
+    <message>
+      <source>Imported {0} save file(s) ({1}).</source>
+      <translation>Importováno {0} uložených souborů ({1}).</translation>
+    </message>
+    <message>
+      <source>Save import failed: {0}</source>
+      <translation>Import se nezdařil: {0}</translation>
+    </message>
+    <message>
+      <source>Save import failed.</source>
+      <translation>Import se nezdařil.</translation>
+    </message>
+  </context>
+  <context>
     <name>ProfileSettingsView</name>
     <message>
       <source>Profile Settings</source>
@@ -17708,10 +18720,6 @@ Odstraní celý profil kolekce, včetně jeho osobních modů a připojených ko
       <translation>Každá verze dostane svou vlastní prefix; závislosti jsou do ní nainstalovány automaticky na dalším kroku.</translation>
     </message>
     <message>
-      <source>{0} runs in its own Wine prefix, stored next to its exe and separate from the game's prefix, so you can pick any Proton version without affecting the game.</source>
-      <translation>{0} běží ve své vlastní prefix vína, uložený vedle svého exe a oddělený od herní prefix, takže si můžete vybrat jakoukoliv verzi Proton, aniž by to ovlivnilo hru.</translation>
-    </message>
-    <message>
       <source>Prefer discrete GPU (hybrid systems)</source>
       <translation>Preferovat diskrétní GPU (hybridní systémy)</translation>
     </message>
@@ -17738,6 +18746,10 @@ Odstraní celý profil kolekce, včetně jeho osobních modů a připojených ko
     <message>
       <source>The saved game prefix is unavailable. Choose another prefix setting.</source>
       <translation>Uložená prefix hry není k dispozici. Vyberte jiné nastavení prefixu.</translation>
+    </message>
+    <message>
+      <source>{0} runs in its own Wine prefix, separate from the game's prefix, so you can pick any Proton version without affecting the game.</source>
+      <translation>{0} běží ve své vlastní prefixu Wine oddělené od prefixu hry, takže si můžete vybrat jakoukoliv verzi Protonu, aniž byste ovlivnili hru.</translation>
     </message>
     <message>
       <source>Use 64-bit version</source>
@@ -17890,6 +18902,57 @@ má problémy - na dalším kroku je automaticky obnoven.</translation>
     <message>
       <source>Could not delete prefix: {0}</source>
       <translation>Nepodařilo se odstranit předponu: {0}</translation>
+    </message>
+  </context>
+  <context>
+    <name>ProviderOverlay</name>
+    <message>
+      <source>Loading provider details…</source>
+      <translation>Načítání detailů poskytovatele…</translation>
+    </message>
+    <message>
+      <source>Install selected version</source>
+      <translation>Instalovat vybranou verzi</translation>
+    </message>
+    <message>
+      <source>Download and install</source>
+      <translation>Stáhnout a nainstalovat</translation>
+    </message>
+    <message>
+      <source>Apply selected action</source>
+      <translation>Použít vybranou akci</translation>
+    </message>
+    <message>
+      <source>Open website</source>
+      <translation>Otevřít web</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>Zavřít</translation>
+    </message>
+    <message>
+      <source>Update listed mods</source>
+      <translation>Aktualizovat uvedené mody</translation>
+    </message>
+    <message>
+      <source>Review the proposed provider updates below.</source>
+      <translation>Přečtěte si níže navrhované aktualizace poskytovatele.</translation>
+    </message>
+    <message>
+      <source>Choose a version or repository action. Installation replaces the selected mod.</source>
+      <translation>Vyberte verzi nebo akci repozitáře. Instalace nahrazuje vybraný režim.</translation>
+    </message>
+    <message>
+      <source>Review the downloads and dependencies below, then choose Download and install.</source>
+      <translation>Přečtěte si níže uvedené stahování a závislosti, poté vyberte Stáhnout a nainstalovat.</translation>
+    </message>
+    <message>
+      <source>Operation completed.</source>
+      <translation>Operace dokončena.</translation>
+    </message>
+    <message>
+      <source>Waiting for the active operation to finish…</source>
+      <translation>Čekání na aktivní operaci do dokončení…</translation>
     </message>
   </context>
   <context>
@@ -18098,6 +19161,10 @@ Pokud je hra stále přerušena, ověřte si herní soubory pomocí služby Stea
       <translation>Přeskočil (přejmenován / odstraněn proti proudu): {0}</translation>
     </message>
     <message>
+      <source>Shader packs: {0}/{1}</source>
+      <translation>Balíčky shaderu: {0}/{1}</translation>
+    </message>
+    <message>
       <source>Trimmed shaders to {0} preset effect(s).</source>
       <translation>Zmenšené stínidla na {0} přednastavený efekt (y).</translation>
     </message>
@@ -18289,14 +19356,6 @@ Předpona Protonu: {2}</translation>
       <translation>Zkusit znovu</translation>
     </message>
     <message>
-      <source>This game has no Bethesda registry name; nothing to do.</source>
-      <translation>Tato hra nemá Bethesda název registru, nic dělat.</translation>
-    </message>
-    <message>
-      <source>Game path or Proton prefix not available.</source>
-      <translation>Cesta ke hře nebo předpona Proton není k dispozici.</translation>
-    </message>
-    <message>
       <source>Prefix: {0}</source>
       <translation>Předpona: {0}</translation>
     </message>
@@ -18437,6 +19496,72 @@ Zvolte možnost „Ponechat“, pokud se jedná o volitelnou/alternativní varia
     <message>
       <source>Remove</source>
       <translation>Odstranit</translation>
+    </message>
+  </context>
+  <context>
+    <name>ReportOverlay</name>
+    <message>
+      <source>Close</source>
+      <translation>Zavřít</translation>
+    </message>
+  </context>
+  <context>
+    <name>RepositoriesOverlay</name>
+    <message>
+      <source>Default branch</source>
+      <translation>Výchozí větev</translation>
+    </message>
+    <message>
+      <source>Repository root</source>
+      <translation>Kořen repositáře</translation>
+    </message>
+    <message>
+      <source>Repository URL</source>
+      <translation>URL repozitáře</translation>
+    </message>
+    <message>
+      <source>Branch</source>
+      <translation>Větev</translation>
+    </message>
+    <message>
+      <source>Folder</source>
+      <translation>Složka</translation>
+    </message>
+    <message>
+      <source>Enable this repository</source>
+      <translation>Povolit tento repozitář</translation>
+    </message>
+    <message>
+      <source>New</source>
+      <translation>Nové</translation>
+    </message>
+    <message>
+      <source>Save</source>
+      <translation>Uložit</translation>
+    </message>
+    <message>
+      <source>Remove</source>
+      <translation>Odebrat</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>Zavřít</translation>
+    </message>
+    <message>
+      <source>Enabled</source>
+      <translation>Povoleno</translation>
+    </message>
+    <message>
+      <source>Disabled</source>
+      <translation>Zakázáno</translation>
+    </message>
+    <message>
+      <source>Built-in</source>
+      <translation>Vestavěné</translation>
+    </message>
+    <message>
+      <source>Repository saved.</source>
+      <translation>Repozitář byl uložen.</translation>
     </message>
   </context>
   <context>
@@ -19631,6 +20756,17 @@ Restartujte prosím průvodce a nejprve nainstalujte Script Merger.</translation
     </message>
   </context>
   <context>
+    <name>SettingField</name>
+    <message>
+      <source>Browse…</source>
+      <translation>Procházet…</translation>
+    </message>
+    <message>
+      <source>Select path</source>
+      <translation>Vyberte cestu</translation>
+    </message>
+  </context>
+  <context>
     <name>SettingsView</name>
     <message>
       <source>Settings</source>
@@ -20713,6 +21849,10 @@ ametyst.flatpakrepo</translation>
       <translation>Nic</translation>
     </message>
     <message>
+      <source>Unassigned</source>
+      <translation>Nepřiřazeno</translation>
+    </message>
+    <message>
       <source>Reset {0} to {1}</source>
       <translation>Obnovit {0} na {1}</translation>
     </message>
@@ -20743,86 +21883,6 @@ ametyst.flatpakrepo</translation>
     <message>
       <source>Shortcuts reset to defaults.</source>
       <translation>Zkratky byly obnoveny na výchozí hodnoty.</translation>
-    </message>
-    <message>
-      <source>Rename selected mod or separator</source>
-      <translation>Přejmenovat vybraný mód nebo oddělovač</translation>
-    </message>
-    <message>
-      <source>Refresh mod list</source>
-      <translation>Aktualizovat seznam modifikací</translation>
-    </message>
-    <message>
-      <source>Deploy mods</source>
-      <translation>Publikovat módy</translation>
-    </message>
-    <message>
-      <source>Install a mod</source>
-      <translation>Install a mod</translation>
-    </message>
-    <message>
-      <source>Create an empty mod</source>
-      <translation>Vytvořit prázdný mod</translation>
-    </message>
-    <message>
-      <source>Restore game files</source>
-      <translation>Obnovit herní soubory</translation>
-    </message>
-    <message>
-      <source>Open Settings</source>
-      <translation>Otevřít nastavení</translation>
-    </message>
-    <message>
-      <source>Focus search</source>
-      <translation>Zaměřit hledání</translation>
-    </message>
-    <message>
-      <source>Select all in the active group</source>
-      <translation>Vybrat vše v aktivní skupině</translation>
-    </message>
-    <message>
-      <source>Move selection up</source>
-      <translation>Přesunout výběr nahoru</translation>
-    </message>
-    <message>
-      <source>Move selection down</source>
-      <translation>Přesunout výběr dolů</translation>
-    </message>
-    <message>
-      <source>Remove selected mods</source>
-      <translation>Odstranit vybrané mody</translation>
-    </message>
-    <message>
-      <source>Enable or disable selection</source>
-      <translation>Povolit nebo zakázat výběr</translation>
-    </message>
-    <message>
-      <source>Scroll active list to the top</source>
-      <translation>Posunout aktivní seznam nahoře</translation>
-    </message>
-    <message>
-      <source>Scroll active list to the bottom</source>
-      <translation>Posunout aktivní seznam na konec</translation>
-    </message>
-    <message>
-      <source>Expand or collapse all separators</source>
-      <translation>Rozbalit nebo sbalit všechny oddělovače</translation>
-    </message>
-    <message>
-      <source>Show or hide active filters</source>
-      <translation>Zobrazit nebo skrýt aktivní filtry</translation>
-    </message>
-    <message>
-      <source>Open a mod's source page</source>
-      <translation>Otevřít zdrojovou stránku modu</translation>
-    </message>
-    <message>
-      <source>Browser back</source>
-      <translation>Prohlížeč zpět</translation>
-    </message>
-    <message>
-      <source>Browser forward</source>
-      <translation>Prohlížeč vpřed</translation>
     </message>
   </context>
   <context>
@@ -21413,28 +22473,12 @@ Pokračovat s {0}?</translation>
       <translation>Spuštění syntézy</translation>
     </message>
     <message>
-      <source>Game path is not configured; aborting.</source>
-      <translation>Cesta ke hře není nastavena; přerušuje se.</translation>
-    </message>
-    <message>
-      <source>Game path not configured.</source>
-      <translation>Cesta ke hře není nastavena.</translation>
-    </message>
-    <message>
       <source>No Proton selected; aborting.</source>
       <translation>Žádný Proton vybrán; potrat.</translation>
     </message>
     <message>
-      <source>Synthesis dir: {0}</source>
-      <translation>Syntetický dir: {0}</translation>
-    </message>
-    <message>
       <source>Proton: {0}</source>
       <translation>Proton: {0}</translation>
-    </message>
-    <message>
-      <source>Game path: {0}</source>
-      <translation>Cesta hry: {0}</translation>
     </message>
     <message>
       <source>Prefix setup raised: {0}</source>
@@ -24540,10 +25584,6 @@ Prefix: {1}</source>
       <translation>Aktualizovat hru (YeetPatch)</translation>
     </message>
     <message>
-      <source>Install Steam Workshop Mod</source>
-      <translation>Instalovat mód Steam Workshop</translation>
-    </message>
-    <message>
       <source>mod.io API Key</source>
       <translation>mod.io API klíč</translation>
     </message>
@@ -24790,10 +25830,6 @@ Prefix: {1}</source>
     <message>
       <source>Download YeetPatch and update Voices of the Void in a terminal.</source>
       <translation>Stáhněte si YeetPatch a aktualizujte hlasy Void v terminálu.</translation>
-    </message>
-    <message>
-      <source>Download a Steam Workshop item and install it into this profile.</source>
-      <translation>Stáhněte si položku Steam Workshop a nainstalujte ji do tohoto profilu.</translation>
     </message>
     <message>
       <source>Enter a mod.io key to enable update checks for manually-installed mod.io mods.</source>
@@ -25302,149 +26338,6 @@ Znovu otevřete toho čaroděje.</translation>
     </message>
   </context>
   <context>
-    <name>WorkshopView</name>
-    <message>
-      <source>Install Steam Workshop Mod</source>
-      <translation>Instalovat mód Steam Workshop</translation>
-    </message>
-    <message>
-      <source>Download an individual public Workshop mod into this profile. Required Workshop items must be installed separately.</source>
-      <translation>Stáhněte si do tohoto profilu jednotlivý veřejný workshop. Požadované položky workshopu musí být nainstalovány samostatně.</translation>
-    </message>
-    <message>
-      <source>Item ID or Steam Workshop URL</source>
-      <translation>ID položky nebo URL Steam Workshopu</translation>
-    </message>
-    <message>
-      <source>Workshop item</source>
-      <translation>Položka dílny</translation>
-    </message>
-    <message>
-      <source>{0} · App ID {1}</source>
-      <translation>{0} · App ID {1}</translation>
-    </message>
-    <message>
-      <source>Install into</source>
-      <translation>Instalovat do</translation>
-    </message>
-    <message>
-      <source>QR code (Steam mobile app)</source>
-      <translation>QR kód (Steam Mobile app)</translation>
-    </message>
-    <message>
-      <source>Steam account and password</source>
-      <translation>Steam účet a heslo</translation>
-    </message>
-    <message>
-      <source>Saved account</source>
-      <translation>Uložený účet</translation>
-    </message>
-    <message>
-      <source>Anonymous (where supported)</source>
-      <translation>Anonymní (pokud je podporováno)</translation>
-    </message>
-    <message>
-      <source>Sign in</source>
-      <translation>Přihlásit se</translation>
-    </message>
-    <message>
-      <source>Steam account name, not display name</source>
-      <translation>Jméno účtu Steamu, nezobrazovat jméno</translation>
-    </message>
-    <message>
-      <source>Account name</source>
-      <translation>Název účtu</translation>
-    </message>
-    <message>
-      <source>Remember this account</source>
-      <translation>Zapamatovat si tento účet</translation>
-    </message>
-    <message>
-      <source>Keep the Steam session on this device. Enter the account name to use it for later downloads.</source>
-      <translation>Ponechat Steam relaci na tomto zařízení. Zadejte název účtu pro pozdější stažení.</translation>
-    </message>
-    <message>
-      <source>Forget saved account</source>
-      <translation>Zapomenout uložený účet</translation>
-    </message>
-    <message>
-      <source>Open Workshop page</source>
-      <translation>Otevřít stránku Workshopu</translation>
-    </message>
-    <message>
-      <source>Continue sign-in</source>
-      <translation>Pokračovat v přihlášení</translation>
-    </message>
-    <message>
-      <source>Install downloaded files</source>
-      <translation>Nainstalovat stažené soubory</translation>
-    </message>
-    <message>
-      <source>Cancel download</source>
-      <translation>Zrušit stahování</translation>
-    </message>
-    <message>
-      <source>Download and install</source>
-      <translation>Stáhnout a nainstalovat</translation>
-    </message>
-    <message>
-      <source>Cancel the download before closing.</source>
-      <translation>Zrušit stahování před uzavřením.</translation>
-    </message>
-    <message>
-      <source>Enter your Steam account name.</source>
-      <translation>Zadejte svůj Steam účet.</translation>
-    </message>
-    <message>
-      <source>The mod installer is unavailable.</source>
-      <translation>Instalátor modifikací není k dispozici.</translation>
-    </message>
-    <message>
-      <source>Looking up Workshop item…</source>
-      <translation>Vyhledávání položky…</translation>
-    </message>
-    <message>
-      <source>Signed in. Downloading Workshop files…</source>
-      <translation>Jste přihlášeni. Stahuji soubory Workshopu…</translation>
-    </message>
-    <message>
-      <source>Steam account password</source>
-      <translation>Steam heslo k účtu</translation>
-    </message>
-    <message>
-      <source>Steam Guard code from your email or authenticator</source>
-      <translation>Steam Guard kód z vašeho e-mailu nebo autentifikátoru</translation>
-    </message>
-    <message>
-      <source>Download cancelled. Nothing was installed.</source>
-      <translation>Stahování bylo zrušeno. Nic nebylo nainstalováno.</translation>
-    </message>
-    <message>
-      <source>Installed: {0}</source>
-      <translation>Nainstalováno: {0}</translation>
-    </message>
-    <message>
-      <source>Complete the mod installer tab to finish installation.</source>
-      <translation>Pro dokončení instalace doplňte instalační kartu modů.</translation>
-    </message>
-    <message>
-      <source>Installation did not complete. The download is kept so you can try again.</source>
-      <translation>Instalace nebyla dokončena. Stahování je zachováno a můžete to zkusit znovu.</translation>
-    </message>
-    <message>
-      <source>Cancelling download…</source>
-      <translation>Zrušení stahování…</translation>
-    </message>
-    <message>
-      <source>Installing the downloaded mod…</source>
-      <translation>Instalace staženého modu…</translation>
-    </message>
-    <message>
-      <source>Saved Steam account removed from Amethyst.</source>
-      <translation>Uložený Steam účet odstraněn z Amethystu.</translation>
-    </message>
-  </context>
-  <context>
     <name>WryeBashView</name>
     <message>
       <source>Run Wrye Bash - {0}</source>
@@ -25491,14 +26384,6 @@ Prosím, restartujte průvodce k reinstalaci Wrye Bash.</translation>
     <message>
       <source>Wrye Bash is preparing or running.</source>
       <translation>Wrye Bash se připravuje nebo běží.</translation>
-    </message>
-    <message>
-      <source>Could not resolve the Proton version for the game's own prefix - launch the game once, or pick a different prefix option.</source>
-      <translation>Nelze vyřešit verzi Proton pro vlastní prefix hry - spustit hru jednou, nebo vybrat jinou volbu prefix.</translation>
-    </message>
-    <message>
-      <source>Could not find Proton '{0}' - check that it is installed in Steam, Heroic or ProtonPlus.</source>
-      <translation>Nelze najít Proton '{0}' - zkontrolujte, zda je nainstalován ve službě Steam, Heroic nebo ProtonPlus.</translation>
     </message>
     <message>
       <source>Wrye Bash is running.
@@ -25620,12 +26505,6 @@ nebo použijte tlačítko „Procházet“ a vyberte jej ručně.</translation>
       <translation>Extrakce {0}..</translation>
     </message>
     <message>
-      <source>{0} not found after extraction.
-Check that the archive contains {0}.</source>
-      <translation>{0} nebyl nalezen po extrakci.
-Zkontrolujte, zda archiv obsahuje {0}.</translation>
-    </message>
-    <message>
       <source>Extracted {0} file(s).</source>
       <translation>Extrahovaný soubor (soubory) {0}.</translation>
     </message>
@@ -25684,14 +26563,6 @@ Spusťte prosím průvodce znovu a nejprve nainstalujte soubor {1}.</translation
       <translation>QAC Vše</translation>
     </message>
     <message>
-      <source>Could not resolve the Proton version for the game's own prefix - launch the game once, or pick a different prefix option.</source>
-      <translation>Nelze vyřešit verzi Proton pro vlastní prefix hry - spustit hru jednou, nebo vybrat jinou volbu prefix.</translation>
-    </message>
-    <message>
-      <source>Could not find Proton '{0}' - check that it is installed in Steam, Heroic or ProtonPlus.</source>
-      <translation>Nelze najít Proton '{0}' - zkontrolujte, zda je nainstalován ve službě Steam, Heroic nebo ProtonPlus.</translation>
-    </message>
-    <message>
       <source>{0} is running - close it to continue.</source>
       <translation>{0} běží - zavřete ho a pokračujte.</translation>
     </message>
@@ -25748,14 +26619,6 @@ Když ji zavřete, vaše změny se automaticky obnoví.</translation>
     <message>
       <source>Launching {0}…</source>
       <translation>Spouštím stránku {0}…</translation>
-    </message>
-    <message>
-      <source>Game path not configured.</source>
-      <translation>Cesta ke hře není nastavena.</translation>
-    </message>
-    <message>
-      <source>{0} finished.</source>
-      <translation>{0} skončil.</translation>
     </message>
     <message>
       <source>Launch error: {0}</source>
@@ -26006,8 +26869,19 @@ Postupujte podle požadavků v okně terminálu. YeetPatch vyžaduje curl, jq, x
       <translation>Klikni zde a stiskni klávesu klávesnice, myš 3 nebo boční tlačítko. Únikové ruší; levé a pravé kliknutí jsou rezervované.</translation>
     </message>
     <message>
+      <source>Unassigned</source>
+      <translation>Nepřiřazeno</translation>
+    </message>
+    <message>
       <source>Press key</source>
       <translation>Stiskněte klávesu</translation>
+    </message>
+  </context>
+  <context>
+    <name>_DownloadMenuButton</name>
+    <message>
+      <source>Downloads</source>
+      <translation>Stahování</translation>
     </message>
   </context>
   <context>
@@ -26143,6 +27017,13 @@ Postupujte podle požadavků v okně terminálu. YeetPatch vyžaduje curl, jq, x
     <message>
       <source>Apply</source>
       <translation>Aplikovat</translation>
+    </message>
+  </context>
+  <context>
+    <name>_Popover</name>
+    <message>
+      <source>Close</source>
+      <translation>Zavřít</translation>
     </message>
   </context>
   <context>
@@ -26316,6 +27197,14 @@ Publikace dělá tuto revizi jeden uživatel nainstalovat. Nelze ho nepublikovat
       <translation>Stáhnout balíček z Thunderstore</translation>
     </message>
     <message>
+      <source>Mod provider</source>
+      <translation>Mod provider</translation>
+    </message>
+    <message>
+      <source>Download the pinned archive using its installed plugin</source>
+      <translation>Stáhnout připnutý archiv pomocí nainstalovaného pluginu</translation>
+    </message>
+    <message>
       <source>Browse page</source>
       <translation>Procházet stránku</translation>
     </message>
@@ -26402,6 +27291,13 @@ Publikace dělá tuto revizi jeden uživatel nainstalovat. Nelze ho nepublikovat
     </message>
   </context>
   <context>
+    <name>app</name>
+    <message>
+      <source>Applying plugin changes…</source>
+      <translation>Aplikování změn pluginu…</translation>
+    </message>
+  </context>
+  <context>
     <name>parent_view</name>
     <message>
       <source>Enable this rule</source>
@@ -26422,6 +27318,13 @@ Publikace dělá tuto revizi jeden uživatel nainstalovat. Nelze ho nepublikovat
     <message>
       <source>Remove this rule</source>
       <translation>Odstranit toto pravidlo</translation>
+    </message>
+  </context>
+  <context>
+    <name>self.host</name>
+    <message>
+      <source>Filters</source>
+      <translation>Filtry</translation>
     </message>
   </context>
   <context>
@@ -26452,6 +27355,50 @@ Publikace dělá tuto revizi jeden uživatel nainstalovat. Nelze ho nepublikovat
     <message>
       <source>Remove this variable</source>
       <translation>Odstranit tuto proměnnou</translation>
+    </message>
+    <message>
+      <source>Plugin filters and saved views</source>
+      <translation>Plugin filtry a uložené zobrazení</translation>
+    </message>
+    <message>
+      <source>Plugin filters</source>
+      <translation>Filtry pluginu</translation>
+    </message>
+    <message>
+      <source>Include matches</source>
+      <translation>Zahrnout návrhy partnerů</translation>
+    </message>
+    <message>
+      <source>Exclude matches</source>
+      <translation>Vyloučit shody</translation>
+    </message>
+    <message>
+      <source>At most 64 saved views are supported.</source>
+      <translation>Je podporováno nanejvýš 64 uložených zobrazení.</translation>
+    </message>
+    <message>
+      <source>Saved views</source>
+      <translation>Uložené zobrazení</translation>
+    </message>
+    <message>
+      <source>Apply</source>
+      <translation>Použít</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation>Vymazat</translation>
+    </message>
+    <message>
+      <source>Save view</source>
+      <translation>Uložit zobrazení</translation>
+    </message>
+    <message>
+      <source>View name:</source>
+      <translation>Název zobrazení:</translation>
+    </message>
+    <message>
+      <source>Save current view…</source>
+      <translation>Uložit aktuální zobrazení…</translation>
     </message>
   </context>
   <context>

@@ -82,6 +82,14 @@ class NexusSession:
         self._api: Any = None
 
     def status(self) -> dict[str, Any]:
+        if sys.platform == "darwin":
+            # Caelumite: until it's registered, the testing personal key is
+            # the login; saved OAuth tokens would be Amethyst's.
+            from Utils.macos import nexus as _mac_nexus
+            if not _mac_nexus.registered():
+                with self._lock:
+                    api = self._api
+                return _mac_nexus.session_status(api)
         with self._lock:
             tokens = getattr(self._api, "_oauth_tokens", None)
         try:
@@ -208,6 +216,11 @@ class NexusLoginManager:
             return self._snapshot_locked()
 
     def start(self, *, open_browser: bool = False) -> dict[str, Any]:
+        if sys.platform == "darwin":
+            # Caelumite: no Nexus login until Nexus registers Caelumite.
+            from Utils.macos import nexus as _mac_nexus
+            if not _mac_nexus.registered():
+                raise NexusSessionError("nexus_login_unavailable", _mac_nexus.UNREGISTERED)
         with self._lock:
             if self._state in self._ACTIVE_STATES:
                 raise NexusSessionError(

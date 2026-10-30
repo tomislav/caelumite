@@ -47,3 +47,10 @@ bundled tools (`7zz`) aren't on `PATH`; installing archives needs
   only get it with the testing personal key.
 - **Launching and tools.** Play, Run EXE and tools always run in the game's
   CrossOver bottle. Launcher plugins and Proton runner settings don't apply.
+- **Plugin URL schemes.** A plugin's own `<scheme>://` download links aren't
+  registered: macOS only sends Caelumite the schemes its app bundle declares
+  (`nxm`, `ror2mm`, `modl`).
+- **Versions.** A plugin's `min_manager_version` is an Amethyst version. It's
+  compared with the Amethyst release Caelumite is based on
+  (`AMETHYST_VERSION` in `src/Utils/macos/app.py`); headless mode's
+  `application.version` is Caelumite's own.

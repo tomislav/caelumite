@@ -5,6 +5,7 @@ import fcntl
 import hashlib
 import json
 import os
+import sys
 import threading
 import time
 from datetime import datetime, timezone
@@ -83,6 +84,10 @@ def _operation_resources(game: Any) -> list[str]:
 
 def _lock_dir() -> Path:
     override = os.environ.get("AMETHYST_OPERATION_LOCK_DIR")
+    if sys.platform == "darwin" and not override:
+        # Caelumite: its own folder in Application Support.
+        from Utils.macos.app import config_dir
+        override = str(config_dir() / "operation-locks")
     # HOME is shared by native, AppImage, and our Flatpak; their XDG dirs are not.
     path = (Path(override).expanduser() if override else
             Path.home() / ".local" / "share" / "AmethystModManager"

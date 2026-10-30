@@ -16,6 +16,10 @@ APP_NAME = "Caelumite"
 BUNDLE_ID = "io.github.caelumite"
 UPSTREAM_NAME = "Amethyst Mod Manager"
 UPSTREAM_URL = "https://github.com/ChrisDKN/Amethyst-Mod-Manager"
+# The Amethyst release Caelumite last merged (scripts/sync-upstream.sh warns
+# when it differs). Manager plugins name the Amethyst version they need, so
+# they're checked against this, not Caelumite's own version.
+AMETHYST_VERSION = "2.6.0"
 REPO_SLUG = "tomislav/caelumite"
 REPO_URL = f"https://github.com/{REPO_SLUG}"
 # Branch holding the synced resources (game handlers, wizard plugins,

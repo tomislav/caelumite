@@ -158,3 +158,48 @@ def matching_pids(wanted: tuple[str, ...]) -> set[int] | None:
         if not wanted_set.isdisjoint(env) or any(_runs_exe(argv, env, m) for m in exes):
             found.add(pid)
     return found
+
+
+# The bottle's Steam client, by exe name; its games run from steamapps.
+_STEAM_CLIENT = frozenset({
+    "steam.exe", "steamwebhelper.exe", "steamservice.exe",
+    "steamerrorreporter.exe", "steamerrorreporter64.exe",
+    "gldriverquery.exe", "gldriverquery64.exe",
+    "vulkandriverquery.exe", "vulkandriverquery64.exe",
+})
+
+
+def _windows_program(argv: list[str]) -> PureWindowsPath | None:
+    """The Windows exe a process runs, or None for macOS-side programs
+    (wineserver, CrossOver's wrapper) and non-exe commands."""
+    m = _PROGRAM.match(" ".join(argv))
+    program = next((g for g in m.groups() if g), "") if m else ""
+    if not program or program.startswith("/") or not program.lower().endswith(".exe"):
+        return None
+    return PureWindowsPath(program)
+
+
+def _uses_bottle(argv: list[str]) -> bool:
+    program = _windows_program(argv)
+    if program is None:
+        return False
+    parts = [p.lower() for p in program.parts]
+    if len(parts) > 1 and parts[1] == "windows":
+        return False                      # Wine's own services
+    return "steamapps" in parts or program.name.lower() not in _STEAM_CLIENT
+
+
+def bottle_usage(markers) -> set[int] | None:
+    """Pids of games and tools running in a bottle (an environment entry
+    in *markers*), leaving out what keeps running between games: Wine's own
+    services, wineserver and the bottle's Steam client. None when the
+    process list could not be read."""
+    pids = matching_pids(tuple(markers))
+    if pids is None:
+        return None
+    found = set()
+    for pid in pids:
+        info = _argv_env(pid)
+        if info is not None and _uses_bottle(info[0]):
+            found.add(pid)
+    return found

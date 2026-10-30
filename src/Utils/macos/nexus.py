@@ -108,6 +108,28 @@ def load_saved_api() -> dict:
     return result
 
 
+UNREGISTERED = (f"{APP_NAME} isn't registered with Nexus Mods yet, so it "
+                "can't log in to Nexus.")
+
+
+def session_status(api) -> dict:
+    """Upstream's NexusSession.status() (headless mode) while Caelumite is
+    unregistered: the testing personal key counts as the login, saved OAuth
+    tokens don't (they'd be Amethyst's)."""
+    status = {"authenticated": False, "credential_type": None,
+              "access_token_expires_at": None, "access_token_expired": None,
+              "refresh_required": None, "error": None}
+    try:
+        if api is None:
+            api = load_saved_api()["api"]
+    except Exception as exc:
+        status["error"] = str(exc) or type(exc).__name__
+        return status
+    if api is not None:
+        status.update(authenticated=True, credential_type="api_key")
+    return status
+
+
 def login(window) -> None:
     """The Nexus login button while Caelumite is unregistered (UI thread)."""
     from PySide6.QtWidgets import QInputDialog, QLineEdit, QMessageBox

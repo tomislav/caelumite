@@ -58,6 +58,17 @@ if [ "$BRANCH" = "Resources" ] && [ -f "$MERGE_HEAD_FILE" ]; then
     CODE="$(git diff --name-only HEAD...MERGE_HEAD -- '*.py')"
 fi
 
+# Manager plugins are checked against the Amethyst version Caelumite is based
+# on (src/Utils/macos/app.py); remind when the merge brings a new one.
+if [ "$BRANCH" != "Resources" ]; then
+    THEIRS="$(git show "$REF:src/version.py" 2>/dev/null |
+        sed -n 's/^__version__ = "\(.*\)"/\1/p')"
+    OURS="$(sed -n 's/^AMETHYST_VERSION = "\(.*\)"/\1/p' src/Utils/macos/app.py)"
+    if [ -n "$THEIRS" ] && [ "$THEIRS" != "$OURS" ]; then
+        echo "Upstream is Amethyst $THEIRS: set AMETHYST_VERSION in src/Utils/macos/app.py."
+    fi
+fi
+
 CONFLICTS="$(git diff --name-only --diff-filter=U)"
 if [ -n "$CONFLICTS" ]; then
     echo "Resolve these conflicts, then run 'git commit':"

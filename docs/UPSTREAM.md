@@ -21,7 +21,10 @@ later merges small. After the merge it:
   packaging, CI, Nix, meson), which also resolves conflicts where upstream
   edited one of them;
 - keeps Caelumite's copy of files marked `merge=ours` in `.gitattributes`
-  (the logo, the README, the changelog).
+  (the logo, the README, the changelog);
+- says when upstream's version changed: set `AMETHYST_VERSION` in
+  `src/Utils/macos/app.py` to it, since manager plugins are checked against
+  that version.
 
 Any other conflict is left for you to resolve; the merge isn't committed
 until none remain. After merging, start the app and check that a game
@@ -94,7 +97,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Thunderstore/ror2mm_handler.py` | `ror2mm://` and `modl://` registration via LaunchServices, only when no other app handles them |
 | `Nexus/nexus_api.py` | requests identify as Caelumite; Caelumite's own keyring entry; no weak key-file fallback - a key the Keychain can't store is kept for the session ([NEXUS.md](NEXUS.md)) |
 | `Nexus/nexus_oauth.py` | Caelumite's own OAuth client, empty (OAuth off) until Nexus registers it; the keyring probe checks for the macOS Keychain instead of DBus |
-| `Nexus/session.py` | the saved Nexus login loads only Caelumite's testing personal key until Caelumite is registered, never Amethyst's OAuth login; the app and headless mode both load it here (`Utils/macos/nexus.py`) |
+| `Nexus/session.py` | until Caelumite is registered: the saved Nexus login loads only Caelumite's testing personal key, never Amethyst's OAuth login (the app and headless mode both load it here); headless mode's login status counts that key and its OAuth login can't start (`Utils/macos/nexus.py`) |
 | `Utils/mods/install.py` | the install worker's Nexus lookup ignores saved upstream OAuth logins |
 | `gui_qt/nexus/mod_detail.py` | image requests identify as Caelumite |
 | `wizards_qt/__init__.py` | wizards in `Utils/macos/wizard.py` `MACOS_UNSUPPORTED` join `EXCLUDED` (Linux-native tools, Proton-only texture conversion, Synthesis, ReShade) |
@@ -102,7 +105,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/ui/config.py` | the Wabbajack top-bar button is always hidden; the Endorse button is off; the mod list defaults to MO2's order |
 | `gui_qt/settings/view.py` | no "Hide Ko-Fi button" setting (a hook appended at the end skips that checkbox) |
 | `Utils/bethesda/xedit.py` | the xEdit Windows XP flag goes through `reg import` (`Utils/macos/registry.py`) |
-| `Utils/github/cache.py`, `Utils/sharing/paste.py`, `Thunderstore/thunderstore_download.py`, `Utils/downloads/modl.py`, `LOOT/loot_sorter.py`, `Games/Baldur's Gate 3/modio_api.py`, `Games/Baldur's Gate 3/bg3le_runtime.py` | User-Agent `Caelumite/<version>` |
+| `Utils/github/cache.py`, `Utils/sharing/paste.py`, `Thunderstore/thunderstore_download.py`, `Utils/downloads/modl.py`, `LOOT/loot_sorter.py`, `Games/Baldur's Gate 3/modio_api.py`, `Games/Baldur's Gate 3/bg3le_runtime.py`, `amethyst_backend/tool_acquisition.py`, `amethyst_backend/modio_versions.py` | User-Agent `Caelumite/<version>` |
 | `Utils/loverslab/credentials.py`, `Games/Baldur's Gate 3/modio_key.py` | Keychain service `Caelumite` |
 | `wizards_qt/proton_step.py` | the wizard "Choose Proton Version" step shows the game's bottle instead (`Utils/macos/wizard.py`) |
 | `gui_qt/modlist/menu.py` | "Open on Creations" in a Creation mod's right-click menu (one or several mods) opens its creations.bethesda.net page (`Utils/macos/creations.py`) |
@@ -111,6 +114,11 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; the Nexus login button goes through `Utils/macos/nexus.py` until Caelumite is registered; no Ko-Fi button; after a Play session, a Deploy imports Creations changed in-game, and a startup notice appears when they changed while Caelumite wasn't running; the Change Version tab follows the selection to a Creation and says it's a Creation (`Utils/macos/creations.py`, `Utils/macos/change_version.py`) |
 | `Utils/github/sync.py`, `Utils/profiles/curated.py`, `Utils/bethesda/synthesis.py` | resources come from Caelumite's `Resources` branch |
 | `amethyst_plugins/sources.py`, `Utils/github/handler_sources.py` | the built-in manager-plugin catalogue and game-handler repository are Caelumite's `Resources` branch; upstream's is an ordinary repository (`Utils/macos/resources.py`) |
+| `amethyst_plugins/catalog.py` | a plugin's minimum version is compared with the Amethyst version Caelumite is based on (`AMETHYST_VERSION` in `Utils/macos/app.py`), not Caelumite's own |
+| `amethyst_plugins/protocols.py` | URL schemes that plugins declare aren't registered (LaunchServices only sends the app bundle's own schemes); each is logged instead |
+| `amethyst_backend/service.py` | headless mode's handshake names Caelumite |
+| `Utils/wine/repair.py` | a bottle counts as in use (xEdit, LOD tools, registry repairs refuse to run) only while a game or tool runs in it, not for its Steam client or Wine's services (`Utils/macos/processes.py`) |
+| `Utils/operations.py`, `Utils/bethesda/lod_run.py` | operation locks, launch leases and LOD work folders are in `~/Library/Application Support/Caelumite`, not `~/.local/share` |
 | `Utils/github/wiki.py`, `gui_qt/games/onboarding.py` | the in-app wiki and onboarding link use Caelumite's wiki |
 | `Nexus/nexus_requirements.py` | the requirement filter list comes from Caelumite's `main` |
 | `Utils/github/app_updates.py` | release URLs point at Caelumite |

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import sys
 import time
 from contextlib import contextmanager
 from dataclasses import asdict
@@ -155,6 +156,10 @@ def download(game, mod_id, file, metadata, log, progress, control=None):
             with requests.Session() as session:
                 session.verify = resolve_ca_bundle() or True
                 session.headers.update({"User-Agent": "AmethystModManager"})
+                if sys.platform == "darwin":
+                    # Caelumite: its own name, not upstream's.
+                    from Utils.macos.app import USER_AGENT
+                    session.headers["User-Agent"] = USER_AGENT
                 with session.get(file.download_url, stream=True, timeout=(15, 60)) as response:
                     if response.status_code != 200:
                         raise JobError("modio_download_failed", "The mod.io download was rejected.",

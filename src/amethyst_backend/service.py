@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from collections import OrderedDict
 import json
+import sys
 import time
 from typing import Any
 from functools import partial
@@ -644,6 +645,10 @@ class AmethystService:
                 "'client' must be a JSON object.",
                 {"parameter": "client"},
             )
+        app_name = "Amethyst Mod Manager"
+        if sys.platform == "darwin":
+            # Caelumite: identify as Caelumite.
+            from Utils.macos.app import APP_NAME as app_name
         return {
             "protocol": {
                 "name": PROTOCOL_NAME,
@@ -654,7 +659,7 @@ class AmethystService:
                 "framing": "ndjson",
             },
             "application": {
-                "name": "Amethyst Mod Manager",
+                "name": app_name,
                 "version": __version__,
             },
             "capabilities": {

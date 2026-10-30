@@ -57,6 +57,25 @@ def test_config_dir_can_be_left_uncreated() -> None:
         assert get_config_dir().is_dir()
 
 
+def test_work_folders_stay_in_application_support() -> None:
+    # Operation locks, launch leases and LOD work folders go to Caelumite's
+    # own folder, not ~/.local/share/AmethystModManager.
+    import os
+    import tempfile
+    from pathlib import Path
+    from unittest.mock import patch
+    from Utils.bethesda.lod_run import new_output_path
+    from Utils.config_paths import get_config_dir
+    from Utils.operations import _lock_dir
+    with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ, {"HOME": tmp}):
+        os.environ.pop("AMETHYST_OPERATION_LOCK_DIR", None)
+        os.environ.pop("XDG_DATA_HOME", None)
+        config = get_config_dir().resolve()
+        assert _lock_dir().resolve().is_relative_to(config), _lock_dir()
+        assert new_output_path().is_relative_to(config), new_output_path()
+        assert not (Path(tmp) / ".local").exists()
+
+
 if __name__ == "__main__":
     test_plugins_come_from_caelumite()
     print("✓ the built-in plugin catalogue is Caelumite's Resources branch")
@@ -66,3 +85,5 @@ if __name__ == "__main__":
     print("✓ the plugin store sees the redirected source")
     test_config_dir_can_be_left_uncreated()
     print("✓ the config folder isn't created when asked not to")
+    test_work_folders_stay_in_application_support()
+    print("✓ operation locks and LOD work folders stay in Application Support")

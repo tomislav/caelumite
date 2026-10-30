@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import sys
 import tarfile
 import tempfile
 import urllib.error
@@ -117,6 +118,10 @@ def _download(game, tool_id, version_index, version, url, tag, control, progress
         temporary = Path(raw)
         try:
             request = urllib.request.Request(url, headers={"User-Agent": "ModManager/1.0"})
+            if sys.platform == "darwin":
+                # Caelumite: its own name.
+                from Utils.macos.app import USER_AGENT
+                request.add_header("User-Agent", USER_AGENT)
             _checkpoint(control)
             with urllib.request.urlopen(request, timeout=30, context=get_ssl_context()) as response, \
                     os.fdopen(fd, "wb") as output:

@@ -132,6 +132,12 @@ def register_all(log):
         log(error)
     schemes = {scheme for plugin in plugins if load_settings(plugin).get("enabled") is not False
                for provider in plugin.download_providers for scheme in provider.protocols}
+    if sys.platform == "darwin":
+        # Caelumite: LaunchServices only sends Caelumite the URL schemes its
+        # app bundle declares, so a plugin's own schemes can't reach it.
+        for scheme in sorted(schemes):
+            log(f"Plugin protocol {scheme}:// isn't supported on macOS.")
+        return
     from Utils.config_paths import get_config_dir
     from Utils.atomic_write import write_atomic_text
     path = get_config_dir() / "plugin_protocols.json"

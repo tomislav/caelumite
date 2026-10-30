@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from Utils import json_limits as json
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -247,6 +248,10 @@ def version_key(value):
 
 def compatibility_error(plugin):
     from version import __version__
+    if sys.platform == "darwin":
+        # Caelumite: plugins name the Amethyst version they need; compare
+        # with the one Caelumite is based on, not Caelumite's own.
+        from Utils.macos.app import AMETHYST_VERSION as __version__
     from amethyst_backend.methods import METHOD_NAMES
     if plugin.min_manager_version:
         current = version_key(__version__)

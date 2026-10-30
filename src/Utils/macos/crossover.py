@@ -180,14 +180,19 @@ def bottle_for_path(path: "Path | str | None") -> Bottle | None:
     if not path:
         return None
     try:
-        p = Path(path).absolute()
-    except (OSError, ValueError):
+        given = Path(path).absolute()
+        paths = (given, given.resolve())
+        roots = {bottles_dir(), bottles_dir().resolve()}
+    except (OSError, ValueError, RuntimeError):
         return None
-    root = bottles_dir()
-    for candidate in (p, *p.parents):
-        if candidate.parent == root and is_bottle(candidate):
-            conf = _read_bottle_conf(candidate)
-            return Bottle(path=candidate, version=conf.get("Version", ""))
+    # The given path first, so a bottle keeps the path it was asked by; the
+    # resolved one when a link (a moved Bottles folder, a bottle's pfx) is
+    # in the way.
+    for p in paths:
+        for candidate in (p, *p.parents):
+            if candidate.parent in roots and is_bottle(candidate):
+                conf = _read_bottle_conf(candidate)
+                return Bottle(path=candidate, version=conf.get("Version", ""))
     return None
 
 

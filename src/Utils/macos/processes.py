@@ -192,21 +192,40 @@ def bottle_markers(prefix) -> set[str]:
     return markers
 
 
+_WINE = "Wine services"
+
+
 def _program_name(pid: int) -> str:
+    """What to call a bottle process in a message: its Windows exe; for
+    CrossOver's wrapper, the exe it starts; Wine's services and CrossOver's
+    own programs as "Wine services"; "" when it's gone."""
     info = _argv_env(pid)
     if info is None:
         return ""
-    m = _PROGRAM.match(" ".join(info[0]))
+    argv = info[0]
+    if any(_CROSSOVER_PROGRAMS in arg for arg in argv[:3]):
+        exe = next((a for a in argv[2:] if a.lower().endswith(".exe")), "")
+        return PureWindowsPath(exe).name if exe else _WINE
+    m = _PROGRAM.match(" ".join(argv))
     program = next((g for g in m.groups() if g), "") if m else ""
-    return PureWindowsPath(program).name if program and not program.startswith("/") \
-        else os.path.basename(program)
+    if program.startswith("/"):
+        return os.path.basename(program)
+    path = PureWindowsPath(program)
+    windows = len(path.parts) > 1 and path.parts[1].lower() == "windows"
+    if windows and path.name.lower() in _WINE_SERVICES:
+        return _WINE
+    return path.name
 
 
 def busy_message(pids, *, steam: bool = False) -> str:
     """Why a bottle is busy, naming the programs running in it. With
     *steam*, says the bottle's Steam counts too (registry repairs)."""
-    names = sorted({n for n in map(_program_name, pids) if n}, key=str.lower)
-    text = "Close these programs in the bottle first: " + (", ".join(names) or "unknown") + "."
+    found = {n for n in map(_program_name, pids) if n}
+    names = sorted(found - {_WINE}, key=str.lower)
+    if _WINE in found:
+        names.append(_WINE)               # summed up, after what can be closed
+    names = names or ["unknown"]
+    text = "Close these programs in the bottle first: " + ", ".join(names) + "."
     if steam:
         text += (" The bottle's Steam counts too: quit it, or use Force Quit on "
                  "the bottle in CrossOver.")

@@ -115,7 +115,9 @@ UNREGISTERED = (f"{APP_NAME} isn't registered with Nexus Mods yet, so it "
 def _stored_key() -> bool:
     """Whether load_saved_api would find a personal key, read-only: this
     session's key, the Keychain entry while Caelumite uses the Keychain, or
-    a key in the old key files (which load_saved_api would move)."""
+    a key in the old key files (which load_saved_api would move). Only a
+    Keychain that refuses to store a moved key can make the two disagree,
+    which a read-only check can't foresee."""
     if _session_key:
         return True
     from Nexus import nexus_api
@@ -126,12 +128,15 @@ def _stored_key() -> bool:
                 return True
         except Exception:
             pass                          # load_api_key falls back to the files too
-    if nexus_api._load_key_file():
+    # Upstream's key-file paths create the config folder; look first.
+    from Utils.config_paths import get_config_dir
+    config = get_config_dir(create=False)
+    if (config / nexus_api._API_KEY_FILE).is_file() and nexus_api._load_key_file():
         return True
     try:
-        return bool(nexus_api._api_key_path().read_text(encoding="utf-8").strip())
-    except OSError:
-        return False
+        return bool((config / "nexus_api_key").read_text(encoding="utf-8").strip())
+    except (OSError, ValueError):
+        return False                      # missing, or not a key (not UTF-8)
 
 
 def session_status(api) -> dict:

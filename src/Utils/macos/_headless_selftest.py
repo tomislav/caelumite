@@ -68,11 +68,13 @@ def _memory_keyring():
 def test_status_matches_what_nexus_calls_use() -> None:
     # The status is read-only, yet must say "logged in" exactly when
     # require_api() (the call every Nexus method makes) finds the testing
-    # personal key: in the Keychain, only while Caelumite uses the Keychain;
-    # in the old key file, which require_api would move.
+    # personal key: typed this session; in the Keychain, only while
+    # Caelumite uses the Keychain; or in the old key files, which
+    # require_api would move.
     import keyring
+    from cryptography.fernet import Fernet
     from Nexus import nexus_api
-    from Nexus.session import NexusSession, NexusSessionError
+    from Nexus.session import NexusSession
     from Utils.config_paths import get_config_dir
     from Utils.macos import nexus
 
@@ -80,37 +82,54 @@ def test_status_matches_what_nexus_calls_use() -> None:
         try:
             NexusSession().require_api()
             return True
-        except NexusSessionError:
+        except Exception:
             return False
 
-    def case(*, allowed=True, keychain=False, keychain_ok=True, legacy_file=False):
+    def case(*, allowed=True, keychain=False, keychain_ok=True, legacy=b"",
+             encrypted="", session=""):
         with tempfile.TemporaryDirectory() as home, \
                 patch.dict(os.environ, {"HOME": home}), \
                 patch.object(nexus, "registered", return_value=False), \
                 patch.object(nexus, "personal_key_allowed", return_value=allowed), \
                 patch.object(nexus_api, "_keyring_ok", return_value=keychain_ok), \
-                patch.object(nexus, "_session_key", ""):
+                patch.object(nexus, "_session_key", session):
             ring = _memory_keyring()
             previous = keyring.get_keyring()
             keyring.set_keyring(ring)
             try:
+                config = get_config_dir(create=False)
                 if keychain:
                     ring.set_password(nexus.KEYRING_SERVICE, nexus_api._KEYRING_USER, "k1")
-                if legacy_file:
-                    get_config_dir().mkdir(parents=True, exist_ok=True)
-                    nexus_api._api_key_path().write_text("k2", encoding="utf-8")
-                before = dict(ring.items)
+                if legacy:
+                    config.mkdir(parents=True)
+                    (config / "nexus_api_key").write_bytes(legacy)
+                if encrypted:
+                    config.mkdir(parents=True, exist_ok=True)
+                    (config / nexus_api._API_KEY_FILE).write_bytes(Fernet(
+                        nexus_api._derive_key()).encrypt(json.dumps({"api_key": encrypted}).encode()))
+
+                def disk():
+                    return sorted((str(p), p.read_bytes()) for p in Path(home).rglob("*")
+                                  if p.is_file())
+                before = (dict(ring.items), disk(), config.exists())
                 status = NexusSession().status()["authenticated"]
-                assert ring.items == before, "the status changed the Keychain"
+                after = (dict(ring.items), disk(), config.exists())
+                assert after == before, "the status changed the Keychain or the disk"
+                assert nexus._session_key == session
                 return status, require()
             finally:
                 keyring.set_keyring(previous)
 
     assert case(keychain=True) == (True, True)
     assert case(keychain=True, keychain_ok=False) == (False, False)
-    assert case(legacy_file=True) == (True, True)
+    assert case(legacy=b"k2") == (True, True)
+    assert case(legacy=b"k2", keychain_ok=False) == (True, True)
+    assert case(encrypted="k3") == (True, True)
+    assert case(encrypted="k3", keychain_ok=False) == (True, True)
+    assert case(session="k4", keychain_ok=False) == (True, True)
+    assert case(legacy=b"\xff\xfe broken") == (False, False)
     assert case() == (False, False)
-    assert case(keychain=True, allowed=False) == (False, False)
+    assert case(keychain=True, legacy=b"k2", allowed=False) == (False, False)
 
 
 class _Sent(Exception):

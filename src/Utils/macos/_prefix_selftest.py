@@ -141,6 +141,26 @@ def test_blocked_tools_name_the_programs() -> None:
     assert "SF1Edit.exe" in message, message
 
 
+def test_bottle_found_through_a_linked_bottles_folder() -> None:
+    # Bottles moved to another disk and linked back: the resolved prefix a
+    # tool passes still finds its bottle, so CX_BOTTLE=<name> counts.
+    from unittest.mock import patch
+    from Utils.macos.processes import bottle_markers
+    with tempfile.TemporaryDirectory() as tmp:
+        real = Path(tmp).resolve() / "Disk" / "Bottles"
+        bottle = real / "Starfield"
+        (bottle / "drive_c").mkdir(parents=True)
+        (bottle / "cxbottle.conf").write_text("[Bottle]\n")
+        (bottle / "pfx").symlink_to(bottle)
+        link = Path(tmp).resolve() / "Bottles"
+        link.symlink_to(real)
+        with patch.dict(os.environ, {"CX_BOTTLE_PATH": str(link)}):
+            for prefix in (link / "Starfield", link / "Starfield" / "pfx",
+                           (link / "Starfield" / "pfx").resolve()):
+                assert "CX_BOTTLE=Starfield" in bottle_markers(prefix), prefix
+            assert not any(m.startswith("CX_BOTTLE=") for m in bottle_markers(Path(tmp)))
+
+
 def test_bottle_name_alone_counts() -> None:
     # A process CrossOver marks only with CX_BOTTLE=<name>.
     from unittest.mock import patch
@@ -196,6 +216,19 @@ def test_repairs_say_to_quit_the_bottles_steam() -> None:
     assert "steam.exe" in result[1] and "Force Quit" in result[1], result
 
 
+def test_messages_name_what_can_be_closed() -> None:
+    # Wine's services and CrossOver's own programs are summed up; the
+    # wrapper is named by the exe it starts, never as "perl".
+    from Utils.macos.processes import busy_message
+    message, _pids = _running(BACKGROUND, lambda prefix: busy_message(_strict_usage(prefix),
+                                                                       steam=True))
+    assert "steam.exe" in message and "GameOverlayUI.exe" in message, message
+    assert "Wine services" in message, message
+    names = message.split("first: ", 1)[1].split(". ", 1)[0].rstrip(".").split(", ")
+    for hidden in ("perl", "wineserver", "services.exe", "explorer.exe", "winedevice.exe"):
+        assert hidden not in names, (hidden, message)
+
+
 def test_other_bottles_dont_count() -> None:
     with tempfile.TemporaryDirectory() as other:
         proc = _start([r"C:\Games\Other.exe"], Path(other).resolve())
@@ -220,6 +253,10 @@ if __name__ == "__main__":
     print("✓ xEdit's prefix check uses the tool rule")
     test_blocked_tools_name_the_programs()
     print("✓ a blocked tool names the programs to close")
+    test_bottle_found_through_a_linked_bottles_folder()
+    print("✓ a bottle is found through a linked Bottles folder")
+    test_messages_name_what_can_be_closed()
+    print("✓ messages name what can be closed and sum up Wine's services")
     test_bottle_name_alone_counts()
     print("✓ a process marked only with the bottle's name counts")
     test_repairs_say_to_quit_the_bottles_steam()

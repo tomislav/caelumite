@@ -167,7 +167,7 @@ _STEAM_CLIENT = frozenset({
     "steam.exe", "steamwebhelper.exe", "steamservice.exe",
     "steamerrorreporter.exe", "steamerrorreporter64.exe",
     "gldriverquery.exe", "gldriverquery64.exe",
-    "vulkandriverquery.exe", "vulkandriverquery64.exe",
+    "vulkandriverquery.exe", "vulkandriverquery64.exe", "gameoverlayui.exe",
 })
 _WINE_SERVICES = frozenset({
     "services.exe", "winedevice.exe", "plugplay.exe", "explorer.exe",
@@ -175,9 +175,42 @@ _WINE_SERVICES = frozenset({
 })
 _CROSSOVER_PROGRAMS = "/Contents/SharedSupport/CrossOver/"
 
-BOTTLE_IN_USE = ("Close the game and tools using this bottle first. The "
-                 "bottle's Steam counts too: quit it, or use Force Quit on "
+
+
+def bottle_markers(prefix) -> set[str]:
+    """matching_pids markers for the processes of the bottle at *prefix*:
+    upstream's WINEPREFIX/STEAM_COMPAT_DATA_PATH ones, plus CX_BOTTLE=<name>,
+    which CrossOver sets on the processes it starts."""
+    from pathlib import Path
+    from Utils.macos.crossover import bottle_for_path
+    from Utils.processes.game import prefix_markers
+    path = Path(prefix)
+    markers = set(prefix_markers(path)) | set(prefix_markers(path.resolve()))
+    bottle = bottle_for_path(path)
+    if bottle is not None:
+        markers.add(f"CX_BOTTLE={bottle.name}")
+    return markers
+
+
+def _program_name(pid: int) -> str:
+    info = _argv_env(pid)
+    if info is None:
+        return ""
+    m = _PROGRAM.match(" ".join(info[0]))
+    program = next((g for g in m.groups() if g), "") if m else ""
+    return PureWindowsPath(program).name if program and not program.startswith("/") \
+        else os.path.basename(program)
+
+
+def busy_message(pids, *, steam: bool = False) -> str:
+    """Why a bottle is busy, naming the programs running in it. With
+    *steam*, says the bottle's Steam counts too (registry repairs)."""
+    names = sorted({n for n in map(_program_name, pids) if n}, key=str.lower)
+    text = "Close these programs in the bottle first: " + (", ".join(names) or "unknown") + "."
+    if steam:
+        text += (" The bottle's Steam counts too: quit it, or use Force Quit on "
                  "the bottle in CrossOver.")
+    return text
 
 
 def _runs_tool(argv: list[str]) -> bool:
@@ -206,11 +239,7 @@ def tool_usage(prefix) -> set[int] | None:
     those; registry repairs and installers count every process
     (Utils/wine/repair.py prefix_usage). None when the process list could
     not be read."""
-    from pathlib import Path
-    from Utils.processes.game import prefix_markers
-    path = Path(prefix)
-    markers = set(prefix_markers(path)) | set(prefix_markers(path.resolve()))
-    pids = matching_pids(tuple(markers))
+    pids = matching_pids(tuple(bottle_markers(prefix)))
     if pids is None:
         return None
     found = set()

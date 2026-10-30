@@ -113,13 +113,25 @@ UNREGISTERED = (f"{APP_NAME} isn't registered with Nexus Mods yet, so it "
 
 
 def _stored_key() -> bool:
-    """A personal key is saved in the Keychain (or typed this session).
-    Read-only: unlike load_saved_api, nothing is moved or loaded."""
+    """Whether load_saved_api would find a personal key, read-only: this
+    session's key, the Keychain entry while Caelumite uses the Keychain, or
+    a key in the old key files (which load_saved_api would move)."""
     if _session_key:
         return True
-    import keyring
-    from Nexus.nexus_api import _KEYRING_USER
-    return bool(keyring.get_password(KEYRING_SERVICE, _KEYRING_USER))
+    from Nexus import nexus_api
+    if nexus_api._keyring_ok():
+        try:
+            import keyring
+            if keyring.get_password(KEYRING_SERVICE, nexus_api._KEYRING_USER):
+                return True
+        except Exception:
+            pass                          # load_api_key falls back to the files too
+    if nexus_api._load_key_file():
+        return True
+    try:
+        return bool(nexus_api._api_key_path().read_text(encoding="utf-8").strip())
+    except OSError:
+        return False
 
 
 def session_status(api) -> dict:
@@ -129,12 +141,7 @@ def session_status(api) -> dict:
     status = {"authenticated": False, "credential_type": None,
               "access_token_expires_at": None, "access_token_expired": None,
               "refresh_required": None, "error": None}
-    try:
-        authenticated = api is not None or (personal_key_allowed() and _stored_key())
-    except Exception as exc:
-        status["error"] = str(exc) or type(exc).__name__
-        return status
-    if authenticated:
+    if api is not None or (personal_key_allowed() and _stored_key()):
         status.update(authenticated=True, credential_type="api_key")
     return status
 

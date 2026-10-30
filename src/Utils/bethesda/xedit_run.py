@@ -104,6 +104,10 @@ def _check_prefix(prefix, launch_env):
     pids = prefix_usage(expected)
     if pids is None:
         raise XEditRunError("wine_prefix_scan_unavailable", "Could not check whether the selected prefix is in use.")
+    if pids and sys.platform == "darwin":
+        # Caelumite: name what's running, e.g. a helper a game left behind.
+        from Utils.macos.processes import busy_message
+        raise XEditRunError("wine_prefix_in_use", busy_message(pids), {"pids": sorted(pids)})
     if pids:
         raise XEditRunError("wine_prefix_in_use", "Close other processes using the selected prefix first.",
                             {"pids": sorted(pids)})

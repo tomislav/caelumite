@@ -43,28 +43,74 @@ def test_login_stays_off() -> None:
     assert reply.get("error", {}).get("data", {}).get("name") == "nexus_login_unavailable", reply
 
 
-def test_status_counts_the_personal_key() -> None:
-    # Read-only: whether the testing switch is on and a key is stored. It
-    # never loads the key into a session or moves a key file.
-    from Nexus.session import NexusSession
+def _memory_keyring():
+    import keyring.backend
+
+    class MemoryKeyring(keyring.backend.KeyringBackend):
+        priority = 1
+
+        def __init__(self):
+            super().__init__()
+            self.items = {}
+
+        def get_password(self, service, username):
+            return self.items.get((service, username))
+
+        def set_password(self, service, username, password):
+            self.items[(service, username)] = password
+
+        def delete_password(self, service, username):
+            self.items.pop((service, username), None)
+
+    return MemoryKeyring()
+
+
+def test_status_matches_what_nexus_calls_use() -> None:
+    # The status is read-only, yet must say "logged in" exactly when
+    # require_api() (the call every Nexus method makes) finds the testing
+    # personal key: in the Keychain, only while Caelumite uses the Keychain;
+    # in the old key file, which require_api would move.
+    import keyring
+    from Nexus import nexus_api
+    from Nexus.session import NexusSession, NexusSessionError
+    from Utils.config_paths import get_config_dir
     from Utils.macos import nexus
 
-    def no_load():
-        raise AssertionError("the status loaded the key")
+    def require():
+        try:
+            NexusSession().require_api()
+            return True
+        except NexusSessionError:
+            return False
 
-    with patch.object(nexus, "registered", return_value=False), \
-            patch.object(nexus, "load_saved_api", no_load), \
-            patch.object(nexus, "_stored_key", return_value=True):
-        with patch.object(nexus, "personal_key_allowed", return_value=True):
-            status = NexusSession().status()
-        assert status["authenticated"] and status["credential_type"] == "api_key", status
-        with patch.object(nexus, "personal_key_allowed", return_value=False):
-            status = NexusSession().status()
-        assert not status["authenticated"] and status["credential_type"] is None, status
-    with patch.object(nexus, "registered", return_value=False), \
-            patch.object(nexus, "personal_key_allowed", return_value=True), \
-            patch.object(nexus, "_stored_key", return_value=False):
-        assert not NexusSession().status()["authenticated"]
+    def case(*, allowed=True, keychain=False, keychain_ok=True, legacy_file=False):
+        with tempfile.TemporaryDirectory() as home, \
+                patch.dict(os.environ, {"HOME": home}), \
+                patch.object(nexus, "registered", return_value=False), \
+                patch.object(nexus, "personal_key_allowed", return_value=allowed), \
+                patch.object(nexus_api, "_keyring_ok", return_value=keychain_ok), \
+                patch.object(nexus, "_session_key", ""):
+            ring = _memory_keyring()
+            previous = keyring.get_keyring()
+            keyring.set_keyring(ring)
+            try:
+                if keychain:
+                    ring.set_password(nexus.KEYRING_SERVICE, nexus_api._KEYRING_USER, "k1")
+                if legacy_file:
+                    get_config_dir().mkdir(parents=True, exist_ok=True)
+                    nexus_api._api_key_path().write_text("k2", encoding="utf-8")
+                before = dict(ring.items)
+                status = NexusSession().status()["authenticated"]
+                assert ring.items == before, "the status changed the Keychain"
+                return status, require()
+            finally:
+                keyring.set_keyring(previous)
+
+    assert case(keychain=True) == (True, True)
+    assert case(keychain=True, keychain_ok=False) == (False, False)
+    assert case(legacy_file=True) == (True, True)
+    assert case() == (False, False)
+    assert case(keychain=True, allowed=False) == (False, False)
 
 
 class _Sent(Exception):
@@ -126,7 +172,7 @@ if __name__ == "__main__":
     print("✓ headless mode identifies as Caelumite")
     test_login_stays_off()
     print("✓ headless mode can't start a Nexus login while Caelumite is unregistered")
-    test_status_counts_the_personal_key()
-    print("✓ the login status counts the testing personal key")
+    test_status_matches_what_nexus_calls_use()
+    print("✓ the login status matches the key Nexus calls would use, read-only")
     test_downloads_identify_as_caelumite()
     print("✓ headless tool and mod.io downloads identify as Caelumite")

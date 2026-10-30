@@ -117,8 +117,8 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `amethyst_plugins/catalog.py` | a plugin's minimum version is compared with the Amethyst version Caelumite is based on (`AMETHYST_VERSION` in `Utils/macos/app.py`), not Caelumite's own |
 | `amethyst_plugins/protocols.py` | URL schemes that plugins declare aren't registered (LaunchServices only sends the app bundle's own schemes); each is logged instead |
 | `amethyst_backend/service.py` | headless mode's handshake names Caelumite |
-| `Utils/bethesda/xedit_run.py` | xEdit, QuickAutoClean, the LOD tools and Wrye Bash may run while the bottle's Steam client, Wine's services and CrossOver's own programs do; a game or any other program in the bottle still blocks them (`Utils/macos/processes.py`) |
-| `Utils/wine/repair.py` | registry repairs and installers keep upstream's check (any process in the bottle); when the bottle is busy, the message says its Steam counts too and how to quit it |
+| `Utils/bethesda/xedit_run.py` | xEdit, QuickAutoClean, the LOD tools and Wrye Bash may run while the bottle's Steam client, Wine's services and CrossOver's own programs do; a game or any other program in the bottle still blocks them, and the message names it (`Utils/macos/processes.py`) |
+| `Utils/wine/repair.py` | registry repairs and installers keep upstream's check (any process in the bottle, also those CrossOver marks only with `CX_BOTTLE=<name>`); when the bottle is busy, the message names the programs and says its Steam counts too and how to quit it |
 | `Utils/operations.py`, `Utils/bethesda/lod_run.py` | operation locks, launch leases and LOD work folders are in `~/Library/Application Support/Caelumite`, not `~/.local/share` |
 | `Utils/github/wiki.py`, `gui_qt/games/onboarding.py` | the in-app wiki and onboarding link use Caelumite's wiki |
 | `Nexus/nexus_requirements.py` | the requirement filter list comes from Caelumite's `main` |

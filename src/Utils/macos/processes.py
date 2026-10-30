@@ -160,46 +160,62 @@ def matching_pids(wanted: tuple[str, ...]) -> set[int] | None:
     return found
 
 
-# The bottle's Steam client, by exe name; its games run from steamapps.
+# What keeps running in a bottle between games: the bottle's Steam client
+# (its games run from steamapps) and Wine's own services, by exe name, plus
+# CrossOver's macOS-side programs (wineserver, its Perl wine wrapper).
 _STEAM_CLIENT = frozenset({
     "steam.exe", "steamwebhelper.exe", "steamservice.exe",
     "steamerrorreporter.exe", "steamerrorreporter64.exe",
     "gldriverquery.exe", "gldriverquery64.exe",
     "vulkandriverquery.exe", "vulkandriverquery64.exe",
 })
+_WINE_SERVICES = frozenset({
+    "services.exe", "winedevice.exe", "plugplay.exe", "explorer.exe",
+    "rpcss.exe", "svchost.exe", "conhost.exe", "winemenubuilder.exe",
+})
+_CROSSOVER_PROGRAMS = "/Contents/SharedSupport/CrossOver/"
+
+BOTTLE_IN_USE = ("Close the game and tools using this bottle first. The "
+                 "bottle's Steam counts too: quit it, or use Force Quit on "
+                 "the bottle in CrossOver.")
 
 
-def _windows_program(argv: list[str]) -> PureWindowsPath | None:
-    """The Windows exe a process runs, or None for macOS-side programs
-    (wineserver, CrossOver's wrapper) and non-exe commands."""
+def _runs_tool(argv: list[str]) -> bool:
+    """True for a game or tool in the bottle, False for what keeps running
+    between games."""
+    if any(_CROSSOVER_PROGRAMS in arg for arg in argv[:3]):
+        return False
     m = _PROGRAM.match(" ".join(argv))
     program = next((g for g in m.groups() if g), "") if m else ""
-    if not program or program.startswith("/") or not program.lower().endswith(".exe"):
-        return None
-    return PureWindowsPath(program)
-
-
-def _uses_bottle(argv: list[str]) -> bool:
-    program = _windows_program(argv)
-    if program is None:
+    if not program or program.startswith("/"):
+        return bool(program)              # a macOS program in the bottle
+    path = PureWindowsPath(program)
+    name = path.name.lower()
+    windows = len(path.parts) > 1 and path.parts[1].lower() == "windows"
+    if windows and name in _WINE_SERVICES:
         return False
-    parts = [p.lower() for p in program.parts]
-    if len(parts) > 1 and parts[1] == "windows":
-        return False                      # Wine's own services
-    return "steamapps" in parts or program.name.lower() not in _STEAM_CLIENT
+    if name in _STEAM_CLIENT and "steamapps" not in [p.lower() for p in path.parts]:
+        return False
+    return True
 
 
-def bottle_usage(markers) -> set[int] | None:
-    """Pids of games and tools running in a bottle (an environment entry
-    in *markers*), leaving out what keeps running between games: Wine's own
-    services, wineserver and the bottle's Steam client. None when the
-    process list could not be read."""
+def tool_usage(prefix) -> set[int] | None:
+    """Pids of games and tools running in the bottle at *prefix*, leaving
+    out the bottle's Steam client, Wine's services and CrossOver's own
+    programs. For tools (xEdit, LOD, Wrye Bash), which may run next to
+    those; registry repairs and installers count every process
+    (Utils/wine/repair.py prefix_usage). None when the process list could
+    not be read."""
+    from pathlib import Path
+    from Utils.processes.game import prefix_markers
+    path = Path(prefix)
+    markers = set(prefix_markers(path)) | set(prefix_markers(path.resolve()))
     pids = matching_pids(tuple(markers))
     if pids is None:
         return None
     found = set()
     for pid in pids:
         info = _argv_env(pid)
-        if info is not None and _uses_bottle(info[0]):
+        if info is not None and _runs_tool(info[0]):
             found.add(pid)
     return found

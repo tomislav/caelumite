@@ -73,11 +73,6 @@ def prefix_usage(prefix):
 
     path = Path(prefix)
     markers = set(prefix_markers(path)) | set(prefix_markers(path.resolve()))
-    if sys.platform == "darwin":
-        # Caelumite: a bottle's Steam and Wine's services keep running
-        # between games; only games and tools make it busy.
-        from Utils.macos.processes import bottle_usage
-        return bottle_usage(markers)
     return matching_pids(markers)
 
 
@@ -105,6 +100,10 @@ def prefix_repair_operation(game, *, stop=None, require_initialized=True,
             pids = prefix_usage(prefix)
             if pids is None:
                 raise PrefixRepairError("wine_prefix_scan_unavailable", "Could not check whether the prefix is in use.")
+            if pids and sys.platform == "darwin":
+                # Caelumite: the bottle's Steam keeps running after a game.
+                from Utils.macos.processes import BOTTLE_IN_USE
+                raise PrefixRepairError("wine_prefix_in_use", BOTTLE_IN_USE, {"pids": sorted(pids)})
             if pids:
                 raise PrefixRepairError("wine_prefix_in_use", "Close the game and tools using this prefix first.",
                                         {"pids": sorted(pids)})

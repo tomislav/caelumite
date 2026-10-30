@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 from .tool_run import ToolRunError as XEditRunError, ToolRunCancelled as XEditRunCancelled
@@ -89,6 +90,10 @@ def arguments(game, choice, exe, compat_data, mode, launch_args=""):
 def _check_prefix(prefix, launch_env):
     from Utils.executables.launch import parse_env_overrides
     from Utils.wine.repair import prefix_usage
+    if sys.platform == "darwin":
+        # Caelumite: tools may run while the bottle's Steam client and
+        # Wine's services do; a game or other program still blocks them.
+        from Utils.macos.processes import tool_usage as prefix_usage
 
     expected = Path(prefix["prefix_path"]).resolve()
     overrides = parse_env_overrides(launch_env)

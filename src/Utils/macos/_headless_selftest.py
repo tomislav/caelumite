@@ -44,17 +44,27 @@ def test_login_stays_off() -> None:
 
 
 def test_status_counts_the_personal_key() -> None:
+    # Read-only: whether the testing switch is on and a key is stored. It
+    # never loads the key into a session or moves a key file.
     from Nexus.session import NexusSession
     from Utils.macos import nexus
-    with patch.object(nexus, "registered", return_value=False):
-        with patch.object(nexus, "load_saved_api",
-                          return_value={"api": object(), "error": "", "revoked": False}):
+
+    def no_load():
+        raise AssertionError("the status loaded the key")
+
+    with patch.object(nexus, "registered", return_value=False), \
+            patch.object(nexus, "load_saved_api", no_load), \
+            patch.object(nexus, "_stored_key", return_value=True):
+        with patch.object(nexus, "personal_key_allowed", return_value=True):
             status = NexusSession().status()
         assert status["authenticated"] and status["credential_type"] == "api_key", status
-        with patch.object(nexus, "load_saved_api",
-                          return_value={"api": None, "error": "", "revoked": False}):
+        with patch.object(nexus, "personal_key_allowed", return_value=False):
             status = NexusSession().status()
         assert not status["authenticated"] and status["credential_type"] is None, status
+    with patch.object(nexus, "registered", return_value=False), \
+            patch.object(nexus, "personal_key_allowed", return_value=True), \
+            patch.object(nexus, "_stored_key", return_value=False):
+        assert not NexusSession().status()["authenticated"]
 
 
 class _Sent(Exception):

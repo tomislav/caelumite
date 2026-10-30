@@ -112,20 +112,29 @@ UNREGISTERED = (f"{APP_NAME} isn't registered with Nexus Mods yet, so it "
                 "can't log in to Nexus.")
 
 
+def _stored_key() -> bool:
+    """A personal key is saved in the Keychain (or typed this session).
+    Read-only: unlike load_saved_api, nothing is moved or loaded."""
+    if _session_key:
+        return True
+    import keyring
+    from Nexus.nexus_api import _KEYRING_USER
+    return bool(keyring.get_password(KEYRING_SERVICE, _KEYRING_USER))
+
+
 def session_status(api) -> dict:
     """Upstream's NexusSession.status() (headless mode) while Caelumite is
     unregistered: the testing personal key counts as the login, saved OAuth
-    tokens don't (they'd be Amethyst's)."""
+    tokens don't (they'd be Amethyst's). Read-only, so polling it is cheap."""
     status = {"authenticated": False, "credential_type": None,
               "access_token_expires_at": None, "access_token_expired": None,
               "refresh_required": None, "error": None}
     try:
-        if api is None:
-            api = load_saved_api()["api"]
+        authenticated = api is not None or (personal_key_allowed() and _stored_key())
     except Exception as exc:
         status["error"] = str(exc) or type(exc).__name__
         return status
-    if api is not None:
+    if authenticated:
         status.update(authenticated=True, credential_type="api_key")
     return status
 

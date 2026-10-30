@@ -248,12 +248,15 @@ def version_key(value):
 
 def compatibility_error(plugin):
     from version import __version__
+    from amethyst_backend.methods import METHOD_NAMES
     if sys.platform == "darwin":
         # Caelumite: plugins name the Amethyst version they need; compare
-        # with the one Caelumite is based on, not Caelumite's own.
-        from Utils.macos.app import AMETHYST_VERSION as __version__
-    from amethyst_backend.methods import METHOD_NAMES
-    if plugin.min_manager_version:
+        # with the one Caelumite is based on and name Caelumite versions.
+        from Utils.macos.plugins import version_error
+        error = version_error(plugin.min_manager_version)
+        if error:
+            return error
+    elif plugin.min_manager_version:
         current = version_key(__version__)
         minimum = version_key(plugin.min_manager_version)
         if minimum[1]:

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import sys
+
 from amethyst_plugins.i18n import Translator
 
 from PySide6.QtCore import QRectF, QSize, Qt, QUrl, Signal
@@ -289,6 +291,10 @@ class PluginStoreView(QWidget):
                  self.tr("Installed version: {0}").format(installed_version),
                  self.tr("Minimum manager version: {0}").format(data.get("min_manager_version") or self.tr("Not specified")),
                  "", row["description"]]
+        if sys.platform == "darwin":
+            # Caelumite: the minimum version as a Caelumite version.
+            from Utils.macos.plugins import relabel_minimum
+            lines = relabel_minimum(self, lines, data.get("min_manager_version"))
         source = entry["source"] if entry else None
         if source:
             lines.extend(("", self.tr("Repository: {0}").format(source["url"]),

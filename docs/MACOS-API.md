@@ -52,5 +52,7 @@ bundled tools (`7zz`) aren't on `PATH`; installing archives needs
   (`nxm`, `ror2mm`, `modl`).
 - **Versions.** A plugin's `min_manager_version` is an Amethyst version. It's
   compared with the Amethyst release Caelumite is based on
-  (`AMETHYST_VERSION` in `src/Utils/macos/app.py`); headless mode's
-  `application.version` is Caelumite's own.
+  (`AMETHYST_VERSION` in `src/Utils/macos/app.py`), and shown to users as the
+  first Caelumite release built on a new enough Amethyst
+  (`AMETHYST_RELEASES`). Headless mode's `application.version` is Caelumite's
+  own.

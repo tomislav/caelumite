@@ -65,7 +65,8 @@ if [ "$BRANCH" != "Resources" ]; then
         sed -n 's/^__version__ = "\(.*\)"/\1/p')"
     OURS="$(sed -n 's/^AMETHYST_VERSION = "\(.*\)"/\1/p' src/Utils/macos/app.py)"
     if [ -n "$THEIRS" ] && [ "$THEIRS" != "$OURS" ]; then
-        echo "Upstream is Amethyst $THEIRS: set AMETHYST_VERSION in src/Utils/macos/app.py."
+        echo "Upstream is Amethyst $THEIRS: set AMETHYST_VERSION in src/Utils/macos/app.py,"
+        echo "and add it to AMETHYST_RELEASES with the Caelumite release that will ship it."
     fi
 fi
 

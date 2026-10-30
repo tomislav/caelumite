@@ -20,6 +20,12 @@ UPSTREAM_URL = "https://github.com/ChrisDKN/Amethyst-Mod-Manager"
 # when it differs). Manager plugins name the Amethyst version they need, so
 # they're checked against this, not Caelumite's own version.
 AMETHYST_VERSION = "2.6.0"
+# Each merged Amethyst release and the first Caelumite release built on it,
+# so plugin requirements can be shown as Caelumite versions
+# (Utils/macos/plugins.py). Manager plugins start with Amethyst 2.6.0.
+AMETHYST_RELEASES = {
+    "2.6.0": "1.2.0",
+}
 REPO_SLUG = "tomislav/caelumite"
 REPO_URL = f"https://github.com/{REPO_SLUG}"
 # Branch holding the synced resources (game handlers, wizard plugins,

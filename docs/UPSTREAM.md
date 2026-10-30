@@ -24,7 +24,8 @@ later merges small. After the merge it:
   (the logo, the README, the changelog);
 - says when upstream's version changed: set `AMETHYST_VERSION` in
   `src/Utils/macos/app.py` to it, since manager plugins are checked against
-  that version.
+  that version, and add it to `AMETHYST_RELEASES` with the Caelumite release
+  that will ship it, so plugin requirements show as Caelumite versions.
 
 Any other conflict is left for you to resolve; the merge isn't committed
 until none remain. After merging, start the app and check that a game
@@ -61,8 +62,9 @@ stops before committing if any `.py` file changed. Caelumite runs plugin code, s
   backends (`sleep.py`, `instances.py`), the import of in-game Bethesda
   Creations into mods (`creations.py`), their Change Version notice
   (`change_version.py`), the missing-master check before a LOOT sort
-  (`loot.py`), and the built-in plugin and game-handler repositories
-  (`resources.py`).
+  (`loot.py`), the built-in plugin and game-handler repositories
+  (`resources.py`), and plugin versions shown as Caelumite versions
+  (`plugins.py`).
 - `src/LOOT/build_libloot_macos.sh`, `native/amethyst_filegraph/.cargo/`,
   `scripts/`, `caelumite`, `docs/`.
 
@@ -114,7 +116,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `gui_qt/app.py` | app name and UI filter; menu bar; the Github button opens Caelumite's repository; the Nexus login button goes through `Utils/macos/nexus.py` until Caelumite is registered; no Ko-Fi button; after a Play session, a Deploy imports Creations changed in-game, and a startup notice appears when they changed while Caelumite wasn't running; the Change Version tab follows the selection to a Creation and says it's a Creation (`Utils/macos/creations.py`, `Utils/macos/change_version.py`) |
 | `Utils/github/sync.py`, `Utils/profiles/curated.py`, `Utils/bethesda/synthesis.py` | resources come from Caelumite's `Resources` branch |
 | `amethyst_plugins/sources.py`, `Utils/github/handler_sources.py` | the built-in manager-plugin catalogue and game-handler repository are Caelumite's `Resources` branch; upstream's is an ordinary repository (`Utils/macos/resources.py`) |
-| `amethyst_plugins/catalog.py` | a plugin's minimum version is compared with the Amethyst version Caelumite is based on (`AMETHYST_VERSION` in `Utils/macos/app.py`), not Caelumite's own |
+| `amethyst_plugins/catalog.py`, `gui_qt/settings/plugin_store.py` | a plugin's minimum version (an Amethyst version) is compared with the Amethyst version Caelumite is based on (`AMETHYST_VERSION` in `Utils/macos/app.py`), and the plugin browser and the too-new message show it as a Caelumite version (`AMETHYST_RELEASES`, `Utils/macos/plugins.py`) |
 | `amethyst_plugins/protocols.py` | URL schemes that plugins declare aren't registered (LaunchServices only sends the app bundle's own schemes); each is logged instead |
 | `amethyst_backend/service.py` | headless mode's handshake names Caelumite |
 | `Utils/bethesda/xedit_run.py` | xEdit, QuickAutoClean, the LOD tools and Wrye Bash may run while the bottle's Steam client, Wine's services and CrossOver's own programs do; a game or any other program in the bottle (also one CrossOver marks only with `CX_BOTTLE=<name>`) still blocks them, and the message names it (`Utils/macos/processes.py`) |

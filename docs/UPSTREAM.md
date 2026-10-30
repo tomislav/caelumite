@@ -85,6 +85,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/processes/sleep.py` | `caffeinate` |
 | `Utils/processes/instances.py` | `ps`/`kill` instead of `/proc` |
 | `Utils/processes/game.py` | running-game tracking via `sysctl(KERN_PROCARGS2)` instead of `/proc/*/environ` |
+| `Utils/processes/leases.py` | launch leases identify the boot and processes via sysctl instead of `/proc` (`Utils/macos/processes.py`) |
 | `gui_qt/i18n.py` | installs the rename translator |
 | `Utils/ui/portal.py`, `gui_qt/dialogs/file_pickers.py` | file pickers skip the XDG portal, zenity and kdialog and use the native macOS open and save panels |
 | `gui_qt/games/configure.py` | no dependency installers run in a game's CrossOver bottle |

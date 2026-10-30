@@ -11,5 +11,3 @@ flake.lock
 amethyst-mod-manager
 amethyst-mod-manager-cli
 src/run_qt.sh
-docs/headless.md
-docs/manager-plugins.md

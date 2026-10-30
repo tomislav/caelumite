@@ -187,6 +187,9 @@ def test_downloads_identify_as_caelumite() -> None:
 
 
 if __name__ == "__main__":
+    # The real config stays untouched: operation locks and anything else
+    # written under the home folder go to a temporary one.
+    os.environ["HOME"] = tempfile.mkdtemp(prefix="caelumite-selftest-")
     test_handshake_names_caelumite()
     print("✓ headless mode identifies as Caelumite")
     test_login_stays_off()

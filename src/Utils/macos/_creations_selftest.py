@@ -878,6 +878,9 @@ def test_change_version_follows_selection_to_a_creation() -> None:
 
 
 if __name__ == "__main__":
+    # The real config stays untouched: operation locks and anything else
+    # written under the home folder go to a temporary one.
+    os.environ["HOME"] = tempfile.mkdtemp(prefix="caelumite-selftest-")
     test_read_catalog()
     print("✓ reads ContentCatalog.txt with a BOM")
     test_read_catalog_bad_input()

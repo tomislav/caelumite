@@ -1,3 +1,7 @@
+- v1.2.3
+### Changes
+- Change Version also updates a mod in place when it was installed without its Nexus file, as an older or manual install: installing the Main file the mod's archive came from replaces it, when no other mod comes from the same Nexus page. Before, it asked to remove the previous version. Afterwards the mod's Nexus file is known, so its updates are found as usual
+
 - v1.2.2
 ### Bug Fixes
 - The file count after Overwrite and Root Folder in the mod list leaves out Caelumite's hidden restore log and Finder's .DS_Store files. Before, an empty Root Folder showed "(1)"

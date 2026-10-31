@@ -1,3 +1,7 @@
+- v1.2.2
+### Bug Fixes
+- The file count after Overwrite and Root Folder in the mod list leaves out Caelumite's hidden restore log and Finder's .DS_Store files. Before, an empty Root Folder showed "(1)"
+
 - v1.2.1
 ### Changes
 - Updating a mod from Change Version, or with Mod Manager Download on its Nexus page, replaces it in place, like Quick Update: it keeps its name and its place in the mod list, and Change Version no longer asks to remove the previous version. Rollback brings the previous version back

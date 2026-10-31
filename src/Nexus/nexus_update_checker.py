@@ -18,6 +18,7 @@ Usage::
 from __future__ import annotations
 
 import copy
+import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, fields
@@ -540,6 +541,10 @@ def _check_for_updates_one_domain(
             # --- Path A: Nexus-native flag = True (trusted).
             # Only True is reliable - False can mean "author didn't bump the
             # page version" even when a new file exists.
+            if sys.platform == "darwin":
+                # Caelumite: a page version behind the installed one decides (Path B).
+                from Utils.macos.mod_updates import without_stale_flag
+                info = without_stale_flag(gql_info.get(mod_id), meta.version)
             if info is not None and info.viewer_update_available is True:
                 has_update = True
                 if not meta.version and info.version:

@@ -5620,6 +5620,12 @@ class MainWindow(QMainWindow, PluginPanelControls):
             return
         metas = {path: meta} if meta is not None else None
         pending = getattr(result, "version_change", None)
+        if pending is None and sys.platform == "darwin":
+            # Caelumite: a Mod Manager Download of a found update updates its mod.
+            from Utils.macos.mod_updates import nxm_update
+            pending = nxm_update(game, self._gs.profile_dir(), self._gs.staging_dir(),
+                                 result.game_domain, result.mod_id, result.file_id,
+                                 log_fn=self._append_log)
         changes = pending if isinstance(pending, list) else [pending]
         for change in changes:
             rollback = change is not None and change.operation == "rollback"
@@ -10277,6 +10283,10 @@ class MainWindow(QMainWindow, PluginPanelControls):
         self._change_version_view = view
         view.destroyed.connect(
             lambda *_: setattr(self, "_change_version_view", None))
+        if sys.platform == "darwin":
+            # Caelumite: the replaced tab is deleted after this one opens.
+            from Utils.macos.change_version import keep_replacement
+            keep_replacement(self, view)
         self._tabs.open_scoped_tab(
             view, self.tr("Change Version"), self._plugins_panel_stack,
             key="change_version")
@@ -16062,6 +16072,10 @@ class MainWindow(QMainWindow, PluginPanelControls):
         one, skipping the Profile Group member picker (set by the group update
         routing below when a batch is split across the members that own the
         mods being updated)."""
+        if sys.platform == "darwin":
+            # Caelumite: the update the check found replaces its mod in place.
+            from Utils.macos.mod_updates import in_place_names
+            preferred_names = in_place_names(paths, metas, version_changes, preferred_names)
         if fomod_request is not None:
             if not self._fomod_controller().valid_target(fomod_request):
                 return False
@@ -17283,6 +17297,12 @@ class MainWindow(QMainWindow, PluginPanelControls):
             # Change Version tab stays open - refresh its highlights.
             if prev_name:
                 self._sync_change_version_after_install(final)
+            elif sys.platform == "darwin":
+                # Caelumite: also follow a rollback or reinstall of the mod the tab shows.
+                from Utils.macos.change_version import showing_mod
+                previous = getattr(prepared.version_change, "mod_name", None)
+                if showing_mod(self, final, previous):
+                    self._sync_change_version_after_install(final)
             # Change Version landed a different-named version → offer to remove
             # the previous version before rebuilding the filemap.
             if prev_name and final != prev_name:
@@ -17367,6 +17387,12 @@ class MainWindow(QMainWindow, PluginPanelControls):
             # The Change Version tab stays open - repoint it at the installed
             # mod so the installed-version highlight is accurate.
             self._sync_change_version_after_install(name)
+        elif sys.platform == "darwin":
+            # Caelumite: also follow a rollback or reinstall of the mod the tab shows.
+            from Utils.macos.change_version import showing_mod
+            change = getattr(self, "_install_version_changes", {}).get(current_path)
+            if showing_mod(self, name, getattr(change, "mod_name", None)):
+                self._sync_change_version_after_install(name)
         if prev and name != prev:
             self._install_prev_name = None   # don't re-prompt for later items
             # Preserve the existing Profile Group ordering contract: reconcile

@@ -23,6 +23,8 @@ class _Change:
     previous_meta: object
     operation: str = "update"
     source: str = "nexus"
+    profile_dir: Path | None = None
+    previous_path: Path | None = None
 
 
 @dataclass
@@ -30,13 +32,15 @@ class _Meta:
     file_id: int = 0
     mod_id: int = 0
     file_category: str = ""
+    nexus_file_name: str = ""
 
 
 def _nexus_meta(mod_id: int, file_id: int, latest_file_id: int, domain="starfield",
-                category=""):
+                category="", archive=""):
     from Nexus.nexus_meta import NexusModMeta
     return NexusModMeta(game_domain=domain, mod_id=mod_id, file_id=file_id,
-                        latest_file_id=latest_file_id, file_category=category)
+                        latest_file_id=latest_file_id, file_category=category,
+                        installation_file=archive)
 
 
 def _profile(root: Path, mods: dict[str, tuple | None]):
@@ -127,6 +131,76 @@ def test_other_places_on_the_page_keep_their_own_name() -> None:
     assert _picked("MAIN", "") is None, "picked category unknown"
     assert _picked("MAIN", "MAIN", picked_id=72913) is None, "reinstalling the same file"
     assert _picked("MAIN", "MAIN", mod_id=99999) is None, "another Nexus mod"
+
+
+NATIVE = "Native Light - Colour-Accurate LUT Overhaul"
+NATIVE_ARCHIVE = "NativeLight FOMOD 17733 1 2026-07-26T21-27Z Y9Cjid45G.zip"
+
+
+def _main(file_id=69764, mod_id=17733, name="NativeLight FOMOD", category="MAIN"):
+    return _Meta(file_id, mod_id, category, name)
+
+
+def _unknown_installed(mods: dict, mod_name: str, picked: _Meta):
+    """Change Version on *mod_name*, installed without a file ID or category,
+    in a profile holding *mods*: the name the picked file installs under."""
+    with tempfile.TemporaryDirectory() as tmp:
+        profile, staging = _profile(Path(tmp), mods)
+        change = _Change(mod_name, _nexus_meta(*mods[mod_name]),
+                         profile_dir=profile, previous_path=staging / mod_name)
+        names = _names(["a.zip"], {"a.zip": picked}, {"a.zip": change})
+    return (names or {}).get("a.zip")
+
+
+def test_main_file_replaces_a_lone_mod_installed_without_file_id() -> None:
+    mods = {NATIVE: (17733, 0, 0, "starfield", "", NATIVE_ARCHIVE),
+            "Nova Galactic - Pilot Seat Fix": (17801, 0, 0, "starfield", "",
+                                               "Nova Galactic - Pilot Seat Fix 17801 1 2026-07-28T05-34Z 2frBl7dK2.zip")}
+    assert _unknown_installed(mods, NATIVE, _main()) == NATIVE
+    assert _unknown_installed(mods, NATIVE, _main(category="main")) == NATIVE
+    # The Main file's name may carry another version than the archive's.
+    assert _unknown_installed(mods, NATIVE, _main(name="NativeLight FOMOD V2.0.1")) == NATIVE
+    classic = {"Akila": (16238, 0, 0, "starfield", "",
+                         "Akila Outskirts Expanded-16238-1-0-1774513871.7z")}
+    assert _unknown_installed(classic, "Akila", _main(mod_id=16238,
+                              name="Akila Outskirts Expanded 1.1")) == "Akila"
+
+
+def test_unknown_installed_file_keeps_the_prompt_otherwise() -> None:
+    vco = {"VCO - Vitruvian Character Overhaul": (18405, 0, 0, "starfield", "",
+                                                  "Vitruvian Character Overhaul 18405 2.1 2026-10-24T17-40Z vPWlJVbut.7z"),
+           "VCO - FaceGen for Popular Mods": (18405, 0, 0, "starfield", "",
+                                              "VCO - FaceGen for Popular Mods 18405 2 2026-10-18T09-27Z xzTDtbMN4.zip")}
+    assert _unknown_installed(vco, "VCO - Vitruvian Character Overhaul",
+                              _main(70000, 18405, "Vitruvian Character Overhaul")) is None, \
+        "page shared with another mod"
+    # An optional file installed alone is not the Main file, even alone on its page.
+    facegen = {"VCO - FaceGen for Popular Mods": vco["VCO - FaceGen for Popular Mods"]}
+    assert _unknown_installed(facegen, "VCO - FaceGen for Popular Mods",
+                              _main(70000, 18405, "Vitruvian Character Overhaul")) is None
+    lone = {NATIVE: (17733, 0, 0, "starfield", "", NATIVE_ARCHIVE)}
+    for picked in (_main(category="OPTIONAL"), _main(category="OLD_VERSION"), _main(category=""),
+                   _main(mod_id=99999), _main(file_id=0), _main(name=""),
+                   _main(name="NativeLight FOMOD Lite")):
+        assert _unknown_installed(lone, NATIVE, picked) is None, picked
+    no_archive = {NATIVE: (17733, 0, 0, "starfield", "", "")}
+    assert _unknown_installed(no_archive, NATIVE, _main()) is None, "archive name unknown"
+    # Without the profile to check for other mods from the page, nothing changes.
+    change = _Change(NATIVE, _nexus_meta(17733, 0, 0, archive=NATIVE_ARCHIVE))
+    assert _names(["a.zip"], {"a.zip": _main()}, {"a.zip": change}) is None
+
+
+def test_unknown_installed_rule_reads_the_owning_profile() -> None:
+    # In a Profile Group the change names the member that owns the mod; the
+    # group's own mod list (here holding a second mod from the page) is not read.
+    with tempfile.TemporaryDirectory() as tmp:
+        member, member_staging = _profile(Path(tmp) / "member",
+                                          {NATIVE: (17733, 0, 0, "starfield", "", NATIVE_ARCHIVE)})
+        _profile(Path(tmp) / "group", {NATIVE: (17733, 0, 0), "NativeLight FOMOD": (17733, 69764, 0)})
+        change = _Change(NATIVE, _nexus_meta(17733, 0, 0, archive=NATIVE_ARCHIVE),
+                         profile_dir=member, previous_path=member_staging / NATIVE)
+        names = _names(["a.zip"], {"a.zip": _main()}, {"a.zip": change})
+    assert names == {"a.zip": NATIVE}, names
 
 
 def test_link_finds_the_mod_it_updates() -> None:
@@ -492,6 +566,12 @@ if __name__ == "__main__":
     print("✓ a file in the installed file's place on the page replaces it in place")
     test_other_places_on_the_page_keep_their_own_name()
     print("✓ add-ons, unknown categories and the same file keep their own name")
+    test_main_file_replaces_a_lone_mod_installed_without_file_id()
+    print("✓ a Main file replaces a mod installed without a file ID, alone on its page")
+    test_unknown_installed_file_keeps_the_prompt_otherwise()
+    print("✓ shared pages, other files, other categories and other mods keep the prompt")
+    test_unknown_installed_rule_reads_the_owning_profile()
+    print("✓ the rule reads the profile that owns the mod, as in a Profile Group")
     test_link_finds_the_mod_it_updates()
     print("✓ a Mod Manager Download finds the mod it updates")
     test_link_with_two_candidates_installs_as_before()

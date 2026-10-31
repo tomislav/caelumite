@@ -15,7 +15,10 @@ Change Version also replaces in place without that record (no check yet, or
 after a rollback cleared it) when the picked file fills the installed file's
 place on the mod's page: the same Nexus category, or either one an old
 version - the rule the update check uses. A file in another current category,
-such as an optional patch, still installs beside it. Hooked in gui_qt/app.py
+such as an optional patch, still installs beside it. For a mod installed
+without a file ID or category, a Main file replaces it when its archive was
+that file (the name before the mod ID in the archive's name, versions aside)
+and no other mod in the profile comes from the same Nexus page. Hooked in gui_qt/app.py
 (_install_paths and _on_nxm_download_done).
 
 For a mod without a Nexus file ID, upstream's update check trusts Nexus's
@@ -48,8 +51,10 @@ _MOD_ID = re.compile(r"^[ \t]*modid[ \t]*=[ \t]*(\d+)[ \t]*$", re.IGNORECASE | r
 
 
 def in_place_names(paths, metas, version_changes, preferred_names):
-    """*preferred_names* plus the mod's own name for each archive that is the
-    update the check found for the mod its Nexus version change updates.
+    """*preferred_names* plus the mod's own name for each archive that replaces
+    the mod its Nexus version change updates: the update the check found, a
+    file in the installed file's place on the page (_same_place), or the
+    Main file of a mod installed without a file ID (_main_for_unknown).
     Returns *preferred_names* unchanged when no archive qualifies."""
     names = dict(preferred_names or {})
     for path in paths:
@@ -59,17 +64,57 @@ def in_place_names(paths, metas, version_changes, preferred_names):
                 or change.operation != "update" or change.source != "nexus"):
             continue
         if (_is_update(change.previous_meta, getattr(meta, "file_id", 0))
-                or _same_place(change.previous_meta, meta)):
+                or _same_place(change.previous_meta, meta)
+                or _main_for_unknown(change, meta)):
             names[path] = change.mod_name
     return names or preferred_names
+
+
+def _category(meta) -> str:
+    return (getattr(meta, "file_category", "") or "").strip().upper()
+
+
+def _main_for_unknown(change, picked) -> bool:
+    """The installed file of *change*'s mod is unknown (no file ID or
+    category), *picked* is a Main file of its Nexus page whose name matches
+    the archive the mod was installed from, and no other mod in the profile
+    comes from that page, so the Main file can only replace it."""
+    installed = change.previous_meta
+    mod_id = getattr(installed, "mod_id", 0)
+    profile_dir = getattr(change, "profile_dir", None)
+    previous_path = getattr(change, "previous_path", None)
+    if (getattr(installed, "file_id", 0) or _category(installed)
+            or _category(picked) != "MAIN" or not getattr(picked, "file_id", 0)
+            or not mod_id or getattr(picked, "mod_id", 0) != mod_id
+            or profile_dir is None or previous_path is None):
+        return False
+    archive_name = _archive_file_name(getattr(installed, "installation_file", ""), mod_id)
+    picked_name = _without_versions(getattr(picked, "nexus_file_name", ""))
+    if not archive_name or archive_name != picked_name:
+        return False
+    names = [name for name, _meta in _mods_with_id(profile_dir, Path(previous_path).parent, mod_id)]
+    return names == [change.mod_name]
+
+
+def _archive_file_name(archive: str, mod_id: int) -> str:
+    """The Nexus file name a downloaded archive was named after: what comes
+    before its mod ID ("NativeLight FOMOD 17733 1 2026-07-26T21-27Z ….zip",
+    "Akila Outskirts Expanded-16238-1-0-1774513871.7z"), versions aside."""
+    match = re.match(rf"(.+?)[ -]{mod_id}[ -]", archive or "")
+    return _without_versions(match.group(1)) if match else ""
+
+
+def _without_versions(name: str) -> str:
+    """*name* compared loosely and without version numbers ("V2.0.1", "1.3")."""
+    from Utils.mods.versions import _normalize_match
+    return " ".join(token for token in _normalize_match(name or "").split()
+                    if not re.fullmatch(r"v?\d+", token))
 
 
 def _same_place(installed, picked) -> bool:
     """*picked* is another file of the installed mod's Nexus page in the
     installed file's place: the same category, or either an old version."""
-    def category(meta):
-        return (getattr(meta, "file_category", "") or "").strip().upper()
-    old, new = category(installed), category(picked)
+    old, new = _category(installed), _category(picked)
     file_id = getattr(picked, "file_id", 0)
     return (bool(old and new and file_id)
             and file_id != getattr(installed, "file_id", 0)
@@ -90,17 +135,27 @@ def update_target(profile_dir, staging, game_domain: str, mod_id: int,
     mod *mod_id* on *game_domain*, or None (none, several, or a Profile Group).
     A meta.ini without a domain belongs to the profile's game, as in the
     update check."""
-    from Nexus.nexus_meta import normalise_game_domain, read_meta
-    from Utils.mods.modlist import read_modlist
+    from Nexus.nexus_meta import normalise_game_domain
     from Utils.profiles.groups import is_group
     domain = normalise_game_domain(game_domain)
     if not (profile_dir and staging and mod_id and file_id) or is_group(profile_dir):
         return None
+    found = [name for name, meta in _mods_with_id(profile_dir, staging, mod_id)
+             if _is_update(meta, file_id)
+             and (normalise_game_domain(meta.game_domain) or domain) == domain]
+    return found[0] if len(found) == 1 else None
+
+
+def _mods_with_id(profile_dir, staging, mod_id: int):
+    """(name, meta) of each mod in the profile's mod list from Nexus mod
+    *mod_id*. Each meta.ini is checked for the ID before it's parsed."""
+    from Nexus.nexus_meta import read_meta
+    from Utils.mods.modlist import read_modlist
     found = []
     for entry in read_modlist(Path(profile_dir) / "modlist.txt"):
-        meta_path = Path(staging) / entry.name / "meta.ini"
         if entry.is_separator:
             continue
+        meta_path = Path(staging) / entry.name / "meta.ini"
         try:
             text = meta_path.read_text(encoding="utf-8", errors="replace")
         except OSError:
@@ -111,10 +166,9 @@ def update_target(profile_dir, staging, game_domain: str, mod_id: int,
             meta = read_meta(meta_path)
         except Exception:
             continue
-        if (meta.mod_id == mod_id and _is_update(meta, file_id)
-                and (normalise_game_domain(meta.game_domain) or domain) == domain):
-            found.append(entry.name)
-    return found[0] if len(found) == 1 else None
+        if meta.mod_id == mod_id:
+            found.append((entry.name, meta))
+    return found
 
 
 def nxm_update(game, profile_dir, staging, game_domain: str, mod_id: int,

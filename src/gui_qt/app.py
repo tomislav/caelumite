@@ -8950,6 +8950,12 @@ class MainWindow(QMainWindow, PluginPanelControls):
         # subset is None for a full check (re-reads all flags) or the checked
         # names for a right-click subset; either way, no filemap rebuild.
         self._refresh_modlist_flags(result.get("subset"))
+        if sys.platform == "darwin":
+            # Caelumite: offer Show updates, and Quick Update only with Premium;
+            # upstream's offer below is skipped.
+            from Utils.macos.mod_updates import offer_updates
+            offer_updates(self, [u.mod_name for u in nexus[0]] if nexus else [])
+            nexus = None
         # Offer to Quick Update everything the check just flagged. Nexus only -
         # Quick Update resolves and downloads through the Nexus API, so mod.io
         # updates (BG3) stay manual. Ignored updates never reach this list.

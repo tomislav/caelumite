@@ -303,6 +303,165 @@ def test_update_check_hook_is_in_place() -> None:
     assert "\nimport sys\n" in text
 
 
+class _Search:
+    def __init__(self, value: str = "") -> None:
+        self.value = value
+
+    def text(self) -> str:
+        return self.value
+
+    def setText(self, text: str) -> None:
+        self.value = text
+
+
+class _UpdatesWindow:
+    def __init__(self, search: str = "") -> None:
+        self._modlist_search = _Search(search)
+        self.quick_updated: list = []
+
+    def tr(self, text: str) -> str:
+        return text
+
+    def _quick_update_mods(self, names) -> None:
+        self.quick_updated.append(list(names))
+
+
+def _offer(premium, names=("ScreenSFSE", "FTL")):
+    """offer_updates with Premium *premium*: (window, dialog arguments)."""
+    from Utils.macos import mod_updates
+    shown = []
+    window = _UpdatesWindow()
+
+    def show_over(host, title, body, on_done, **kw):
+        shown.append(dict(host=host, title=title, body=body, on_done=on_done, **kw))
+
+    with patch("gui_qt.dialogs.confirm.ConfirmOverlay.show_over", show_over), \
+            patch("Utils.ui.config.load_nexus_last_premium", lambda: premium):
+        mod_updates.offer_updates(window, list(names))
+    return window, shown
+
+
+def test_without_premium_updates_are_shown_not_quick_updated() -> None:
+    window, shown = _offer(False)
+    assert len(shown) == 1, shown
+    dialog = shown[0]
+    assert dialog["title"] == "Updates available"
+    assert dialog["body"] == "2 mod(s) have an update.", dialog["body"]
+    assert dialog["confirm_label"] == "Show updates"
+    assert "Quick Update" not in dialog["body"] and "secondary_action" not in dialog
+    dialog["on_done"](False)
+    assert window._modlist_search.value == "" and not window.quick_updated
+    dialog["on_done"](True)
+    assert window._modlist_search.value == "!update"
+    assert not window.quick_updated
+
+
+def test_with_premium_quick_update_and_show_updates() -> None:
+    for premium in (True, None):
+        window, shown = _offer(premium)
+        dialog = shown[0]
+        assert dialog["confirm_label"] == "Quick Update", premium
+        assert dialog["body"] == ("2 mod(s) have an update available.\n\n"
+                                  "Run Quick Update on all of them now?"), dialog["body"]
+        dialog["on_done"](True)
+        assert window.quick_updated == [["ScreenSFSE", "FTL"]], window.quick_updated
+        label, show = dialog["secondary_action"]
+        assert label == "Show updates"
+        show()
+        assert window._modlist_search.value == "!update"
+
+
+def test_no_updates_no_prompt() -> None:
+    _window, shown = _offer(False, names=())
+    assert shown == []
+
+
+def test_show_updates_keeps_the_search() -> None:
+    from Utils.macos.mod_updates import show_updates
+    for before, after in (("", "!update"), ("ftl", "ftl !update"),
+                          ("  ftl  ", "ftl !update"), ("ftl !update", "ftl !update"),
+                          ("!updates", "!updates"), ("!Update ftl", "!Update ftl")):
+        window = _UpdatesWindow(before)
+        show_updates(window)
+        assert window._modlist_search.value == after, (before, window._modlist_search.value)
+
+
+def test_quick_update_needs_premium() -> None:
+    from Utils.macos.mod_updates import quick_update_available
+    for premium, expected in ((False, False), (True, True), (None, True)):
+        with patch("Utils.ui.config.load_nexus_last_premium", lambda p=premium: p):
+            assert quick_update_available() is expected, premium
+
+
+def test_menu_offers_quick_update_only_with_premium() -> None:
+    import os
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication
+    QApplication.instance() or QApplication([])
+    from gui_qt.modlist import menu
+    view = object()
+    with patch.object(menu, "_has_update_flag", lambda _v, _n: True), \
+            patch.object(menu, "_has_nexus_id", lambda _v, _n: False), \
+            patch.object(menu, "_modio_url", lambda _v, _n: None), \
+            patch.object(menu, "_is_thunderstore_mod", lambda _v, _n: False), \
+            patch.object(menu, "_provider_record", lambda _v, _n: None), \
+            patch.object(menu, "_can_roll_back", lambda _v, _n: False):
+        for premium, offered in ((False, False), (True, True), (None, True)):
+            with patch("Utils.ui.config.load_nexus_last_premium", lambda p=premium: p):
+                labels = [item[0] for item in menu._update_menu_items(view, ["ScreenSFSE"])]
+            assert ("Quick Update" in labels) is offered, (premium, labels)
+
+
+class _CheckWindow:
+    """MainWindow stand-in for _on_updates_ready: no-ops for the rest."""
+
+    def tr(self, text: str) -> str:
+        return text
+
+    def __getattr__(self, name):
+        if name.startswith("__"):
+            raise AttributeError(name)
+        return lambda *args, **kwargs: None
+
+
+def _updates_ready(nexus):
+    from types import SimpleNamespace
+    from gui_qt.app import MainWindow
+    from Utils.macos import mod_updates
+    offered, upstream = [], []
+    result = {"nexus": nexus, "modio": [], "thunderstore": [], "subset": None}
+    window = _CheckWindow()
+    window._check_updates_btn = None
+    window._updates_toast = None
+    with patch.object(mod_updates, "offer_updates", lambda _w, names: offered.append(names)), \
+            patch("gui_qt.dialogs.confirm.ConfirmOverlay.show_over",
+                  lambda *a, **kw: upstream.append(a)):
+        MainWindow._on_updates_ready(window, result)
+    return offered, upstream
+
+
+def test_updates_ready_offers_the_found_updates() -> None:
+    from types import SimpleNamespace
+    found = [SimpleNamespace(mod_name="ScreenSFSE", mod_id=18465, game_domain="starfield",
+                             installed_version="0.2", latest_version="0.3.2",
+                             installed_file_id=72913, latest_file_id=73589,
+                             latest_file_name="", nexus_url="")]
+    offered, upstream = _updates_ready((found, []))
+    assert offered == [["ScreenSFSE"]], offered
+    assert upstream == [], "upstream's Quick Update prompt must not appear too"
+    offered, upstream = _updates_ready(None)
+    assert offered == [[]] and upstream == [], (offered, upstream)
+
+
+def test_updates_prompt_hook_is_in_place() -> None:
+    source = _method_source("_on_updates_ready")
+    hook = source.index("offer_updates(self, ")
+    upstream_if = source.index("if nexus is not None and nexus[0]:")
+    assert hook < upstream_if, "hook must run first"
+    assert "return" not in source[hook:upstream_if], \
+        "the hook must not end the method: later upstream code has to stay reachable"
+
+
 def _method_source(name: str) -> str:
     text = (SRC / "gui_qt" / "app.py").read_text(encoding="utf-8")
     for node in ast.walk(ast.parse(text)):
@@ -359,5 +518,21 @@ if __name__ == "__main__":
     print("✓ the update check ignores Nexus's flag only when the page is behind")
     test_update_check_judges_each_copy_of_a_mod()
     print("✓ each local copy of a Nexus mod is judged on its own")
+    test_without_premium_updates_are_shown_not_quick_updated()
+    print("✓ without Premium the prompt shows the updates instead of Quick Update")
+    test_with_premium_quick_update_and_show_updates()
+    print("✓ with Premium (or unknown) it offers Quick Update and Show updates")
+    test_no_updates_no_prompt()
+    print("✓ no Nexus updates, no prompt")
+    test_show_updates_keeps_the_search()
+    print("✓ Show updates adds !update to the search instead of replacing it")
+    test_quick_update_needs_premium()
+    print("✓ Quick Update counts as available unless the account lacks Premium")
+    test_menu_offers_quick_update_only_with_premium()
+    print("✓ the right-click menu offers Quick Update only with Premium")
+    test_updates_ready_offers_the_found_updates()
+    print("✓ a finished update check offers its Nexus updates, without upstream's prompt")
+    test_updates_prompt_hook_is_in_place()
+    print("✓ the prompt hook runs before upstream's and leaves the rest reachable")
     test_update_check_hook_is_in_place()
     print("✓ the update check hook sits on the Nexus-flag path")

@@ -858,6 +858,10 @@ def _update_menu_items(view, names, multi=False):
     ignore = [n for n in names if _has_nexus_id(view, n)
               or _is_thunderstore_mod(view, n) or _provider_record(view, n)]
     quick = [n for n in names if _has_update_flag(view, n)]
+    if sys.platform == "darwin":
+        # Caelumite: Quick Update downloads directly, which needs Nexus Premium.
+        from Utils.macos.mod_updates import quick_update_available
+        quick = quick if quick_update_available() else []
     rollback = [n for n in names if _can_roll_back(view, n)]
     if check:
         items.append((label("Check Updates", len(check)),

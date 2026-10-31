@@ -23,7 +23,14 @@ per-account "update available" flag first. That flag only says the mod page
 changed since the account last downloaded from it, so an optional file at
 2.0.3 showed "update" to the page's 1.3. When the page's version is behind
 the installed one, the version comparison decides instead
-(without_stale_flag, hooked in Nexus/nexus_update_checker.py). An unchanged page version still
+(without_stale_flag, hooked in Nexus/nexus_update_checker.py).
+
+After Check Updates, upstream offers Quick Update for the Nexus updates it
+found, which downloads directly and so needs Nexus Premium. offer_updates
+(hooked in gui_qt/app.py _on_updates_ready) adds Show updates, which filters
+the mod list to !update, and without Premium offers only that. The mod list's
+right-click menu leaves out Quick Update then too (quick_update_available,
+hooked in gui_qt/modlist/menu.py). An unchanged page version still
 trusts the flag: authors often upload a file without bumping it.
 """
 
@@ -149,3 +156,43 @@ def without_stale_flag(info, installed_version: str):
     stale = copy.copy(info)
     stale.viewer_update_available = None
     return stale
+
+
+def quick_update_available() -> bool:
+    """Quick Update downloads directly, which needs Nexus Premium: False only
+    when the account's last validation said it has none."""
+    from Utils.ui.config import load_nexus_last_premium
+    return load_nexus_last_premium() is not False
+
+
+def show_updates(window) -> None:
+    """Filter the mod list to mods with updates: add !update to its search,
+    keeping what's already typed there."""
+    text = window._modlist_search.text().strip()
+    if any(term.lower() in ("!update", "!updates") for term in text.split()):
+        return
+    window._modlist_search.setText(f"{text} !update".strip())
+
+
+def offer_updates(window, names: list[str]) -> None:
+    """After Check Updates, offer the Nexus updates in *names*: Show updates
+    (the mod list filtered to !update), plus upstream's Quick Update unless
+    the account is known not to have Premium."""
+    if not names:
+        return
+    from gui_qt.dialogs.confirm import ConfirmOverlay
+
+    if not quick_update_available():
+        ConfirmOverlay.show_over(
+            window, window.tr("Updates available"),
+            window.tr("{0} mod(s) have an update.").format(len(names)),
+            lambda ok: ok and show_updates(window),
+            confirm_label=window.tr("Show updates"), danger=False)
+        return
+    ConfirmOverlay.show_over(
+        window, window.tr("Updates available"),
+        window.tr("{0} mod(s) have an update available.\n\n"
+                  "Run Quick Update on all of them now?").format(len(names)),
+        lambda ok: ok and window._quick_update_mods(names),
+        confirm_label=window.tr("Quick Update"),
+        secondary_action=(window.tr("Show updates"), lambda: show_updates(window)))

@@ -6,6 +6,7 @@ they can run on a worker thread.
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 from Utils.mods.modlist import ModEntry
@@ -323,6 +324,11 @@ def count_files_in(path: Path) -> int:
         with os.scandir(path) as it:
             for entry in it:
                 try:
+                    if sys.platform == "darwin":
+                        # Caelumite: skip the restore log and Finder's files, as the file scan does.
+                        from Utils.macos.boundary_folders import counts_as_file
+                        if not counts_as_file(entry.name):
+                            continue
                     if entry.is_dir(follow_symlinks=False):
                         total += count_files_in(Path(entry.path))
                     else:

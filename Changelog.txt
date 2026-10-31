@@ -1,3 +1,12 @@
+- v1.2.1
+### Changes
+- Updating a mod from Change Version, or with Mod Manager Download on its Nexus page, replaces it in place, like Quick Update: it keeps its name and its place in the mod list, and Change Version no longer asks to remove the previous version. Rollback brings the previous version back
+- After Check Updates, Show updates filters the mod list to mods with updates. Without Nexus Premium, Quick Update, which downloads directly, is no longer offered there or in the right-click menu
+### Bug Fixes
+- Opening Change Version for a second mod no longer stops it from recognising a Mod Manager Download. Before, the download installed as a new mod and the tab kept waiting
+- The Change Version tab shows the right installed version after a Rollback, Reinstall or Quick Update of its mod
+- A mod without a Nexus file ID is no longer flagged for an update when its mod page shows an older version than the installed one
+
 - v1.2.0
 Based on Amethyst Mod Manager 2.6.0.
 ### macOS

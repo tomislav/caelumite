@@ -79,6 +79,8 @@ def show_context_menu(view, global_pos, index):
     menu = build_context_menu(view, index)
     if menu is not None:
         menu.exec(global_pos)
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)
 
 
 def _plugin_actions(menu, view, index):

@@ -146,6 +146,8 @@ class TextInputOverlay(OverlayBase):
         from gui_qt.runtime.plugin_menus import add_plugin_actions, menu_item
         add_plugin_actions(menu, self, "suggestions", menu_item("suggestion", text=self._edit.text()))
         menu.exec(anchor.mapToGlobal(anchor.rect().bottomLeft()))
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)
 
     def _apply_suggestion(self, text: str):
         self._edit.setText(text)

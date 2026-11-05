@@ -563,6 +563,8 @@ class SelectorButton(QToolButton):
             f"QMenu {{ icon-size: {self._item_icon_px}px; }}"
             if self._item_icons else "")
         self._menu.setMaximumHeight(_QWIDGETSIZE_MAX)
+        from Utils.macos.menus import delete_old_submenus  # Caelumite: clear() keeps them
+        delete_old_submenus(self._menu)
         self._menu.clear()
         self._item_list = None      # cleared with the menu
         self._item_list_other_height = None

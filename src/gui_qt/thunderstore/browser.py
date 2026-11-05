@@ -665,6 +665,8 @@ class ThunderstoreBrowserView(QWidget):
             "thunderstore_package", entry.name, namespace=entry.namespace,
             package_name=entry.package_name, community=entry.community))
         menu.exec(global_pos)
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)
 
     def _search_author(self, namespace: str):
         self._search.setText(namespace)

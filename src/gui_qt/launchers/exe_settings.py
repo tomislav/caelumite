@@ -459,6 +459,8 @@ class ExeSettingsView(QWidget):
             "launcher", self._exe_path.name, self._exe_path), utility="insert_mod_path")
         menu.exec(self._insert_mod_btn.mapToGlobal(
             self._insert_mod_btn.rect().bottomLeft()))
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)
 
     # ---- prefix tools ---------------------------------------------------------
     # Workers only touch exe_launch + log_fn (thread-safe); the Proton pick is

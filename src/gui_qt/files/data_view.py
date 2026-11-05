@@ -637,6 +637,8 @@ class DataView(QWidget):
         menu = self._build_context_menu(node)
         if menu is not None:
             menu.exec(self._tree.viewport().mapToGlobal(pos))
+            from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+            delete_closed(menu)
 
     def _build_context_menu(self, node: _DataNode):
         from PySide6.QtWidgets import QMenu

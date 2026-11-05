@@ -570,6 +570,8 @@ class OverwriteView(QWidget):
             add_plugin_actions(menu, self, "overrides", item(clicked) if clicked else None,
                                [item(n) for n in self._selected_nodes()])
         menu.exec(self._tree.viewport().mapToGlobal(pos))
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)
 
     # -- actions ------------------------------------------------------------
     def _context_is_current(self) -> bool:

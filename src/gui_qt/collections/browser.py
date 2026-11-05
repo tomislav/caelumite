@@ -536,3 +536,5 @@ class CollectionsBrowserView(QWidget):
             "collection", entry.name, id=entry.id, slug=entry.slug,
             domain=self._domain, url=self._collection_url(entry)))
         menu.exec(global_pos)
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)

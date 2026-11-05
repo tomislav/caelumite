@@ -621,6 +621,8 @@ class ModListView(QTreeView):
         self._sync_clear_action()
         btn = self._col_menu_btn
         menu.exec(btn.mapToGlobal(btn.rect().bottomLeft()))
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)
         # The menu and its widgets die with exec() - drop the references so a
         # later call can't touch deleted C++ objects.
         self._clear_action = None

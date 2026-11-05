@@ -133,6 +133,8 @@ class FilterMenuButton(QToolButton):
         if callable(open_tab):
             menu.addAction(self.tr("Open as tab"), open_tab)
         menu.exec(self.mapToGlobal(self.rect().bottomLeft()))
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)
 
     def _fill_scroll_section(self, sub, entries):
         """Hold *entries* in one scrollable checklist capped at SCROLL_CAP rows.

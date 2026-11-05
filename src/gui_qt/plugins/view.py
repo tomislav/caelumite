@@ -772,6 +772,8 @@ class PluginView(QTreeView):
             menu.addAction(self.tr("Open as tab"), open_tab)
         btn = self._col_menu_btn
         menu.exec(btn.mapToGlobal(btn.rect().bottomLeft()))
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)
 
     def _on_quick_filter(self, key: str, on: bool):
         cb = getattr(self, "on_quick_filter", None)

@@ -942,6 +942,8 @@ class SavesView(QWidget):
         menu = self._build_context_menu(item)
         if menu is not None:
             menu.exec(self._tree.viewport().mapToGlobal(pos))
+            from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+            delete_closed(menu)
 
     def _menu_action(self, menu, label, slot, enabled=True):
         """Add one item. triggered() passes a `checked` bool that would

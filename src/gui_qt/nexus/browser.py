@@ -1791,6 +1791,8 @@ class NexusBrowserView(QWidget):
         selected = list(self._selected_mods.values()) if entry.mod_id in self._selected_mods else [entry]
         add_plugin_actions(menu, self, "nexus", item(entry), [item(mod) for mod in selected])
         menu.exec(global_pos)
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)
 
     def _browse_author(self, author: str, uploader_id: int = 0):
         """List all mods by an uploader in the Browse section. Triggered from a

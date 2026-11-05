@@ -805,6 +805,8 @@ class ModFilesView(QWidget):
             relative_path=node.path, mod_name=self._mod_name, synthetic=node.synthetic)
         add_plugin_actions(menu, self, "mod_files", clicked, mod_name=self._mod_name)
         menu.exec(self._tree.viewport().mapToGlobal(pos))
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)
 
     @staticmethod
     def _entry_exists(path: Path) -> bool:

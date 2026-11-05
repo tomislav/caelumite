@@ -15388,6 +15388,8 @@ class MainWindow(QMainWindow, PluginPanelControls):
         menu = getattr(self._wizard_btn, "_menu", None)
         if menu is None:
             return
+        from Utils.macos.menus import delete_old_submenus  # Caelumite: clear() keeps them
+        delete_old_submenus(menu)
         menu.clear()
         menu.setToolTipsVisible(True)
         game = self._gs.game

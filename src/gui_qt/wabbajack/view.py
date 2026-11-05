@@ -865,6 +865,8 @@ class WabbajackView(QWidget):
         add_plugin_actions(menu, self, "wabbajack", menu_item(
             "modlist", entry.title, id=entry.id, game=entry.game, version=entry.version))
         menu.exec(position)
+        from Utils.macos.menus import delete_closed  # Caelumite: free its window surfaces
+        delete_closed(menu)
 
     def _external_url(self, url):
         from PySide6.QtGui import QDesktopServices

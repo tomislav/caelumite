@@ -1,3 +1,7 @@
+- v1.2.4
+### Bug Fixes
+- Caelumite no longer uses more and more memory as you open menus. A menu stayed in memory after it closed, about 235 MB after two days of use; closed menus are now freed.
+
 - v1.2.3
 ### Changes
 - Change Version also updates a mod in place when it was installed without its Nexus file, as an older or manual install: installing the Main file the mod's archive came from replaces it, when no other mod comes from the same Nexus page. Before, it asked to remove the previous version. Afterwards the mod's Nexus file is known, so its updates are found as usual

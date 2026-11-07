@@ -6,6 +6,7 @@ import hashlib
 import os
 from pathlib import Path
 import shutil
+import sys
 import tempfile
 
 from Utils.games.instances import instance_id
@@ -20,6 +21,10 @@ def log_directory(game, executable=None) -> Path:
     identity = (str(instance_id(game) or game.name), str(profile or ""),
                 str(Path(executable).resolve()) if executable else "__game__")
     key = hashlib.sha256(repr(identity).encode()).hexdigest()[:24]
+    if sys.platform == "darwin":
+        # Caelumite: beside its session logs, not in ~/.cache.
+        from Utils.macos.app import config_dir
+        return config_dir() / "logs" / "launch" / key
     cache = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache")
     return cache / "AmethystModManager" / "launch-logs" / key
 

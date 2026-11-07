@@ -58,20 +58,26 @@ def test_config_dir_can_be_left_uncreated() -> None:
 
 
 def test_work_folders_stay_in_application_support() -> None:
-    # Operation locks and launch leases go to Caelumite's own folder, not
-    # ~/.local/share/AmethystModManager.
+    # Operation locks, launch leases and launch logs go to Caelumite's own
+    # folder, not ~/.local/share or ~/.cache/AmethystModManager.
     import os
     import tempfile
     from pathlib import Path
+    from types import SimpleNamespace
     from unittest.mock import patch
     from Utils.config_paths import get_config_dir
+    from Utils.executables.logs import log_directory
     from Utils.operations import _lock_dir
     with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ, {"HOME": tmp}):
         os.environ.pop("AMETHYST_OPERATION_LOCK_DIR", None)
         os.environ.pop("XDG_DATA_HOME", None)
+        os.environ.pop("XDG_CACHE_HOME", None)
         config = get_config_dir().resolve()
         assert _lock_dir().resolve().is_relative_to(config), _lock_dir()
+        logs = log_directory(SimpleNamespace(name="Skyrim"))
+        assert logs.resolve().is_relative_to(config / "logs" / "launch"), logs
         assert not (Path(tmp) / ".local").exists()
+        assert not (Path(tmp) / ".cache").exists()
 
 
 if __name__ == "__main__":
@@ -84,4 +90,4 @@ if __name__ == "__main__":
     test_config_dir_can_be_left_uncreated()
     print("✓ the config folder isn't created when asked not to")
     test_work_folders_stay_in_application_support()
-    print("✓ operation locks and LOD work folders stay in Application Support")
+    print("✓ operation locks, leases and launch logs stay in Application Support")

@@ -93,13 +93,19 @@ def taken_by_other(scheme: str) -> bool:
 
 
 def registration_is_current(scheme: str = "nxm") -> bool:
-    return is_default(scheme) or taken_by_other(scheme)
+    # A scheme the bundle doesn't declare (upstream's gale:// and wabbajack://
+    # handlers inherit the ror2mm hook) has nothing to register.
+    return (scheme not in SCHEMES or is_default(scheme)
+            or taken_by_other(scheme))
 
 
 def register_default(scheme: str = "nxm") -> bool:
     """Make Caelumite the default *scheme* handler. Only possible from the
     app bundle - LaunchServices needs the bundle that declares the scheme."""
     from Nexus.nxm_handler import nxm_log
+    if scheme not in SCHEMES:
+        nxm_log(f"{scheme}:// not registered - the app bundle doesn't declare it.")
+        return False
     if running_bundle_id() != BUNDLE_ID:
         nxm_log(f"{scheme}:// not registered - Caelumite is not running from "
                 "Caelumite.app (build it with scripts/build-app.sh).")

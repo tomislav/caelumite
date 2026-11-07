@@ -96,7 +96,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `gui_qt/games/configure.py` | no dependency installers run in a game's CrossOver bottle |
 | `Utils/ui/shortcut_bindings.py` | Install Mod defaults to Cmd+I so Cmd+M can minimize |
 | `Nexus/nxm_handler.py` | `NxmHandler` registration via LaunchServices (`Utils/macos/urls.py`); the single-instance socket is in the per-user temp folder, not XDG/Flatpak/`~/.local/share` paths |
-| `Thunderstore/ror2mm_handler.py` | `ror2mm://` and `modl://` registration via LaunchServices, only when no other app handles them |
+| `Thunderstore/ror2mm_handler.py` | `ror2mm://` and `modl://` registration via LaunchServices, only when no other app handles them; its `gale://` and `wabbajack://` subclasses aren't registered, since the app bundle doesn't declare them |
 | `Nexus/nexus_api.py` | requests identify as Caelumite; Caelumite's own keyring entry; no weak key-file fallback - a key the Keychain can't store is kept for the session ([NEXUS.md](NEXUS.md)) |
 | `Nexus/nexus_oauth.py` | Caelumite's own OAuth client, empty (OAuth off) until Nexus registers it; the keyring probe checks for the macOS Keychain instead of DBus |
 | `Nexus/session.py` | until Caelumite is registered: the saved Nexus login loads only Caelumite's testing personal key, never Amethyst's OAuth login (the app and headless mode both load it here); headless mode's login status counts that key and its OAuth login can't start (`Utils/macos/nexus.py`) |

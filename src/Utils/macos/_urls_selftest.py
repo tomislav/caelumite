@@ -15,13 +15,14 @@ def test_undeclared_schemes_are_left_alone() -> None:
     # Upstream's gale:// and wabbajack:// handlers subclass Ror2mmHandler and
     # inherit its LaunchServices hook, but the app bundle doesn't declare
     # those schemes: making Caelumite their default handler would claim
-    # links it never receives, again on every start.
+    # links it never receives, again on every start. They aren't reported as
+    # registered either, so the startup log doesn't say "unchanged".
     with (patch.object(urls, "running_bundle_id", return_value=BUNDLE_ID),
           patch.object(urls, "default_handler", return_value=None),
           patch.object(urls._CS, "LSSetDefaultHandlerForURLScheme",
                        return_value=0) as set_default):
         for scheme in ("gale", "wabbajack"):
-            assert urls.registration_is_current(scheme), scheme
+            assert not urls.registration_is_current(scheme), scheme
             assert not urls.register_default(scheme), scheme
         assert set_default.call_count == 0
         assert urls.register_default("ror2mm")

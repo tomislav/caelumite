@@ -232,6 +232,10 @@ def prune_old_logs(max_age_days: int = LOG_RETENTION_DAYS,
         return 0
     keep = {Path(p).resolve() for p in (keep or ())}
     cutoff = time.time() - max_age_days * 86400
+    if sys.platform == "darwin":
+        # Caelumite: launch logs are kept in logs/launch (Utils/macos/launch_logs.py).
+        from Utils.macos.launch_logs import prune_launch_logs
+        prune_launch_logs(cutoff)
     removed = 0
     try:
         entries = list(get_logs_dir().iterdir())

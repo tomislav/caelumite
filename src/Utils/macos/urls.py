@@ -94,9 +94,10 @@ def taken_by_other(scheme: str) -> bool:
 
 def registration_is_current(scheme: str = "nxm") -> bool:
     # A scheme the bundle doesn't declare (upstream's gale:// and wabbajack://
-    # handlers inherit the ror2mm hook) has nothing to register.
-    return (scheme not in SCHEMES or is_default(scheme)
-            or taken_by_other(scheme))
+    # handlers inherit the ror2mm hook) isn't registered: register_default
+    # then logs why instead of "registration unchanged".
+    return (scheme in SCHEMES
+            and (is_default(scheme) or taken_by_other(scheme)))
 
 
 def register_default(scheme: str = "nxm") -> bool:

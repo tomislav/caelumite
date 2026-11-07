@@ -96,7 +96,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `gui_qt/games/configure.py` | no dependency installers run in a game's CrossOver bottle |
 | `Utils/ui/shortcut_bindings.py` | Install Mod defaults to Cmd+I so Cmd+M can minimize |
 | `Nexus/nxm_handler.py` | `NxmHandler` registration via LaunchServices (`Utils/macos/urls.py`); the single-instance socket is in the per-user temp folder, not XDG/Flatpak/`~/.local/share` paths |
-| `Thunderstore/ror2mm_handler.py` | `ror2mm://` and `modl://` registration via LaunchServices, only when no other app handles them; its `gale://` and `wabbajack://` subclasses aren't registered, since the app bundle doesn't declare them |
+| `Thunderstore/ror2mm_handler.py` | `ror2mm://` and `modl://` registration via LaunchServices, only when no other app handles them; its `gale://` and `wabbajack://` subclasses aren't registered, since the app bundle doesn't declare them, and the startup log says so |
 | `Nexus/nexus_api.py` | requests identify as Caelumite; Caelumite's own keyring entry; no weak key-file fallback - a key the Keychain can't store is kept for the session ([NEXUS.md](NEXUS.md)) |
 | `Nexus/nexus_oauth.py` | Caelumite's own OAuth client, empty (OAuth off) until Nexus registers it; the keyring probe checks for the macOS Keychain instead of DBus |
 | `Nexus/session.py` | until Caelumite is registered: the saved Nexus login loads only Caelumite's testing personal key, never Amethyst's OAuth login (the app and headless mode both load it here); headless mode's login status counts that key and its OAuth login can't start (`Utils/macos/nexus.py`) |
@@ -122,7 +122,8 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/bethesda/xedit_run.py` | xEdit, QuickAutoClean, the LOD tools and Wrye Bash may run while the bottle's Steam client, Wine's services and CrossOver's own programs do; a game or any other program in the bottle (also one CrossOver marks only with `CX_BOTTLE=<name>`) still blocks them, and the message names it (`Utils/macos/processes.py`) |
 | `Utils/wine/repair.py` | registry repairs and installers keep upstream's check (any process in the bottle, also those CrossOver marks only with `CX_BOTTLE=<name>`); when the bottle is busy, the message names the programs and says its Steam counts too and how to quit it |
 | `Utils/operations.py` | operation locks and launch leases are in `~/Library/Application Support/Caelumite`, not `~/.local/share` |
-| `Utils/executables/logs.py` | the Play bar's launch logs are in `~/Library/Application Support/Caelumite/logs/launch`, not `~/.cache` |
+| `Utils/executables/logs.py`, `Utils/config_paths.py` (`prune_old_logs`) | the Play bar's launch logs are in `~/Library/Application Support/Caelumite/logs/launch`, not `~/.cache`, and a game, profile or exe not launched for the log retention loses its folder (`Utils/macos/launch_logs.py`) |
+| `Utils/executables/launch.py` (`spawn_process_watched`), `Utils/processes/watch.py` (`_capture_file`) | the temporary file capturing a launch's or helper's output is in the per-user temp folder, not `~/.cache/AmethystModManager` (`output_capture_dir` in `Utils/macos/app.py`) |
 | `gui_qt/app.py` (`_on_play_action` "logs"), `gui_qt/launchers/logs.py` | the Play bar's Logs opens one "Wine" tab (the UMU file, which holds Wine's output for launches run in the bottle) instead of UMU and Proton tabs, with an empty text that doesn't mention them; a Steam hand-off adds a note that the game's output goes to Steam (`Utils/macos/launch_logs.py`) |
 | `Utils/github/wiki.py`, `gui_qt/games/onboarding.py` | the in-app wiki and onboarding link use Caelumite's wiki |
 | `Nexus/nexus_requirements.py` | the requirement filter list comes from Caelumite's `main` |

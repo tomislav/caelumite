@@ -57,6 +57,28 @@ def test_config_dir_can_be_left_uncreated() -> None:
         assert get_config_dir().is_dir()
 
 
+def test_old_launch_logs_are_pruned() -> None:
+    # Launch logs are kept like session logs: a game, profile or exe not
+    # launched for LOG_RETENTION_DAYS loses its folder.
+    import os
+    import tempfile
+    import time
+    from pathlib import Path
+    from unittest.mock import patch
+    from Utils.config_paths import LOG_RETENTION_DAYS, prune_old_logs
+    with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ, {"HOME": tmp}):
+        launch = Path(tmp) / "Library" / "Application Support" / "Caelumite" / "logs" / "launch"
+        old, new = launch / "old", launch / "new"
+        for folder in (old, new):
+            (folder / "run-1").mkdir(parents=True)
+            (folder / "latest").write_text("run-1", encoding="utf-8")
+        stale = time.time() - (LOG_RETENTION_DAYS + 1) * 86400
+        for path in (old / "run-1", old / "latest", old):
+            os.utime(path, (stale, stale))
+        prune_old_logs()
+        assert not old.exists() and new.is_dir(), sorted(launch.iterdir())
+
+
 def test_work_folders_stay_in_application_support() -> None:
     # Operation locks, launch leases and launch logs go to Caelumite's own
     # folder, not ~/.local/share or ~/.cache/AmethystModManager.
@@ -76,6 +98,14 @@ def test_work_folders_stay_in_application_support() -> None:
         assert _lock_dir().resolve().is_relative_to(config), _lock_dir()
         logs = log_directory(SimpleNamespace(name="Skyrim"))
         assert logs.resolve().is_relative_to(config / "logs" / "launch"), logs
+        # Launches and helpers capture a program's output in a temporary
+        # file; it isn't kept in ~/.cache either.
+        from Utils.executables.launch import spawn_process_watched
+        from Utils.processes.watch import _capture_file
+        capture, _note = _capture_file()
+        capture.close()
+        spawn_process_watched(["/usr/bin/true"], env=dict(os.environ),
+                              cwd=tmp, label="true")
         assert not (Path(tmp) / ".local").exists()
         assert not (Path(tmp) / ".cache").exists()
 
@@ -91,3 +121,5 @@ if __name__ == "__main__":
     print("✓ the config folder isn't created when asked not to")
     test_work_folders_stay_in_application_support()
     print("✓ operation locks, leases and launch logs stay in Application Support")
+    test_old_launch_logs_are_pruned()
+    print("✓ launch logs older than the log retention are removed")

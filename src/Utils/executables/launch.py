@@ -1666,6 +1666,10 @@ def spawn_process_watched(cmd: list, *, env: "dict | None" = None,
         cache_base = Path(
             os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
         capture_dir = cache_base / "AmethystModManager"
+        if sys.platform == "darwin":
+            # Caelumite: the per-user temp folder, not ~/.cache.
+            from Utils.macos.app import output_capture_dir
+            capture_dir = output_capture_dir()
         capture_dir.mkdir(parents=True, exist_ok=True)
         if errfile is None:
             errfile = tempfile.NamedTemporaryFile(

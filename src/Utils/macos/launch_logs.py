@@ -28,6 +28,24 @@ def empty_text(editor) -> str:
                      "Press Play to capture it.")
 
 
+def prune_launch_logs(cutoff: float) -> None:
+    """Remove the launch logs of a game, profile or exe not launched since
+    *cutoff* (a time.time() value), like old session logs. Best-effort."""
+    import shutil
+    from Utils.macos.app import config_dir
+    try:
+        folders = list((config_dir() / "logs" / "launch").iterdir())
+    except OSError:
+        return
+    for folder in folders:
+        try:
+            if (folder.is_dir() and not folder.is_symlink()
+                    and folder.stat().st_mtime < cutoff):
+                shutil.rmtree(folder, ignore_errors=True)
+        except OSError:
+            continue
+
+
 def note_steam_hand_off() -> None:
     """Add STEAM_NOTE to the current launch's log (during a Play capture)."""
     from Utils.executables import logs

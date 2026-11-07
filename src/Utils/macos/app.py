@@ -61,6 +61,14 @@ def logs_dir() -> Path:
     return Path.home() / "Library" / "Logs" / APP_NAME
 
 
+def output_capture_dir() -> Path:
+    """Where Play, Run EXE and helper programs keep the temporary file that
+    captures their output: Caelumite's folder in the per-user temp folder,
+    not ~/.cache (upstream's choice for Flatpak). Not created here."""
+    import tempfile
+    return Path(tempfile.gettempdir()) / APP_NAME
+
+
 def ipc_socket_path() -> Path:
     """The single-instance socket, in the per-user temp folder launchd gives
     every process of this user (confstr _CS_DARWIN_USER_TEMP_DIR, so it does

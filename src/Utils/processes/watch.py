@@ -6,6 +6,7 @@ import os
 import re
 import shlex
 import subprocess
+import sys
 import tempfile
 import threading
 import time
@@ -86,6 +87,10 @@ def _capture_file():
         cache_base = Path(
             os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
         capture_dir = cache_base / "AmethystModManager"
+        if sys.platform == "darwin":
+            # Caelumite: the per-user temp folder, not ~/.cache.
+            from Utils.macos.app import output_capture_dir
+            capture_dir = output_capture_dir()
         capture_dir.mkdir(parents=True, exist_ok=True)
         capture = tempfile.TemporaryFile(
             prefix="amm-helper-output-", dir=capture_dir)

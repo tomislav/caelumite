@@ -123,6 +123,7 @@ grep -rn "Caelumite:" src --include="*.py" --exclude-dir=macos
 | `Utils/wine/repair.py` | registry repairs and installers keep upstream's check (any process in the bottle, also those CrossOver marks only with `CX_BOTTLE=<name>`); when the bottle is busy, the message names the programs and says its Steam counts too and how to quit it |
 | `Utils/operations.py` | operation locks and launch leases are in `~/Library/Application Support/Caelumite`, not `~/.local/share` |
 | `Utils/executables/logs.py` | the Play bar's launch logs are in `~/Library/Application Support/Caelumite/logs/launch`, not `~/.cache` |
+| `gui_qt/app.py` (`_on_play_action` "logs"), `gui_qt/launchers/logs.py` | the Play bar's Logs opens one "Wine" tab (the UMU file, which holds Wine's output for launches run in the bottle) instead of UMU and Proton tabs, with an empty text that doesn't mention them; a Steam hand-off adds a note that the game's output goes to Steam (`Utils/macos/launch_logs.py`) |
 | `Utils/github/wiki.py`, `gui_qt/games/onboarding.py` | the in-app wiki and onboarding link use Caelumite's wiki |
 | `Nexus/nexus_requirements.py` | the requirement filter list comes from Caelumite's `main` |
 | `Utils/github/app_updates.py` | release URLs point at Caelumite |

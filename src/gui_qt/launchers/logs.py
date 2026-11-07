@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import re
+import sys
 
 from PySide6.QtCore import QTimer
 
@@ -16,6 +17,11 @@ _ANSI_ESCAPE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
 class LaunchLogEditor(TextEditor):
     def __init__(self, directory: Path, kind: str, label: str):
         super().__init__(directory / (kind + ".log"), f"{kind.upper()} — {label}")
+        if sys.platform == "darwin":
+            # Caelumite: the UMU file holds Wine's output (Utils/macos/launch_logs.py).
+            from Utils.macos.launch_logs import tab_title
+            self._name = tab_title(label)
+            self._label.setText(self._name)
         self._directory = directory
         self._kind = kind
         self._stamp = None
@@ -56,6 +62,10 @@ class LaunchLogEditor(TextEditor):
                     "No {0} log is available for the latest launch.\n"
                     "Press Play to capture logs. Native and plain Wine launches "
                     "do not produce Proton logs.").format(self._kind.upper())
+                if sys.platform == "darwin":
+                    # Caelumite: no UMU or Proton to mention.
+                    from Utils.macos.launch_logs import empty_text
+                    content = empty_text(self)
             else:
                 with path.open("rb") as source:
                     source.seek(max(0, stat.st_size - _MAX_BYTES))

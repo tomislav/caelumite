@@ -559,6 +559,8 @@ def _hand_off_to_steam(cmd: list[str], env: dict, cwd: Path, log_fn) -> None:
         _fail(log_fn, f"Steam hand-off exited {result.returncode}: {' '.join(detail)}")
         return
     launch_report.mark_spawned()
+    from Utils.macos.launch_logs import note_steam_hand_off
+    note_steam_hand_off()
     log_fn("Play: Steam has the launch request - waiting for the game to start.")
 
 

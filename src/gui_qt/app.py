@@ -14199,7 +14199,11 @@ class MainWindow(QMainWindow, PluginPanelControls):
             from gui_qt.launchers.logs import LaunchLogEditor
             label = self._play_exe_selector.current()
             directory = log_directory(game, self._play_exe_paths.get(label))
-            for kind in ("umu", "proton"):
+            kinds = ("umu", "proton")
+            if sys.platform == "darwin":
+                # Caelumite: one Wine tab - CrossOver has no UMU or Proton.
+                from Utils.macos.launch_logs import KINDS as kinds
+            for kind in kinds:
                 key = f"launch_log:{directory}:{kind}"
                 if self._tabs.has_key(key):
                     self._tabs.focus_key(key)

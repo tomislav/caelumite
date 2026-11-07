@@ -1,5 +1,7 @@
 - v1.2.5
 Based on Amethyst Mod Manager 2.6.2.
+### macOS
+- The Play menu's Logs shows the latest launch's Wine output in one Wine tab. A game Play starts through Steam shows only Caelumite's lines, since its own output goes to Steam
 ### Additions
 - Graveyard Keeper 2
 - A Hexium browser: browse and install mods from hexium.gg, with Change Version and Open on Hexium in a Hexium mod's right-click menu

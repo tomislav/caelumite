@@ -748,9 +748,18 @@ def test_pipeline_skips_the_import_while_deployed() -> None:
         "test_successful_transfer_commits_filegraph")
     try:
         # Upstream's fake game predates the deploy events, which need a
-        # game_id (its own pipeline tests fail the same way).
+        # game_id, and the path check before a deploy, which clears the
+        # active profile and reloads paths (its own pipeline tests fail the
+        # same way).
+        def set_profile(game, path):
+            game._active_profile_dir = None if path is None else Path(path)
         with (patch.object(deploy_tests._PipelineGame, "game_id",
                            "transfer_failure_test", create=True),
+              patch.object(deploy_tests._PipelineGame,
+                           "set_active_profile_dir", set_profile),
+              patch.object(deploy_tests._PipelineGame, "load_paths",
+                           lambda game, **_options: None),
+              patch("Utils.games.instances.validate_paths"),
               patch.object(deploy_tests._PipelineGame, "get_deploy_active",
                            return_value=True),
               patch("Utils.macos.creations.creations_changed",

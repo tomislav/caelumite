@@ -486,6 +486,36 @@ def test_menu_offers_quick_update_only_with_premium() -> None:
             assert ("Quick Update" in labels) is offered, (premium, labels)
 
 
+def test_repository_updates_keep_quick_update_without_premium() -> None:
+    # Thunderstore and Hexium updates don't download from Nexus.
+    import os
+    from types import SimpleNamespace
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication
+    QApplication.instance() or QApplication([])
+    from gui_qt.modlist import menu
+    from gui_qt.modlist.data import (
+        FLAG_HEXIUM_UPDATE, FLAG_THUNDERSTORE_UPDATE, FLAG_UPDATE)
+    model = SimpleNamespace(_flags={"Nexus": FLAG_UPDATE,
+                                    "Store": FLAG_THUNDERSTORE_UPDATE,
+                                    "Hex": FLAG_HEXIUM_UPDATE})
+    view = SimpleNamespace(model=lambda: model)
+    with patch.object(menu, "_has_nexus_id", lambda _v, _n: False), \
+            patch.object(menu, "_modio_url", lambda _v, _n: None), \
+            patch.object(menu, "_is_thunderstore_mod", lambda _v, _n: False), \
+            patch.object(menu, "_provider_record", lambda _v, _n: None), \
+            patch.object(menu, "_can_roll_back", lambda _v, _n: False), \
+            patch("Utils.ui.config.load_nexus_last_premium", lambda: False):
+        for names, offered in ((["Store"], True), (["Hex"], True),
+                               (["Nexus"], False)):
+            labels = [item[0] for item in menu._update_menu_items(view, names)]
+            assert ("Quick Update" in labels) is offered, (names, labels)
+        quick = [item for item in menu._update_menu_items(
+            view, ["Nexus", "Store", "Hex"], multi=True)
+            if item[0].startswith("Quick Update")]
+        assert [item[0] for item in quick] == ["Quick Update (2)"], quick
+
+
 class _CheckWindow:
     """MainWindow stand-in for _on_updates_ready: no-ops for the rest."""
 
@@ -610,6 +640,8 @@ if __name__ == "__main__":
     print("✓ Quick Update counts as available unless the account lacks Premium")
     test_menu_offers_quick_update_only_with_premium()
     print("✓ the right-click menu offers Quick Update only with Premium")
+    test_repository_updates_keep_quick_update_without_premium()
+    print("✓ Thunderstore and Hexium updates keep Quick Update without Premium")
     test_updates_ready_offers_the_found_updates()
     print("✓ a finished update check offers its Nexus updates, without upstream's prompt")
     test_updates_prompt_hook_is_in_place()

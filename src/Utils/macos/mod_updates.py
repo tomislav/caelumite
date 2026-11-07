@@ -219,6 +219,21 @@ def quick_update_available() -> bool:
     return load_nexus_last_premium() is not False
 
 
+def quick_update_names(view, names: list) -> list:
+    """The mods the right-click menu offers Quick Update for: all of *names*
+    with Premium, otherwise those whose update comes from Thunderstore or
+    Hexium, which don't download from Nexus."""
+    if quick_update_available():
+        return list(names)
+    from gui_qt.modlist.data import FLAG_HEXIUM_UPDATE, FLAG_THUNDERSTORE_UPDATE
+    try:
+        flags = view.model()._flags
+    except Exception:
+        return []
+    repository = FLAG_THUNDERSTORE_UPDATE | FLAG_HEXIUM_UPDATE
+    return [name for name in names if flags.get(name, 0) & repository]
+
+
 def show_updates(window) -> None:
     """Filter the mod list to mods with updates: add !update to its search,
     keeping what's already typed there."""

@@ -1,3 +1,18 @@
+- v1.2.5
+Based on Amethyst Mod Manager 2.6.2.
+### Additions
+- Graveyard Keeper 2
+- A Hexium browser: browse and install mods from hexium.gg, with Change Version and Open on Hexium in a Hexium mod's right-click menu
+- A wizard that installs Fallout: New California for Fallout: New Vegas
+- Duplicate an instance from a game's configure menu
+- Custom links for mods
+- The default mod name on install can be changed (Settings > Downloads > Archives)
+### Changes
+- Mod update detection uses Nexus update groups, so an update is matched to the right file series
+### Bug Fixes
+- Some No Man's Sky mods no longer deploy to the wrong folder
+- Text Files no longer shows Steam INIs for a GOG installation when both My Games folders exist
+
 - v1.2.4
 ### Bug Fixes
 - Caelumite no longer uses more and more memory as you open menus. A menu stayed in memory after it closed, about 235 MB after two days of use; closed menus are now freed.
